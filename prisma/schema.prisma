@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+}
+
+enum ElementType {
+  TEXT
+  MULTIPLE_CHOICE
+  NAVIGATION_BUTTON
+}
+
+model Quiz {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  steps     Step[]
+  responses Response[]
+
+  @@map("quizzes")
+}
+
+model Step {
+  id     String @id @default(cuid())
+  quizId String
+  title  String
+  order  Int
+
+  quiz     Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  elements Element[]
+
+  @@index([quizId])
+  @@index([quizId, order])
+  @@map("steps")
+}
+
+model Element {
+  id      String      @id @default(cuid())
+  stepId  String
+  type    ElementType
+  order   Int
+  content Json // Propriedades específicas de cada tipo de elemento
+
+  step Step @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@index([stepId])
+  @@index([stepId, order])
+  @@map("elements")
+}
+
+model Response {
+  id          String    @id @default(cuid())
+  quizId      String
+  sessionId   String // Para agrupar respostas de uma sessão do usuário
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  quiz    Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers Answer[]
+
+  @@index([quizId])
+  @@index([sessionId])
+  @@map("responses")
+}
+
+model Answer {
+  id         String @id @default(cuid())
+  responseId String
+  elementId  String
+  value      Json // Valor da resposta (flexível para diferentes tipos)
+
+  response Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
+
+  @@index([responseId])
+  @@index([elementId])
+  @@map("answers")
+}
