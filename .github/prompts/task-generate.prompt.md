@@ -16,7 +16,7 @@ Você é um assistente especializado no projeto Funnel Quiz. Utilizando como con
 
 ## Formato de Saída:
 
-Crie um arquivo markdown em `.github/tasks/[nome-da-tarefa].md` com a seguinte estrutura:
+Crie um arquivo markdown em `.github/tasks/task-[número]-[nome-da-tarefa].md` com a seguinte estrutura:
 
 ```markdown
 # [Nome da Tarefa]
@@ -53,6 +53,13 @@ Como verificar se a tarefa foi concluída com sucesso.
 
 Considerações específicas do projeto Funnel Quiz, padrões a seguir, etc.
 ```
+
+**Convenção de Nomenclatura:**
+
+- Use sempre `task-[número]-[nome-da-tarefa].md`
+- Número sequencial (01, 02, 03...)
+- Nome da tarefa em kebab-case
+- Exemplo: `task-01-create-element-registry.md`, `task-02-implement-drag-drop.md`
 
 ## Diretrizes Específicas do Projeto:
 
