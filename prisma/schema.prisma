@@ -19,16 +19,11 @@ model User {
   name  String?
 }
 
-enum ElementType {
-  TEXT
-  MULTIPLE_CHOICE
-  NAVIGATION_BUTTON
-}
-
 model Quiz {
   id          String   @id @default(cuid())
   title       String
   description String?
+  isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -40,44 +35,36 @@ model Quiz {
 
 model Step {
   id     String @id @default(cuid())
-  quizId String
   title  String
   order  Int
+  quizId String
 
   quiz     Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
   elements Element[]
 
-  @@index([quizId])
-  @@index([quizId, order])
   @@map("steps")
 }
 
 model Element {
   id      String      @id @default(cuid())
-  stepId  String
   type    ElementType
+  content Json
   order   Int
-  content Json // Propriedades específicas de cada tipo de elemento
+  stepId  String
 
   step Step @relation(fields: [stepId], references: [id], onDelete: Cascade)
 
-  @@index([stepId])
-  @@index([stepId, order])
   @@map("elements")
 }
 
 model Response {
-  id          String    @id @default(cuid())
-  quizId      String
-  sessionId   String // Para agrupar respostas de uma sessão do usuário
-  createdAt   DateTime  @default(now())
-  completedAt DateTime?
+  id        String   @id @default(cuid())
+  quizId    String
+  createdAt DateTime @default(now())
 
   quiz    Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   answers Answer[]
 
-  @@index([quizId])
-  @@index([sessionId])
   @@map("responses")
 }
 
@@ -85,11 +72,15 @@ model Answer {
   id         String @id @default(cuid())
   responseId String
   elementId  String
-  value      Json // Valor da resposta (flexível para diferentes tipos)
+  value      Json
 
   response Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
 
-  @@index([responseId])
-  @@index([elementId])
   @@map("answers")
+}
+
+enum ElementType {
+  TEXT
+  MULTIPLE_CHOICE
+  NAVIGATION_BUTTON
 }
