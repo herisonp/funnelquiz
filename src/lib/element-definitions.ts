@@ -55,10 +55,9 @@ export const AVAILABLE_ELEMENTS: ElementDefinition[] = [
     category: "navigation",
     description: "Botão para navegar entre etapas",
     defaultContent: {
-      text: "Continuar",
-      action: "next",
-      variant: "default",
-      size: "default",
+      label: "Continuar",
+      targetStep: "next",
+      variant: "primary",
     } as NavigationButtonElementContent,
   },
 ];

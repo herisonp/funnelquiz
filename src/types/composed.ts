@@ -47,10 +47,9 @@ export interface MultipleChoiceElementContent {
 }
 
 export interface NavigationButtonElementContent {
-  text: string;
-  variant?: "default" | "outline" | "ghost";
-  size?: "sm" | "default" | "lg";
-  action: "next" | "previous" | "submit";
+  label: string;
+  targetStep?: "next" | "previous" | string; // specific step ID
+  variant?: "primary" | "secondary" | "outline";
 }
 
 // Union type para conteúdo de elementos
@@ -98,4 +97,40 @@ export interface AnswerValue {
   text?: string;
   selectedOptions?: string[];
   multipleChoice?: string | string[];
+}
+
+// Type guards para validação de content
+export function isTextElementContent(
+  content: unknown
+): content is TextElementContent {
+  return (
+    typeof content === "object" &&
+    content !== null &&
+    "text" in content &&
+    typeof (content as Record<string, unknown>).text === "string"
+  );
+}
+
+export function isMultipleChoiceElementContent(
+  content: unknown
+): content is MultipleChoiceElementContent {
+  return (
+    typeof content === "object" &&
+    content !== null &&
+    "question" in content &&
+    "options" in content &&
+    typeof (content as Record<string, unknown>).question === "string" &&
+    Array.isArray((content as Record<string, unknown>).options)
+  );
+}
+
+export function isNavigationButtonElementContent(
+  content: unknown
+): content is NavigationButtonElementContent {
+  return (
+    typeof content === "object" &&
+    content !== null &&
+    "label" in content &&
+    typeof (content as Record<string, unknown>).label === "string"
+  );
 }

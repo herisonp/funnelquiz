@@ -35,27 +35,23 @@ export default function StepsNavigation() {
             variant={currentStepId === step.id ? "default" : "outline"}
             size="sm"
             onClick={() => setCurrentStep(step.id)}
-            className={cn(
-              "min-w-0 relative",
-              currentStepId === step.id && "ring-2 ring-primary ring-offset-2"
-            )}
+            className={cn("min-w-0 relative")}
           >
             <span className="truncate">{step.title}</span>
             <Badge variant="secondary" className="ml-2 text-xs">
               {step.elements.length}
             </Badge>
-
-            {quiz.steps.length > 1 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => handleRemoveStep(step.id, e)}
-                className="absolute -top-2 -right-2 h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            )}
           </Button>
+          {quiz.steps.length > 1 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => handleRemoveStep(step.id, e)}
+              className="absolute -top-2 -right-2 h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          )}
         </div>
       ))}
 
