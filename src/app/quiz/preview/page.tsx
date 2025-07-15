@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import QuizRenderer from "@/components/quiz/QuizRenderer";
+import { PublicQuizRenderer } from "@/components/quiz/PublicQuizRenderer";
 
 export default function QuizPreviewPage() {
   const router = useRouter();
@@ -30,5 +30,11 @@ export default function QuizPreviewPage() {
     );
   }
 
-  return <QuizRenderer quiz={quiz} onBack={handleBackToEditor} />;
+  return (
+    <PublicQuizRenderer
+      quiz={quiz}
+      onBack={handleBackToEditor}
+      allowStepNavigation={true}
+    />
+  );
 }

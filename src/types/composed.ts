@@ -99,6 +99,17 @@ export interface AnswerValue {
   multipleChoice?: string | string[];
 }
 
+// Tipos para resposta de quiz
+export interface QuizResponseData {
+  quizId: string;
+  sessionId: string;
+  responses: Record<string, AnswerValue>;
+  currentStepIndex: number;
+  startedAt: Date;
+  completedAt?: Date;
+  isCompleted: boolean;
+}
+
 // Type guards para validação de content
 export function isTextElementContent(
   content: unknown
