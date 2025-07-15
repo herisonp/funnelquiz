@@ -20,6 +20,9 @@ interface EditorState {
   isSidebarCollapsed: boolean;
   isPropertiesPanelOpen: boolean;
 
+  // Persistence state
+  hasUnsavedChanges: boolean;
+
   // Actions
   setQuiz: (quiz: QuizWithSteps) => void;
   setCurrentStep: (stepId: string) => void;
@@ -28,6 +31,7 @@ interface EditorState {
   // Quiz management
   createNewQuiz: () => void;
   resetQuiz: () => void;
+  clearQuiz: () => void;
 
   // Step management
   addStep: () => void;
@@ -47,6 +51,10 @@ interface EditorState {
   togglePreviewMode: () => void;
   toggleSidebar: () => void;
   togglePropertiesPanel: () => void;
+
+  // Persistence actions
+  markAsSaved: () => void;
+  markAsChanged: () => void;
 }
 
 const createEmptyQuiz = (): QuizWithSteps => ({
@@ -77,10 +85,15 @@ export const useEditorStore = create<EditorState>()(
       isPreviewMode: false,
       isSidebarCollapsed: false,
       isPropertiesPanelOpen: false,
+      hasUnsavedChanges: false,
 
       // Actions
       setQuiz: (quiz) =>
-        set({ quiz, currentStepId: quiz.steps[0]?.id || null }),
+        set({
+          quiz,
+          currentStepId: quiz.steps[0]?.id || null,
+          hasUnsavedChanges: false,
+        }),
 
       setCurrentStep: (stepId) =>
         set({ currentStepId: stepId, selectedElementId: null }),
@@ -97,6 +110,7 @@ export const useEditorStore = create<EditorState>()(
           quiz: newQuiz,
           currentStepId: newQuiz.steps[0].id,
           selectedElementId: null,
+          hasUnsavedChanges: false,
         });
       },
 
@@ -106,6 +120,16 @@ export const useEditorStore = create<EditorState>()(
           quiz: newQuiz,
           currentStepId: newQuiz.steps[0].id,
           selectedElementId: null,
+          hasUnsavedChanges: true,
+        });
+      },
+
+      clearQuiz: () => {
+        set({
+          quiz: null,
+          currentStepId: null,
+          selectedElementId: null,
+          hasUnsavedChanges: false,
         });
       },
 
@@ -127,6 +151,7 @@ export const useEditorStore = create<EditorState>()(
             steps: [...quiz.steps, newStep],
           },
           currentStepId: newStep.id,
+          hasUnsavedChanges: true,
         });
       },
 
@@ -153,6 +178,7 @@ export const useEditorStore = create<EditorState>()(
           },
           currentStepId: newCurrentStepId,
           selectedElementId: null,
+          hasUnsavedChanges: true,
         });
       },
 
@@ -167,6 +193,7 @@ export const useEditorStore = create<EditorState>()(
               step.id === stepId ? { ...step, title } : step
             ),
           },
+          hasUnsavedChanges: true,
         });
       },
 
@@ -201,6 +228,7 @@ export const useEditorStore = create<EditorState>()(
           },
           selectedElementId: newElement.id,
           isPropertiesPanelOpen: true,
+          hasUnsavedChanges: true,
         });
       },
 
@@ -219,6 +247,7 @@ export const useEditorStore = create<EditorState>()(
             })),
           },
           selectedElementId: null,
+          hasUnsavedChanges: true,
         });
       },
 
@@ -236,6 +265,7 @@ export const useEditorStore = create<EditorState>()(
               ),
             })),
           },
+          hasUnsavedChanges: true,
         });
       },
 
@@ -271,6 +301,7 @@ export const useEditorStore = create<EditorState>()(
                 : step
             ),
           },
+          hasUnsavedChanges: true,
         });
       },
 
@@ -284,6 +315,10 @@ export const useEditorStore = create<EditorState>()(
         set((state) => ({
           isPropertiesPanelOpen: !state.isPropertiesPanelOpen,
         })),
+
+      markAsSaved: () => set({ hasUnsavedChanges: false }),
+
+      markAsChanged: () => set({ hasUnsavedChanges: true }),
     }),
     {
       name: "editor-store",
