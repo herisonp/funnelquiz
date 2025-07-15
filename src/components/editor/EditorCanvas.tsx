@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditorStore } from "@/hooks/useEditorStore";
+import { useQuizValidation } from "@/hooks/useQuizValidation";
 import { DndContext, DragEndEvent, DragOverlay } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -11,9 +12,11 @@ import DropZone from "./DropZone";
 import ElementRenderer from "./ElementRenderer";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { HelpText } from "@/components/ui/tooltip-help";
 
 export default function EditorCanvas() {
   const { quiz, currentStepId, addElement, moveElement } = useEditorStore();
+  const { currentStepValidation } = useQuizValidation();
 
   const currentStep = quiz?.steps.find((step) => step.id === currentStepId);
   const elements = currentStep?.elements || [];
@@ -62,9 +65,17 @@ export default function EditorCanvas() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold">{currentStep.title}</h2>
-              <p className="text-sm text-muted-foreground">
-                {elements.length} elemento{elements.length !== 1 ? "s" : ""}
-              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-muted-foreground">
+                  {elements.length} elemento{elements.length !== 1 ? "s" : ""}
+                </p>
+                {currentStepValidation.errors.length > 0 && (
+                  <span className="text-xs text-destructive">
+                    • {currentStepValidation.errors.length} erro
+                    {currentStepValidation.errors.length !== 1 ? "s" : ""}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -73,7 +84,20 @@ export default function EditorCanvas() {
         <ScrollArea className="flex-1">
           <div className="p-6">
             {elements.length === 0 ? (
-              <DropZone />
+              <div className="space-y-4">
+                <DropZone />
+                <HelpText className="text-center">
+                  Arraste elementos da sidebar para começar ou use os atalhos:{" "}
+                  <kbd className="px-1 py-0.5 text-xs bg-muted rounded border">
+                    Delete
+                  </kbd>{" "}
+                  para remover,{" "}
+                  <kbd className="px-1 py-0.5 text-xs bg-muted rounded border">
+                    Esc
+                  </kbd>{" "}
+                  para deselecionar
+                </HelpText>
+              </div>
             ) : (
               <SortableContext
                 items={elements.map((el) => el.id)}

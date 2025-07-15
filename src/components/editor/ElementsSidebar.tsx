@@ -17,6 +17,7 @@ import {
   Layers,
 } from "lucide-react";
 import DraggableElement from "./DraggableElement";
+import { QuickTooltip } from "@/components/ui/tooltip-help";
 
 const iconMap = {
   Type,
@@ -46,19 +47,25 @@ export default function ElementsSidebar() {
                 <h2 className="font-semibold">Elementos</h2>
               </div>
             )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleSidebar}
-              className={cn("h-8 w-8 p-0", isSidebarCollapsed && "mx-auto")}
+            <QuickTooltip
+              content={
+                isSidebarCollapsed ? "Expandir sidebar" : "Recolher sidebar"
+              }
             >
-              <ChevronLeft
-                className={cn(
-                  "h-4 w-4 transition-transform",
-                  isSidebarCollapsed && "rotate-180"
-                )}
-              />
-            </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleSidebar}
+                className={cn("h-8 w-8 p-0", isSidebarCollapsed && "mx-auto")}
+              >
+                <ChevronLeft
+                  className={cn(
+                    "h-4 w-4 transition-transform",
+                    isSidebarCollapsed && "rotate-180"
+                  )}
+                />
+              </Button>
+            </QuickTooltip>
           </div>
 
           {!isSidebarCollapsed && (

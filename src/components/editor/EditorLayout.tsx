@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useEditorStore } from "@/hooks/useEditorStore";
 import { useEditorPersistence } from "@/hooks/useEditorPersistence";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import EditorHeader from "./EditorHeader";
 import ElementsSidebar from "./ElementsSidebar";
 import EditorCanvas from "./EditorCanvas";
@@ -14,6 +15,9 @@ export default function EditorLayout() {
   const { isSidebarCollapsed, isPropertiesPanelOpen, createNewQuiz, quiz } =
     useEditorStore();
   const { saveNow } = useEditorPersistence();
+
+  // Initialize keyboard shortcuts
+  useKeyboardShortcuts();
 
   // Initialize quiz if none exists
   useEffect(() => {

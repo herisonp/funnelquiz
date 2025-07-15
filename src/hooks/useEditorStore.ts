@@ -23,6 +23,12 @@ interface EditorState {
   // Persistence state
   hasUnsavedChanges: boolean;
 
+  // Loading and validation states
+  isLoading: boolean;
+  isValidating: boolean;
+  isSaving: boolean;
+  keyboardShortcutsEnabled: boolean;
+
   // Actions
   setQuiz: (quiz: QuizWithSteps) => void;
   setCurrentStep: (stepId: string) => void;
@@ -51,6 +57,12 @@ interface EditorState {
   togglePreviewMode: () => void;
   toggleSidebar: () => void;
   togglePropertiesPanel: () => void;
+
+  // Loading and validation actions
+  setLoading: (isLoading: boolean) => void;
+  setValidating: (isValidating: boolean) => void;
+  setSaving: (isSaving: boolean) => void;
+  setKeyboardShortcutsEnabled: (enabled: boolean) => void;
 
   // Persistence actions
   markAsSaved: () => void;
@@ -86,6 +98,10 @@ export const useEditorStore = create<EditorState>()(
       isSidebarCollapsed: false,
       isPropertiesPanelOpen: false,
       hasUnsavedChanges: false,
+      isLoading: false,
+      isValidating: false,
+      isSaving: false,
+      keyboardShortcutsEnabled: true,
 
       // Actions
       setQuiz: (quiz) =>
@@ -316,6 +332,14 @@ export const useEditorStore = create<EditorState>()(
           isPropertiesPanelOpen: !state.isPropertiesPanelOpen,
         })),
 
+      // Loading and validation actions
+      setLoading: (isLoading) => set({ isLoading }),
+      setValidating: (isValidating) => set({ isValidating }),
+      setSaving: (isSaving) => set({ isSaving }),
+      setKeyboardShortcutsEnabled: (enabled) =>
+        set({ keyboardShortcutsEnabled: enabled }),
+
+      // Persistence actions
       markAsSaved: () => set({ hasUnsavedChanges: false }),
 
       markAsChanged: () => set({ hasUnsavedChanges: true }),

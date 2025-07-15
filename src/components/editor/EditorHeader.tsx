@@ -2,21 +2,39 @@
 
 import { useState } from "react";
 import { useEditorStore } from "@/hooks/useEditorStore";
+import { useQuizValidation } from "@/hooks/useQuizValidation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
-import { Eye, RotateCcw, Menu, FileText, Trash2 } from "lucide-react";
+import {
+  Eye,
+  RotateCcw,
+  Menu,
+  FileText,
+  Trash2,
+  AlertTriangle,
+} from "lucide-react";
 import StepsNavigation from "./StepsNavigation";
 import { SaveStatus } from "./SaveStatus";
 import { ExportImportDialog } from "./ExportImportDialog";
+import { QuickTooltip } from "@/components/ui/tooltip-help";
+import { toast } from "sonner";
 
 export default function EditorHeader() {
   const router = useRouter();
   const [showExportImport, setShowExportImport] = useState(false);
   const { quiz, resetQuiz, clearQuiz, toggleSidebar } = useEditorStore();
+  const { canPreview, hasErrors, errorCount, quickValidationMessage } =
+    useQuizValidation();
 
   const handlePreview = () => {
+    if (!canPreview) {
+      toast.error(
+        quickValidationMessage || "Corrija os erros antes de visualizar o quiz"
+      );
+      return;
+    }
     router.push("/quiz/preview");
   };
 
@@ -46,14 +64,16 @@ export default function EditorHeader() {
         <div className="h-full flex items-center justify-between px-4">
           {/* Left section */}
           <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleSidebar}
-              className="lg:hidden"
-            >
-              <Menu className="h-4 w-4" />
-            </Button>
+            <QuickTooltip content="Alternar sidebar">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleSidebar}
+                className="lg:hidden"
+              >
+                <Menu className="h-4 w-4" />
+              </Button>
+            </QuickTooltip>
 
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-semibold text-foreground">
@@ -86,40 +106,67 @@ export default function EditorHeader() {
 
             <Separator orientation="vertical" className="h-6 hidden sm:block" />
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowExportImport(true)}
-              className="hidden sm:flex"
-            >
-              <FileText className="h-4 w-4 mr-2" />
-              Export/Import
-            </Button>
+            <QuickTooltip content="Exportar/Importar configuração do quiz">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowExportImport(true)}
+                className="hidden sm:flex"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Export/Import
+              </Button>
+            </QuickTooltip>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleReset}
-              className="hidden sm:flex"
-            >
-              <RotateCcw className="h-4 w-4 mr-2" />
-              Reset
-            </Button>
+            <QuickTooltip content="Resetar quiz mantendo estrutura">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleReset}
+                className="hidden sm:flex"
+              >
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Reset
+              </Button>
+            </QuickTooltip>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleClear}
-              className="hidden md:flex"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Limpar
-            </Button>
+            <QuickTooltip content="Limpar todos os dados salvos">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleClear}
+                className="hidden md:flex"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Limpar
+              </Button>
+            </QuickTooltip>
 
-            <Button onClick={handlePreview} size="sm">
-              <Eye className="h-4 w-4 mr-2" />
-              Preview
-            </Button>
+            <QuickTooltip
+              content={
+                canPreview
+                  ? "Visualizar quiz (Ctrl+P)"
+                  : quickValidationMessage ||
+                    "Corrija os erros antes de visualizar"
+              }
+              shortcut="Ctrl+P"
+            >
+              <Button
+                onClick={handlePreview}
+                size="sm"
+                disabled={!canPreview}
+                variant={hasErrors ? "outline" : "default"}
+              >
+                {hasErrors && <AlertTriangle className="h-4 w-4 mr-2" />}
+                <Eye className="h-4 w-4 mr-2" />
+                Preview
+                {errorCount > 0 && (
+                  <Badge variant="destructive" className="ml-2">
+                    {errorCount}
+                  </Badge>
+                )}
+              </Button>
+            </QuickTooltip>
           </div>
         </div>
       </header>
