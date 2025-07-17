@@ -55,6 +55,8 @@ interface EditorState {
 
   // UI actions
   togglePreviewMode: () => void;
+  enablePreview: () => void;
+  enableEditing: () => void;
   toggleSidebar: () => void;
   togglePropertiesPanel: () => void;
 
@@ -223,12 +225,25 @@ export const useEditorStore = create<EditorState>()(
         if (!currentStep) return;
 
         const defaultElement = createDefaultElement(type);
+        const insertOrder = order ?? currentStep.elements.length;
+
+        // Criar novo elemento
         const newElement = {
           id: uuidv4(),
           stepId: currentStepId,
-          order: order ?? currentStep.elements.length,
+          order: insertOrder,
           ...defaultElement,
         };
+
+        // Inserir elemento na posição específica e reordenar
+        const elements = [...currentStep.elements];
+        elements.splice(insertOrder, 0, newElement);
+
+        // Reordenar todos os elementos
+        const reorderedElements = elements.map((element, index) => ({
+          ...element,
+          order: index,
+        }));
 
         set({
           quiz: {
@@ -237,7 +252,7 @@ export const useEditorStore = create<EditorState>()(
               step.id === currentStepId
                 ? {
                     ...step,
-                    elements: [...step.elements, newElement],
+                    elements: reorderedElements,
                   }
                 : step
             ),
@@ -323,6 +338,10 @@ export const useEditorStore = create<EditorState>()(
 
       togglePreviewMode: () =>
         set((state) => ({ isPreviewMode: !state.isPreviewMode })),
+
+      enablePreview: () => set({ isPreviewMode: true }),
+
+      enableEditing: () => set({ isPreviewMode: false }),
 
       toggleSidebar: () =>
         set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),

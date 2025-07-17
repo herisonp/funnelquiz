@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "../styles/drag-drop.css";
+@import "../styles/preview-mode.css";
 
 @custom-variant dark (&:is(.dark *));
 

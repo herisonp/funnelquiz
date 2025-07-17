@@ -74,9 +74,11 @@ export function TextElement({ element, className }: TextElementProps) {
           getFontSizeClass(content.fontSize || "base"),
           getTextAlignClass(content.textAlign || "left"),
           getFontWeightClass(content.fontWeight),
-          content.color && `text-[${content.color}]`,
           "whitespace-pre-wrap break-words"
         )}
+        style={{
+          color: content.color || undefined,
+        }}
       >
         {content.text}
       </p>

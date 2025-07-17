@@ -1,0 +1,86 @@
+/* Drag and Drop animations and styles */
+
+/* Drag overlay animation */
+.drag-overlay {
+  transform-origin: 0 0;
+  animation: dragOverlayEnter 0.2s ease-out;
+}
+
+@keyframes dragOverlayEnter {
+  from {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Drop zone hover animation */
+.dropzone-active {
+  animation: dropzoneGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes dropzoneGlow {
+  from {
+    border-color: hsl(var(--primary) / 0.5);
+    background-color: hsl(var(--primary) / 0.05);
+  }
+  to {
+    border-color: hsl(var(--primary) / 0.8);
+    background-color: hsl(var(--primary) / 0.1);
+  }
+}
+
+/* Sortable element transition */
+.sortable-element {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sortable-element.dragging {
+  z-index: 1000;
+  transform: rotate(5deg);
+}
+
+.sortable-element.over {
+  transform: scale(1.02);
+}
+
+/* Draggable element from sidebar */
+.draggable-element {
+  transition: all 0.15s ease-out;
+}
+
+.draggable-element:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px hsl(var(--foreground) / 0.1);
+}
+
+.draggable-element.dragging {
+  transform: scale(0.95) rotate(2deg);
+  opacity: 0.7;
+}
+
+/* Mobile touch improvements */
+@media (hover: none) and (pointer: coarse) {
+  .draggable-element:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .sortable-element {
+    touch-action: manipulation;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .drag-overlay,
+  .dropzone-active,
+  .sortable-element,
+  .draggable-element {
+    animation: none;
+    transition: none;
+  }
+}

@@ -133,6 +133,9 @@ export function TextElement({
             getTextAlignClass(content.textAlign || "left"),
             getFontWeightClass(content.fontWeight)
           )}
+          style={{
+            color: content.color || undefined,
+          }}
           autoFocus
           placeholder="Digite seu texto..."
         />
@@ -158,10 +161,12 @@ export function TextElement({
           getFontSizeClass(content.fontSize || "base"),
           getTextAlignClass(content.textAlign || "left"),
           getFontWeightClass(content.fontWeight),
-          content.color && `text-[${content.color}]`,
           !localText.trim() && isEditing && "text-muted-foreground italic",
           "min-h-[1.5em] p-2"
         )}
+        style={{
+          color: content.color || undefined,
+        }}
       >
         {localText.trim() || (isEditing ? "Clique para editar..." : "")}
       </p>

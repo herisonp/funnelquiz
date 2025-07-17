@@ -1,0 +1,131 @@
+"use client";
+
+import { ReactNode, useState } from "react";
+import { useEditorStore } from "@/hooks/useEditorStore";
+import { Button } from "@/components/ui/button";
+import { Edit3, Trash2, GripVertical } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Element } from "@/types/composed";
+import { QuickTooltip } from "@/components/ui/tooltip-help";
+
+interface ElementWrapperProps {
+  element: Element;
+  children: ReactNode;
+  isSelected: boolean;
+  isDragging?: boolean;
+  onSelect: () => void;
+  onDelete: () => void;
+  className?: string;
+}
+
+export function ElementWrapper({
+  element,
+  children,
+  isSelected,
+  isDragging = false,
+  onSelect,
+  onDelete,
+  className,
+}: ElementWrapperProps) {
+  const { isPreviewMode } = useEditorStore();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const showControls = !isPreviewMode || (isPreviewMode && isHovered);
+  const showDiscreteControls = isPreviewMode && isHovered;
+
+  return (
+    <div
+      className={cn(
+        "group relative transition-all duration-200",
+        isSelected && "ring-2 ring-primary ring-offset-2",
+        isDragging && "opacity-50",
+        isPreviewMode && "cursor-pointer",
+        className
+      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect();
+      }}
+    >
+      {/* Content */}
+      <div
+        className={cn(
+          "relative transition-all duration-200",
+          showDiscreteControls && "ring-1 ring-border ring-offset-1"
+        )}
+      >
+        {children}
+      </div>
+
+      {/* Discrete controls for preview mode */}
+      {showDiscreteControls && (
+        <div className="absolute top-2 right-2 flex items-center gap-1 bg-background/90 backdrop-blur-sm border border-border rounded-md shadow-sm p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <QuickTooltip content="Editar elemento">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect();
+              }}
+              className="h-6 w-6 p-0 hover:bg-primary hover:text-primary-foreground"
+            >
+              <Edit3 className="h-3 w-3" />
+            </Button>
+          </QuickTooltip>
+
+          <QuickTooltip content="Excluir elemento">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
+              className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </QuickTooltip>
+        </div>
+      )}
+
+      {/* Editor mode controls */}
+      {!isPreviewMode && showControls && (
+        <>
+          {/* Drag handle */}
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <div className="flex items-center justify-center w-6 h-6 bg-muted border border-border rounded cursor-grab">
+              <GripVertical className="h-3 w-3 text-muted-foreground" />
+            </div>
+          </div>
+
+          {/* Element controls */}
+          {isSelected && (
+            <div className="absolute -top-10 left-0 flex items-center gap-1 bg-background border border-border rounded-md shadow-sm p-1">
+              <span className="text-xs text-muted-foreground px-2">
+                {element.type}
+              </span>
+
+              <QuickTooltip content="Excluir elemento">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete();
+                  }}
+                  className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </QuickTooltip>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}

@@ -60,6 +60,20 @@ export function useKeyboardShortcuts() {
         },
       },
       {
+        key: "Tab",
+        description: "Alternar entre modo edição e preview",
+        action: () => {
+          if (canPreview) {
+            togglePreviewMode();
+            toast.info(
+              isPreviewMode ? "Modo edição ativado" : "Modo preview ativado"
+            );
+          } else {
+            toast.error("Corrija os erros antes de visualizar o quiz");
+          }
+        },
+      },
+      {
         key: "Delete",
         description: "Remover elemento selecionado",
         action: () => {

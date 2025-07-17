@@ -81,7 +81,7 @@ export default function ElementsSidebar() {
                     );
 
                     return (
-                      <div key={category.key} className="space-y-2">
+                      <div key={category.key} className="space-y-3">
                         <div>
                           <h3 className="text-sm font-medium text-foreground">
                             {category.label}
@@ -91,7 +91,7 @@ export default function ElementsSidebar() {
                           </p>
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="grid gap-2">
                           {categoryElements.map((element) => (
                             <DraggableElement
                               key={element.type}
