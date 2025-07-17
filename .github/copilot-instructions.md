@@ -28,6 +28,11 @@ Element types: `TEXT`, `MULTIPLE_CHOICE`, `NAVIGATION_BUTTON` with JSON content 
 
 ## Key Development Patterns
 
+### Development Approach
+
+- **Ask questions when in doubt**: If requirements are unclear, implementation details are ambiguous, or multiple approaches are possible, always ask clarifying questions before proceeding to ensure the best possible execution.
+- **Confirm before major changes**: When making significant architectural changes or modifications that could impact existing functionality, seek confirmation first.
+
 ### Component Architecture
 
 - **Shadcn/ui base**: Always use Shadcn components as foundation
