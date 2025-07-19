@@ -52,7 +52,7 @@ export default function EditorCanvas() {
           <div
             className={cn(
               // Base canvas styling
-              "mx-auto max-w-4xl min-h-[calc(100vh-12rem)] bg-background",
+              "mx-auto max-w-4xl min-h-[calc(100vh-12rem)] bg-background flex flex-col items-center justify-center",
               "rounded-lg border shadow-sm canvas-container animate-canvas-enter",
               // Interactive states
               "canvas-deselect-area",
@@ -65,33 +65,34 @@ export default function EditorCanvas() {
             onClick={handleCanvasClick}
           >
             {/* Canvas content */}
-            <div className="p-8">
-              {elements.length === 0 ? (
-                <EmptyCanvasState />
-              ) : (
-                <SortableContext
-                  items={elements.map((el) => el.id)}
-                  strategy={verticalListSortingStrategy}
-                >
-                  <div className="space-y-6 pb-20">
-                    {/* Drop zone principal */}
-                    <DropZone
-                      id="canvas-dropzone"
-                      className="h-20 transform-gpu"
-                    />
+            <div className="p-8 h-full flex flex-col items-center justify-center">
+              <SortableContext
+                items={elements.map((el) => el.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className="space-y-6 pb-20">
+                  {elements.length === 0 ? (
+                    <EmptyCanvasState />
+                  ) : (
+                    <>
+                      <DropZone
+                        id="canvas-dropzone"
+                        className="h-20 transform-gpu"
+                      />
 
-                    {elements.map((element) => (
-                      <SortableElement key={element.id} element={element} />
-                    ))}
+                      {elements.map((element) => (
+                        <SortableElement key={element.id} element={element} />
+                      ))}
 
-                    {/* Drop zone no final */}
-                    <DropZone
-                      id="canvas-dropzone-end"
-                      className="h-16 border-muted-foreground/15 transform-gpu"
-                    />
-                  </div>
-                </SortableContext>
-              )}
+                      {/* Drop zone no final */}
+                      <DropZone
+                        id="canvas-dropzone-end"
+                        className="h-16 border-muted-foreground/15 transform-gpu"
+                      />
+                    </>
+                  )}
+                </div>
+              </SortableContext>
             </div>
 
             {/* Subtle visual indicators */}

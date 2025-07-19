@@ -1,6 +1,5 @@
 "use client";
 
-import { MousePointer2, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface EmptyCanvasStateProps {
@@ -11,26 +10,11 @@ export default function EmptyCanvasState({ className }: EmptyCanvasStateProps) {
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center text-center py-16 px-8",
+        "flex flex-col items-center justify-center text-center py-16 px-8 border border-dashed border-muted rounded-lg h-full",
         "animate-in fade-in-50 duration-500",
         className
       )}
     >
-      {/* Ícone principal com animação sutil */}
-      <div className="relative mb-6">
-        <div className="rounded-full bg-primary/10 p-6 mb-4">
-          <MousePointer2 className="h-8 w-8 text-primary" />
-        </div>
-
-        {/* Indicador de direção para sidebar */}
-        <div className="absolute -left-8 top-1/2 -translate-y-1/2 flex items-center">
-          <ArrowLeft className="h-4 w-4 text-muted-foreground animate-pulse" />
-          <div className="ml-2 text-xs text-muted-foreground hidden sm:block">
-            Sidebar
-          </div>
-        </div>
-      </div>
-
       {/* Título principal */}
       <h3 className="text-xl font-semibold text-foreground mb-3">
         Comece criando seu quiz
