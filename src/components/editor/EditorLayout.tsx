@@ -15,8 +15,7 @@ import EditorDragOverlay from "./EditorDragOverlay";
 import { cn } from "@/lib/utils";
 
 export default function EditorLayout() {
-  const { isSidebarCollapsed, isPropertiesPanelOpen, createNewQuiz, quiz } =
-    useEditorStore();
+  const { isPropertiesPanelOpen, createNewQuiz, quiz } = useEditorStore();
   const { saveNow } = useEditorPersistence();
 
   // Drag and drop hooks (only in editor mode)
@@ -71,10 +70,7 @@ export default function EditorLayout() {
           {/* Main canvas area */}
           <div
             className={cn(
-              "flex-1 flex flex-col transition-all duration-300 min-w-0",
-              !isSidebarCollapsed
-                ? "ml-72 md:ml-96" // Mobile: apenas sidebar (288px), Desktop: navegação (240px) + sidebar (144px) = 384px
-                : "ml-0 md:ml-64", // Mobile: sem margin, Desktop: navegação (240px) + sidebar colapsado (12px) = 252px mas arredondado para 256px
+              "flex-1 flex flex-col min-w-0 ml-72 md:ml-96", // Mobile: apenas sidebar (288px), Desktop: navegação (240px) + sidebar (144px) = 384px
               isPropertiesPanelOpen ? "mr-80" : "mr-0"
             )}
           >

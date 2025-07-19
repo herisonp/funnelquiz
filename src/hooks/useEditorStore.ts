@@ -16,7 +16,6 @@ interface EditorState {
   selectedElementId: string | null;
 
   // UI state
-  isSidebarCollapsed: boolean;
   isPropertiesPanelOpen: boolean;
 
   // Persistence state
@@ -53,7 +52,6 @@ interface EditorState {
   moveElement: (elementId: string, newOrder: number) => void;
 
   // UI actions
-  toggleSidebar: () => void;
   togglePropertiesPanel: () => void;
 
   // Loading and validation actions
@@ -92,7 +90,6 @@ export const useEditorStore = create<EditorState>()(
       quiz: null,
       currentStepId: null,
       selectedElementId: null,
-      isSidebarCollapsed: false,
       isPropertiesPanelOpen: false,
       hasUnsavedChanges: false,
       isLoading: false,
@@ -330,9 +327,6 @@ export const useEditorStore = create<EditorState>()(
           hasUnsavedChanges: true,
         });
       },
-
-      toggleSidebar: () =>
-        set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
 
       togglePropertiesPanel: () =>
         set((state) => ({
