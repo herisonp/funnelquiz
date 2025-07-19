@@ -170,13 +170,13 @@ export default function StepsNavigation() {
                         size="sm"
                         onClick={() => handleStepClick(step.id)}
                         className={cn(
-                          "h-8 px-3 text-xs relative min-w-0 max-w-32 transition-all duration-200",
+                          "h-8 px-3 text-xs relative min-w-0 transition-all duration-200",
                           isActive &&
                             "bg-primary text-primary-foreground shadow-sm",
                           !isActive && "hover:bg-muted"
                         )}
                       >
-                        <span className="truncate">
+                        <span className="whitespace-nowrap">
                           {index + 1}. {step.title}
                         </span>
 

@@ -183,8 +183,8 @@ export default function StepsVerticalNavigation() {
                         </div>
 
                         {/* Step title */}
-                        <div className="flex-1 text-left overflow-hidden">
-                          <div className="text-sm font-medium truncate">
+                        <div className="flex-1 text-left">
+                          <div className="text-sm font-medium">
                             {step.title}
                           </div>
                         </div>
