@@ -1,7 +1,6 @@
 "use client";
 
 import { useEditorStore } from "@/hooks/useEditorStore";
-import { useQuizValidation } from "@/hooks/useQuizValidation";
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -16,7 +15,6 @@ import { cn } from "@/lib/utils";
 export default function EditorCanvas() {
   const { quiz, currentStepId, selectElement, selectedElementId } =
     useEditorStore();
-  const { currentStepValidation } = useQuizValidation();
 
   const currentStep = quiz?.steps.find((step) => step.id === currentStepId);
   const elements = currentStep?.elements || [];
@@ -47,26 +45,6 @@ export default function EditorCanvas() {
   // Render editor mode
   return (
     <div className="flex-1 flex flex-col bg-muted/30">
-      {/* Canvas header */}
-      <div className="p-4 border-b bg-background shadow-sm">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold">{currentStep.title}</h2>
-            <div className="flex items-center gap-2">
-              <p className="text-sm text-muted-foreground">
-                {elements.length} elemento{elements.length !== 1 ? "s" : ""}
-              </p>
-              {currentStepValidation.errors.length > 0 && (
-                <span className="text-xs text-destructive">
-                  • {currentStepValidation.errors.length} erro
-                  {currentStepValidation.errors.length !== 1 ? "s" : ""}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Canvas content area with improved visual container */}
       <ScrollArea className="flex-1">
         <div className="p-6 min-h-full">

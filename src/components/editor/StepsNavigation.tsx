@@ -38,8 +38,6 @@ export default function StepsNavigation() {
 
   if (!quiz) return null;
 
-  const currentStep = quiz.steps.find((step) => step.id === currentStepId);
-
   const handleStepClick = (stepId: string) => {
     setCurrentStep(stepId);
   };
@@ -264,28 +262,6 @@ export default function StepsNavigation() {
             {quiz.steps.length}/5
           </span>
         </div>
-
-        {/* Current step info */}
-        {currentStep && (
-          <div className="mt-1 text-xs text-muted-foreground">
-            <span>Etapa: </span>
-            <span className="font-medium">{currentStep.title}</span>
-            <span className="ml-1">({currentStep.elements.length})</span>
-            {(() => {
-              const currentStatus = getStepStatus(currentStep.id);
-              if (currentStatus.status === "warning") {
-                return <span className="ml-1 text-yellow-600">⚠️</span>;
-              }
-              if (currentStatus.status === "incomplete") {
-                return <span className="ml-1 text-red-600">❌</span>;
-              }
-              if (currentStatus.status === "empty") {
-                return <span className="ml-1 text-gray-500">📝</span>;
-              }
-              return <span className="ml-1 text-green-600">✅</span>;
-            })()}
-          </div>
-        )}
       </div>
 
       {/* Delete Confirmation Dialog */}
