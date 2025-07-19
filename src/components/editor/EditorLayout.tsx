@@ -70,7 +70,10 @@ export default function EditorLayout() {
           {/* Main canvas area */}
           <div
             className={cn(
-              "flex-1 flex flex-col min-w-0 ml-72 md:ml-96", // Mobile: apenas sidebar (288px), Desktop: navegação (240px) + sidebar (144px) = 384px
+              "flex-1 flex flex-col min-w-0",
+              // Margem esquerda: Mobile: ElementsSidebar (11rem = 176px), Desktop: StepsNav (15rem = 240px) + ElementsSidebar (11rem = 176px) = 26rem (416px)
+              "ml-44 md:ml-[26rem]",
+              // Margem direita quando PropertiesPanel está aberto (20rem = 320px)
               isPropertiesPanelOpen ? "mr-80" : "mr-0"
             )}
           >
