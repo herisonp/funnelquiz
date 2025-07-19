@@ -32,10 +32,10 @@ export default function ElementsSidebar() {
     <>
       <div
         className={cn(
-          "fixed left-0 top-16 h-[calc(100vh-4rem)] bg-background border-r transition-all duration-300 z-40",
+          "fixed top-16 h-[calc(100vh-4rem)] bg-background border-r transition-all duration-300 z-40",
           isSidebarCollapsed
-            ? "-translate-x-full lg:-translate-x-0 lg:w-16"
-            : "w-80"
+            ? "left-0 md:left-20 w-16" // Em mobile começa do 0, em desktop após navegação vertical
+            : "left-0 md:left-20 w-80" // Mesmo comportamento para expandido
         )}
       >
         <div className="flex flex-col h-full">

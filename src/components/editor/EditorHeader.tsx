@@ -15,7 +15,6 @@ import {
   Trash2,
   AlertTriangle,
 } from "lucide-react";
-import StepsNavigation from "./StepsNavigation";
 import { SaveStatus } from "./SaveStatus";
 import { ExportImportDialog } from "./ExportImportDialog";
 import { QuickTooltip } from "@/components/ui/tooltip-help";
@@ -24,7 +23,8 @@ import { toast } from "sonner";
 export default function EditorHeader() {
   const router = useRouter();
   const [showExportImport, setShowExportImport] = useState(false);
-  const { quiz, resetQuiz, clearQuiz, toggleSidebar } = useEditorStore();
+  const { quiz, resetQuiz, clearQuiz, toggleSidebar, currentStepId } =
+    useEditorStore();
   const { canPreview, hasErrors, errorCount, quickValidationMessage } =
     useQuizValidation();
 
@@ -90,13 +90,20 @@ export default function EditorHeader() {
                 <div className="text-sm text-muted-foreground">
                   {quiz.title}
                 </div>
+                {/* Mobile step indicator */}
+                <div className="md:hidden text-xs text-muted-foreground ml-2">
+                  Etapa{" "}
+                  {(quiz.steps.findIndex((s) => s.id === currentStepId) || 0) +
+                    1}
+                  /{quiz.steps.length}
+                </div>
               </>
             )}
           </div>
 
-          {/* Center section - Steps Navigation */}
+          {/* Center section */}
           <div className="hidden md:flex items-center gap-4 flex-1 justify-center max-w-2xl">
-            <StepsNavigation />
+            {/* Center content can be added here if needed */}
           </div>
 
           {/* Right section */}

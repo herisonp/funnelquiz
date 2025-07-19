@@ -10,7 +10,7 @@ import EditorHeader from "./EditorHeader";
 import ElementsSidebar from "./ElementsSidebar";
 import EditorCanvas from "./EditorCanvas";
 import PropertiesPanel from "./PropertiesPanel";
-import StepsNavigation from "./StepsNavigation";
+import StepsVerticalNavigation from "./StepsVerticalNavigation";
 import EditorDragOverlay from "./EditorDragOverlay";
 import { cn } from "@/lib/utils";
 
@@ -53,8 +53,8 @@ export default function EditorLayout() {
       {/* Header */}
       <EditorHeader />
 
-      {/* Steps Navigation */}
-      <StepsNavigation />
+      {/* Steps Vertical Navigation */}
+      <StepsVerticalNavigation />
 
       {/* Main content area with DndContext */}
       <DndContext
@@ -72,7 +72,9 @@ export default function EditorLayout() {
           <div
             className={cn(
               "flex-1 flex flex-col transition-all duration-300 min-w-0",
-              !isSidebarCollapsed ? "ml-80" : "ml-0",
+              !isSidebarCollapsed
+                ? "ml-80 md:ml-[400px]" // Mobile: apenas sidebar (320px), Desktop: navegação + sidebar (400px)
+                : "ml-0 md:ml-36", // Mobile: sem margin, Desktop: navegação + sidebar recolhido (36px)
               isPropertiesPanelOpen ? "mr-80" : "mr-0"
             )}
           >
