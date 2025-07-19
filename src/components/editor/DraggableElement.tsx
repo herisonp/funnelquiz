@@ -5,7 +5,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { useEditorStore } from "@/hooks/useEditorStore";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { LucideIcon, GripVertical } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -78,9 +78,6 @@ export default function DraggableElement({
                 <div className="font-medium text-xs truncate">
                   {element.label}
                 </div>
-              </div>
-              <div className="flex-shrink-0 opacity-50 group-hover:opacity-100 transition-opacity">
-                <GripVertical className="h-3 w-3 text-muted-foreground" />
               </div>
             </div>
           </Button>
