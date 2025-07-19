@@ -7,7 +7,6 @@ import {
 } from "@dnd-kit/sortable";
 import DropZone from "./DropZone";
 import SortableElement from "./SortableElement";
-import EmptyCanvasState from "./EmptyCanvasState";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
@@ -64,35 +63,27 @@ export default function EditorCanvas() {
             )}
             onClick={handleCanvasClick}
           >
-            {/* Canvas content */}
-            <div className="p-8 h-full flex flex-col items-center justify-center">
-              <SortableContext
-                items={elements.map((el) => el.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                <div className="space-y-6 pb-20">
-                  {elements.length === 0 ? (
-                    <EmptyCanvasState />
-                  ) : (
-                    <>
-                      <DropZone
-                        id="canvas-dropzone"
-                        className="h-20 transform-gpu"
-                      />
+            <div className="w-full h-full flex flex-col items-center justify-center p-8 relative">
+              {/* Drop zone principal que cobre todo o canvas */}
+              <DropZone
+                id="main-canvas-dropzone"
+                className="w-full h-full"
+                showVisual={elements.length === 0}
+              />
 
-                      {elements.map((element) => (
-                        <SortableElement key={element.id} element={element} />
-                      ))}
-
-                      {/* Drop zone no final */}
-                      <DropZone
-                        id="canvas-dropzone-end"
-                        className="h-16 border-muted-foreground/15 transform-gpu"
-                      />
-                    </>
-                  )}
-                </div>
-              </SortableContext>
+              {/* Conteúdo do canvas */}
+              <div className="w-full h-full flex flex-col items-center justify-center relative z-10">
+                <SortableContext
+                  items={elements.map((el) => el.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="w-full space-y-6">
+                    {elements.map((element) => (
+                      <SortableElement key={element.id} element={element} />
+                    ))}
+                  </div>
+                </SortableContext>
+              </div>
             </div>
 
             {/* Subtle visual indicators */}

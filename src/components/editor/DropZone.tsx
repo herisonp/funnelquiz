@@ -7,15 +7,31 @@ import { Plus } from "lucide-react";
 interface DropZoneProps {
   id?: string;
   className?: string;
+  showVisual?: boolean; // Nova prop para controlar se mostra os elementos visuais
 }
 
 export default function DropZone({
   id = "canvas-dropzone",
   className,
+  showVisual = true,
 }: DropZoneProps) {
   const { isOver, setNodeRef } = useDroppable({
     id,
   });
+
+  // Se não deve mostrar visual, retorna apenas a área de drop invisível
+  if (!showVisual) {
+    return (
+      <div
+        ref={setNodeRef}
+        className={cn(
+          "absolute inset-0 transition-all duration-300",
+          isOver && "bg-primary/5",
+          className
+        )}
+      />
+    );
+  }
 
   return (
     <div
