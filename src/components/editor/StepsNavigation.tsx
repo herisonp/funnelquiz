@@ -153,10 +153,10 @@ export default function StepsNavigation() {
 
   return (
     <TooltipProvider>
-      <div className="border-b bg-background px-4 py-2">
-        <div className="flex items-center gap-2 overflow-x-auto">
+      <div className="border-b bg-background px-2 py-1">
+        <div className="flex items-center gap-1 overflow-x-auto">
           {/* Steps Tabs */}
-          <div className="flex items-center gap-1 min-w-0 flex-1">
+          <div className="flex items-center gap-0.5 min-w-0 flex-1">
             {quiz.steps.map((step, index) => {
               const isActive = step.id === currentStepId;
               const stepStatus = getStepStatus(step.id);
@@ -170,7 +170,7 @@ export default function StepsNavigation() {
                         size="sm"
                         onClick={() => handleStepClick(step.id)}
                         className={cn(
-                          "h-8 px-3 text-xs relative min-w-0 transition-all duration-200",
+                          "h-6 px-2 text-xs relative min-w-0 transition-all duration-200",
                           isActive &&
                             "bg-primary text-primary-foreground shadow-sm",
                           !isActive && "hover:bg-muted"
@@ -181,7 +181,7 @@ export default function StepsNavigation() {
                         </span>
 
                         {/* Element count and status indicator */}
-                        <div className="ml-2 flex items-center gap-1">
+                        <div className="ml-1 flex items-center gap-0.5">
                           {stepStatus.count > 0 && (
                             <Badge
                               variant={
@@ -189,27 +189,27 @@ export default function StepsNavigation() {
                                   ? "destructive"
                                   : "secondary"
                               }
-                              className="h-4 px-1 text-xs"
+                              className="h-3 px-1 text-xs leading-none"
                             >
                               {stepStatus.count}
                             </Badge>
                           )}
 
                           {stepStatus.status === "warning" && (
-                            <AlertTriangle className="h-3 w-3 text-yellow-500" />
+                            <AlertTriangle className="h-2.5 w-2.5 text-yellow-500" />
                           )}
 
                           {stepStatus.status === "valid" &&
                             stepStatus.count > 0 && (
-                              <CheckCircle2 className="h-3 w-3 text-green-500" />
+                              <CheckCircle2 className="h-2.5 w-2.5 text-green-500" />
                             )}
 
                           {stepStatus.status === "incomplete" && (
-                            <AlertCircle className="h-3 w-3 text-red-500" />
+                            <AlertCircle className="h-2.5 w-2.5 text-red-500" />
                           )}
 
                           {stepStatus.status === "empty" && (
-                            <Circle className="h-3 w-3 text-gray-400" />
+                            <Circle className="h-2.5 w-2.5 text-gray-400" />
                           )}
                         </div>
                       </Button>
@@ -224,13 +224,13 @@ export default function StepsNavigation() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-4 w-4 p-0 absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full"
+                      className="h-3 w-3 p-0 absolute -top-0.5 -right-0.5 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full"
                       onClick={(e) => {
                         e.stopPropagation();
                         openDeleteDialog(step.id);
                       }}
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-2 w-2" />
                     </Button>
                   )}
                 </div>
@@ -246,10 +246,10 @@ export default function StepsNavigation() {
                 size="sm"
                 onClick={handleAddStep}
                 disabled={quiz.steps.length >= 5}
-                className="h-8 px-3 text-xs whitespace-nowrap flex-shrink-0"
+                className="h-6 px-2 text-xs whitespace-nowrap flex-shrink-0"
               >
-                <Plus className="h-3 w-3 mr-1" />
-                Nova Etapa
+                <Plus className="h-2.5 w-2.5 mr-1" />
+                Nova
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -267,28 +267,22 @@ export default function StepsNavigation() {
 
         {/* Current step info */}
         {currentStep && (
-          <div className="mt-2 text-xs text-muted-foreground">
-            <span>Etapa atual: </span>
+          <div className="mt-1 text-xs text-muted-foreground">
+            <span>Etapa: </span>
             <span className="font-medium">{currentStep.title}</span>
-            <span className="ml-2">
-              ({currentStep.elements.length} elementos)
-            </span>
+            <span className="ml-1">({currentStep.elements.length})</span>
             {(() => {
               const currentStatus = getStepStatus(currentStep.id);
               if (currentStatus.status === "warning") {
-                return (
-                  <span className="ml-2 text-yellow-600">
-                    ⚠️ Precisa de atenção
-                  </span>
-                );
+                return <span className="ml-1 text-yellow-600">⚠️</span>;
               }
               if (currentStatus.status === "incomplete") {
-                return <span className="ml-2 text-red-600">❌ Incompleta</span>;
+                return <span className="ml-1 text-red-600">❌</span>;
               }
               if (currentStatus.status === "empty") {
-                return <span className="ml-2 text-gray-500">📝 Vazia</span>;
+                return <span className="ml-1 text-gray-500">📝</span>;
               }
-              return <span className="ml-2 text-green-600">✅ Válida</span>;
+              return <span className="ml-1 text-green-600">✅</span>;
             })()}
           </div>
         )}

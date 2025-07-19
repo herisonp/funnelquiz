@@ -157,7 +157,7 @@ export default function StepsVerticalNavigation() {
 
         {/* Steps List */}
         <ScrollArea className="flex-1">
-          <div className="p-3 space-y-2">
+          <div className="p-2 space-y-2">
             {quiz.steps.map((step, index) => {
               const isActive = step.id === currentStepId;
               const stepStatus = getStepStatus(step.id);

@@ -34,17 +34,17 @@ export default function ElementsSidebar() {
         className={cn(
           "fixed top-16 h-[calc(100vh-4rem)] bg-background border-r transition-all duration-300 z-40",
           isSidebarCollapsed
-            ? "left-0 md:left-60 w-16" // Em mobile começa do 0, em desktop após navegação vertical (240px)
-            : "left-0 md:left-60 w-40" // Elementos ocupam 160px quando expandido
+            ? "left-0 md:left-60 w-12" // Em mobile começa do 0, em desktop após navegação vertical (240px)
+            : "left-0 md:left-60 w-44" // Elementos ocupam 144px quando expandido (reduzido de 160px)
         )}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-4">
+          <div className="flex items-center justify-between p-2">
             {!isSidebarCollapsed && (
-              <div className="flex items-center gap-2">
-                <Layers className="h-5 w-5" />
-                <h2 className="font-semibold">Elementos</h2>
+              <div className="flex items-center gap-1.5">
+                <Layers className="h-4 w-4" />
+                <h2 className="font-semibold text-sm">Elementos</h2>
               </div>
             )}
             <QuickTooltip
@@ -56,11 +56,11 @@ export default function ElementsSidebar() {
                 variant="ghost"
                 size="sm"
                 onClick={toggleSidebar}
-                className={cn("h-8 w-8 p-0", isSidebarCollapsed && "mx-auto")}
+                className={cn("h-6 w-6 p-0", isSidebarCollapsed && "mx-auto")}
               >
                 <ChevronLeft
                   className={cn(
-                    "h-4 w-4 transition-transform",
+                    "h-3 w-3 transition-transform",
                     isSidebarCollapsed && "rotate-180"
                   )}
                 />
@@ -73,25 +73,22 @@ export default function ElementsSidebar() {
               <Separator />
 
               {/* Elements list */}
-              <ScrollArea className="flex-1 p-4">
-                <div className="space-y-6">
+              <ScrollArea className="flex-1 p-1">
+                <div className="space-y-4">
                   {ELEMENT_CATEGORIES.map((category) => {
                     const categoryElements = AVAILABLE_ELEMENTS.filter(
                       (element) => element.category === category.key
                     );
 
                     return (
-                      <div key={category.key} className="space-y-3">
+                      <div key={category.key} className="space-y-2">
                         <div>
-                          <h3 className="text-sm font-medium text-foreground">
+                          <h3 className="text-xs font-medium text-foreground">
                             {category.label}
                           </h3>
-                          <p className="text-xs text-muted-foreground">
-                            {category.description}
-                          </p>
                         </div>
 
-                        <div className="grid gap-2">
+                        <div className="grid gap-1">
                           {categoryElements.map((element) => (
                             <DraggableElement
                               key={element.type}

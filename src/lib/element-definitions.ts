@@ -50,7 +50,7 @@ export const AVAILABLE_ELEMENTS: ElementDefinition[] = [
   },
   {
     type: "NAVIGATION_BUTTON",
-    label: "Botão de Navegação",
+    label: "Botão",
     icon: "ArrowRight",
     category: "navigation",
     description: "Botão para navegar entre etapas",
