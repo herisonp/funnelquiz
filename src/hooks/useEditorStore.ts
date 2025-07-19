@@ -16,7 +16,6 @@ interface EditorState {
   selectedElementId: string | null;
 
   // UI state
-  isPreviewMode: boolean;
   isSidebarCollapsed: boolean;
   isPropertiesPanelOpen: boolean;
 
@@ -54,9 +53,6 @@ interface EditorState {
   moveElement: (elementId: string, newOrder: number) => void;
 
   // UI actions
-  togglePreviewMode: () => void;
-  enablePreview: () => void;
-  enableEditing: () => void;
   toggleSidebar: () => void;
   togglePropertiesPanel: () => void;
 
@@ -96,7 +92,6 @@ export const useEditorStore = create<EditorState>()(
       quiz: null,
       currentStepId: null,
       selectedElementId: null,
-      isPreviewMode: false,
       isSidebarCollapsed: false,
       isPropertiesPanelOpen: false,
       hasUnsavedChanges: false,
@@ -335,13 +330,6 @@ export const useEditorStore = create<EditorState>()(
           hasUnsavedChanges: true,
         });
       },
-
-      togglePreviewMode: () =>
-        set((state) => ({ isPreviewMode: !state.isPreviewMode })),
-
-      enablePreview: () => set({ isPreviewMode: true }),
-
-      enableEditing: () => set({ isPreviewMode: false }),
 
       toggleSidebar: () =>
         set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),

@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 
 export default function EditorPage() {
-  const { isLoading, error, hasRecoveredData } = useQuizRecovery();
+  const { isLoading, error } = useQuizRecovery();
   const { saveError } = useAutoSave();
 
   // Adiciona atalho de teclado Ctrl+S
@@ -56,16 +56,6 @@ export default function EditorPage() {
           <AlertDescription>
             Erro ao salvar: {saveError}. Suas alterações podem não estar sendo
             salvas.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      {/* Notificação de recuperação de dados */}
-      {hasRecoveredData && !error && (
-        <Alert className="mx-4 mt-4">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            Quiz recuperado automaticamente dos dados salvos anteriormente.
           </AlertDescription>
         </Alert>
       )}

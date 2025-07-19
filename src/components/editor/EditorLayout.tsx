@@ -15,13 +15,8 @@ import EditorDragOverlay from "./EditorDragOverlay";
 import { cn } from "@/lib/utils";
 
 export default function EditorLayout() {
-  const {
-    isSidebarCollapsed,
-    isPropertiesPanelOpen,
-    isPreviewMode,
-    createNewQuiz,
-    quiz,
-  } = useEditorStore();
+  const { isSidebarCollapsed, isPropertiesPanelOpen, createNewQuiz, quiz } =
+    useEditorStore();
   const { saveNow } = useEditorPersistence();
 
   // Drag and drop hooks (only in editor mode)
@@ -70,22 +65,22 @@ export default function EditorLayout() {
         onDragCancel={handleDragCancel}
       >
         <div className="flex-1 flex overflow-hidden">
-          {/* Left sidebar - Elements (hidden in preview mode) */}
-          {!isPreviewMode && <ElementsSidebar />}
+          {/* Left sidebar - Elements */}
+          <ElementsSidebar />
 
           {/* Main canvas area */}
           <div
             className={cn(
               "flex-1 flex flex-col transition-all duration-300 min-w-0",
-              !isPreviewMode && !isSidebarCollapsed ? "ml-80" : "ml-0",
-              !isPreviewMode && isPropertiesPanelOpen ? "mr-80" : "mr-0"
+              !isSidebarCollapsed ? "ml-80" : "ml-0",
+              isPropertiesPanelOpen ? "mr-80" : "mr-0"
             )}
           >
             <EditorCanvas />
           </div>
 
-          {/* Right sidebar - Properties (hidden in preview mode) */}
-          {!isPreviewMode && <PropertiesPanel />}
+          {/* Right sidebar - Properties */}
+          <PropertiesPanel />
         </div>
 
         {/* Drag overlay */}

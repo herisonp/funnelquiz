@@ -2,7 +2,6 @@
 
 import { useEffect, useCallback, useMemo } from "react";
 import { useEditorStore } from "./useEditorStore";
-import { useQuizValidation } from "./useQuizValidation";
 import { toast } from "sonner";
 
 interface KeyboardShortcut {
@@ -20,14 +19,10 @@ export function useKeyboardShortcuts() {
   const {
     keyboardShortcutsEnabled,
     selectedElementId,
-    isPreviewMode,
-    togglePreviewMode,
     removeElement,
     hasUnsavedChanges,
     selectElement,
   } = useEditorStore();
-
-  const { canPreview } = useQuizValidation();
 
   const shortcuts: KeyboardShortcut[] = useMemo(
     () => [
@@ -45,44 +40,15 @@ export function useKeyboardShortcuts() {
         },
       },
       {
-        key: "p",
-        ctrlKey: true,
-        description: "Alternar preview",
-        action: () => {
-          if (canPreview) {
-            togglePreviewMode();
-            toast.info(
-              isPreviewMode ? "Modo edição ativado" : "Modo preview ativado"
-            );
-          } else {
-            toast.error("Corrija os erros antes de visualizar o quiz");
-          }
-        },
-      },
-      {
-        key: "Tab",
-        description: "Alternar entre modo edição e preview",
-        action: () => {
-          if (canPreview) {
-            togglePreviewMode();
-            toast.info(
-              isPreviewMode ? "Modo edição ativado" : "Modo preview ativado"
-            );
-          } else {
-            toast.error("Corrija os erros antes de visualizar o quiz");
-          }
-        },
-      },
-      {
         key: "Delete",
         description: "Remover elemento selecionado",
         action: () => {
-          if (selectedElementId && !isPreviewMode) {
+          if (selectedElementId) {
             removeElement(selectedElementId);
             toast.success("Elemento removido");
           }
         },
-        condition: () => selectedElementId !== null && !isPreviewMode,
+        condition: () => selectedElementId !== null,
       },
       {
         key: "Escape",
@@ -99,12 +65,12 @@ export function useKeyboardShortcuts() {
         ctrlKey: true,
         description: "Duplicar elemento selecionado",
         action: () => {
-          if (selectedElementId && !isPreviewMode) {
+          if (selectedElementId) {
             // TODO: Implementar duplicação de elemento
             toast.info("Duplicação será implementada em breve");
           }
         },
-        condition: () => selectedElementId !== null && !isPreviewMode,
+        condition: () => selectedElementId !== null,
       },
       {
         key: "z",
@@ -114,18 +80,9 @@ export function useKeyboardShortcuts() {
           // TODO: Implementar undo
           toast.info("Desfazer será implementado em breve");
         },
-        condition: () => !isPreviewMode,
       },
     ],
-    [
-      hasUnsavedChanges,
-      canPreview,
-      togglePreviewMode,
-      isPreviewMode,
-      selectedElementId,
-      removeElement,
-      selectElement,
-    ]
+    [hasUnsavedChanges, selectedElementId, removeElement, selectElement]
   );
 
   const handleKeyDown = useCallback(

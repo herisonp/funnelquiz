@@ -8,20 +8,14 @@ import {
 } from "@dnd-kit/sortable";
 import DropZone from "./DropZone";
 import SortableElement from "./SortableElement";
-import QuizPreview from "./QuizPreview";
 import EmptyCanvasState from "./EmptyCanvasState";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 export default function EditorCanvas() {
-  const {
-    quiz,
-    currentStepId,
-    isPreviewMode,
-    selectElement,
-    selectedElementId,
-  } = useEditorStore();
+  const { quiz, currentStepId, selectElement, selectedElementId } =
+    useEditorStore();
   const { currentStepValidation } = useQuizValidation();
 
   const currentStep = quiz?.steps.find((step) => step.id === currentStepId);
@@ -48,11 +42,6 @@ export default function EditorCanvas() {
         />
       </div>
     );
-  }
-
-  // Render preview mode
-  if (isPreviewMode) {
-    return <QuizPreview />;
   }
 
   // Render editor mode

@@ -58,7 +58,6 @@ export const savedQuizDataSchema = z.object({
     .object({
       currentStepId: z.string().nullable(),
       selectedElementId: z.string().nullable(),
-      isPreviewMode: z.boolean(),
     })
     .optional(),
 });

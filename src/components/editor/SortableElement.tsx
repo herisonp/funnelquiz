@@ -4,7 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Element } from "@prisma/client";
 import { useEditorStore } from "@/hooks/useEditorStore";
-import { ElementWrapper } from "./ElementWrapper";
+import ElementWrapper from "./ElementWrapper";
 import { ElementRenderer } from "@/components/common/ElementRenderer";
 import { cn } from "@/lib/utils";
 

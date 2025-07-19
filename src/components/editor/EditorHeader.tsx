@@ -6,7 +6,6 @@ import { useQuizValidation } from "@/hooks/useQuizValidation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 import { useRouter } from "next/navigation";
 import {
   Eye,
@@ -25,14 +24,7 @@ import { toast } from "sonner";
 export default function EditorHeader() {
   const router = useRouter();
   const [showExportImport, setShowExportImport] = useState(false);
-  const {
-    quiz,
-    resetQuiz,
-    clearQuiz,
-    toggleSidebar,
-    isPreviewMode,
-    togglePreviewMode,
-  } = useEditorStore();
+  const { quiz, resetQuiz, clearQuiz, toggleSidebar } = useEditorStore();
   const { canPreview, hasErrors, errorCount, quickValidationMessage } =
     useQuizValidation();
 
@@ -102,13 +94,8 @@ export default function EditorHeader() {
             )}
           </div>
 
-          {/* Center section - Mode Toggle and Steps Navigation */}
+          {/* Center section - Steps Navigation */}
           <div className="hidden md:flex items-center gap-4 flex-1 justify-center max-w-2xl">
-            <ModeToggle
-              isPreviewMode={isPreviewMode}
-              onToggle={togglePreviewMode}
-            />
-            <Separator orientation="vertical" className="h-6" />
             <StepsNavigation />
           </div>
 

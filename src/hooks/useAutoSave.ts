@@ -24,7 +24,6 @@ export function useAutoSave(
   const quiz = useEditorStore((state) => state.quiz);
   const currentStepId = useEditorStore((state) => state.currentStepId);
   const selectedElementId = useEditorStore((state) => state.selectedElementId);
-  const isPreviewMode = useEditorStore((state) => state.isPreviewMode);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isSavingRef = useRef(false);
@@ -46,7 +45,6 @@ export function useAutoSave(
         editorState: {
           currentStepId,
           selectedElementId,
-          isPreviewMode,
         },
       } as const;
 
@@ -83,7 +81,7 @@ export function useAutoSave(
     } finally {
       isSavingRef.current = false;
     }
-  }, [quiz, currentStepId, selectedElementId, isPreviewMode]);
+  }, [quiz, currentStepId, selectedElementId]);
 
   const saveManually = useCallback(async () => {
     // Cancela auto-save pendente
@@ -118,7 +116,6 @@ export function useAutoSave(
     quiz,
     currentStepId,
     selectedElementId,
-    isPreviewMode,
     enabled,
     debounceMs,
     saveToStorage,
@@ -156,7 +153,6 @@ export function useAutoSave(
             editorState: {
               currentStepId,
               selectedElementId,
-              isPreviewMode,
             },
           };
 
@@ -170,7 +166,7 @@ export function useAutoSave(
 
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [quiz, currentStepId, selectedElementId, isPreviewMode, enabled]);
+  }, [quiz, currentStepId, selectedElementId, enabled]);
 
   return {
     isSaving: isSavingRef.current,
