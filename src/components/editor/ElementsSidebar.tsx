@@ -34,8 +34,8 @@ export default function ElementsSidebar() {
         className={cn(
           "fixed top-16 h-[calc(100vh-4rem)] bg-background border-r transition-all duration-300 z-40",
           isSidebarCollapsed
-            ? "left-0 md:left-20 w-16" // Em mobile começa do 0, em desktop após navegação vertical
-            : "left-0 md:left-20 w-80" // Mesmo comportamento para expandido
+            ? "left-0 md:left-60 w-16" // Em mobile começa do 0, em desktop após navegação vertical (240px)
+            : "left-0 md:left-60 w-40" // Elementos ocupam 160px quando expandido
         )}
       >
         <div className="flex flex-col h-full">

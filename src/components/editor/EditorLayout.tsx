@@ -73,8 +73,8 @@ export default function EditorLayout() {
             className={cn(
               "flex-1 flex flex-col transition-all duration-300 min-w-0",
               !isSidebarCollapsed
-                ? "ml-80 md:ml-[400px]" // Mobile: apenas sidebar (320px), Desktop: navegação + sidebar (400px)
-                : "ml-0 md:ml-36", // Mobile: sem margin, Desktop: navegação + sidebar recolhido (36px)
+                ? "ml-80 md:ml-[400px]" // Mobile: apenas sidebar (320px), Desktop: navegação (240px) + sidebar (160px) = 400px
+                : "ml-0 md:ml-64", // Mobile: sem margin, Desktop: navegação (240px) + sidebar colapsado (16px) = 256px
               isPropertiesPanelOpen ? "mr-80" : "mr-0"
             )}
           >

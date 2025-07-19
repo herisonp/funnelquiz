@@ -147,20 +147,17 @@ export default function StepsVerticalNavigation() {
 
   return (
     <TooltipProvider>
-      <div className="fixed left-0 top-16 w-20 h-[calc(100vh-4rem)] bg-background border-r z-50 hidden md:flex flex-col">
+      <div className="fixed left-0 top-16 w-60 h-[calc(100vh-4rem)] bg-background border-r z-50 hidden md:flex flex-col">
         {/* Header */}
-        <div className="p-3 border-b">
-          <h3 className="text-xs font-medium text-center text-muted-foreground">
-            Etapas
+        <div className="p-4 border-b">
+          <h3 className="text-sm font-medium text-muted-foreground">
+            Etapas ({quiz.steps.length}/5)
           </h3>
-          <div className="text-xs text-center text-muted-foreground mt-1">
-            {quiz.steps.length}/5
-          </div>
         </div>
 
         {/* Steps List */}
         <ScrollArea className="flex-1">
-          <div className="p-2 space-y-2">
+          <div className="p-3 space-y-2">
             {quiz.steps.map((step, index) => {
               const isActive = step.id === currentStepId;
               const stepStatus = getStepStatus(step.id);
@@ -174,24 +171,26 @@ export default function StepsVerticalNavigation() {
                         size="sm"
                         onClick={() => handleStepClick(step.id)}
                         className={cn(
-                          "h-16 w-full p-2 flex flex-col items-center gap-1 text-xs relative transition-all duration-200",
+                          "h-12 w-full p-3 flex items-center gap-3 text-sm relative transition-all duration-200 justify-start",
                           isActive &&
                             "bg-primary text-primary-foreground shadow-sm",
                           !isActive && "hover:bg-muted"
                         )}
                       >
                         {/* Step number */}
-                        <div className="font-semibold">{index + 1}</div>
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-background/20 flex items-center justify-center text-xs font-semibold">
+                          {index + 1}
+                        </div>
 
-                        {/* Step title (truncated) */}
-                        <div className="text-[10px] leading-tight text-center overflow-hidden max-w-full">
-                          {step.title.length > 12
-                            ? `${step.title.substring(0, 12)}...`
-                            : step.title}
+                        {/* Step title */}
+                        <div className="flex-1 text-left overflow-hidden">
+                          <div className="text-sm font-medium truncate">
+                            {step.title}
+                          </div>
                         </div>
 
                         {/* Status indicators */}
-                        <div className="flex items-center justify-center gap-1 mt-1">
+                        <div className="flex items-center gap-1">
                           {stepStatus.count > 0 && (
                             <Badge
                               variant={
@@ -199,27 +198,27 @@ export default function StepsVerticalNavigation() {
                                   ? "destructive"
                                   : "secondary"
                               }
-                              className="h-3 px-1 text-[10px] leading-none"
+                              className="h-4 px-1.5 text-xs"
                             >
                               {stepStatus.count}
                             </Badge>
                           )}
 
                           {stepStatus.status === "warning" && (
-                            <AlertTriangle className="h-2.5 w-2.5 text-yellow-500" />
+                            <AlertTriangle className="h-3 w-3 text-yellow-500" />
                           )}
 
                           {stepStatus.status === "valid" &&
                             stepStatus.count > 0 && (
-                              <CheckCircle2 className="h-2.5 w-2.5 text-green-500" />
+                              <CheckCircle2 className="h-3 w-3 text-green-500" />
                             )}
 
                           {stepStatus.status === "incomplete" && (
-                            <AlertCircle className="h-2.5 w-2.5 text-red-500" />
+                            <AlertCircle className="h-3 w-3 text-red-500" />
                           )}
 
                           {stepStatus.status === "empty" && (
-                            <Circle className="h-2.5 w-2.5 text-gray-400" />
+                            <Circle className="h-3 w-3 text-gray-400" />
                           )}
                         </div>
                       </Button>
@@ -256,15 +255,14 @@ export default function StepsVerticalNavigation() {
                     size="sm"
                     onClick={handleAddStep}
                     disabled={quiz.steps.length >= 5}
-                    className="h-16 w-full p-2 flex flex-col items-center gap-1 text-xs border-dashed hover:bg-muted/50"
+                    className="h-12 w-full p-3 flex items-center gap-3 text-sm border-dashed hover:bg-muted/50 justify-start"
                   >
-                    <Plus className="h-4 w-4" />
-                    <span className="text-[10px] leading-tight">
-                      Nova Etapa
-                    </span>
-                    <span className="text-[9px] text-muted-foreground">
-                      {quiz.steps.length}/5
-                    </span>
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full border border-dashed border-current flex items-center justify-center">
+                      <Plus className="h-3 w-3" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <span className="text-sm font-medium">Nova Etapa</span>
+                    </div>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="right">
