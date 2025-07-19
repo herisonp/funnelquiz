@@ -14,7 +14,7 @@ export default function PropertiesPanel() {
     currentStepId,
     selectedElementId,
     isPropertiesPanelOpen,
-    selectElement,
+    togglePropertiesPanel,
   } = useEditorStore();
 
   const currentStep = quiz?.steps.find((step) => step.id === currentStepId);
@@ -22,14 +22,11 @@ export default function PropertiesPanel() {
     (el) => el.id === selectedElementId
   );
 
-  if (!isPropertiesPanelOpen) {
-    return null;
-  }
-
   return (
     <div
       className={cn(
-        "fixed right-0 top-16 h-[calc(100vh-4rem)] w-80 bg-background border-l z-40 transition-transform duration-300"
+        "fixed right-0 top-16 h-[calc(100vh-4rem)] w-80 bg-background border-l z-40 transition-transform duration-300",
+        isPropertiesPanelOpen ? "translate-x-0" : "translate-x-full"
       )}
     >
       <div className="flex flex-col h-full">
@@ -42,7 +39,7 @@ export default function PropertiesPanel() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => selectElement(null)}
+            onClick={togglePropertiesPanel}
             className="h-8 w-8 p-0"
           >
             <X className="h-4 w-4" />
@@ -57,14 +54,53 @@ export default function PropertiesPanel() {
             {selectedElement ? (
               <ElementProperties element={selectedElement} />
             ) : (
-              <div className="text-center py-8">
-                <Settings className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="font-medium text-foreground mb-2">
-                  Nenhum elemento selecionado
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Clique em um elemento no canvas para editar suas propriedades
-                </p>
+              <div className="space-y-6">
+                {/* Step Information */}
+                {currentStep && (
+                  <div>
+                    <h3 className="font-medium text-foreground mb-3">
+                      Informações do Step
+                    </h3>
+                    <div className="space-y-2">
+                      <div>
+                        <label className="text-sm text-muted-foreground">
+                          Título
+                        </label>
+                        <p className="text-sm font-medium">
+                          {currentStep.title}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm text-muted-foreground">
+                          Elementos
+                        </label>
+                        <p className="text-sm font-medium">
+                          {currentStep.elements.length} elemento(s)
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm text-muted-foreground">
+                          Ordem
+                        </label>
+                        <p className="text-sm font-medium">
+                          {currentStep.order}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Help Text */}
+                <div className="text-center py-4">
+                  <Settings className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+                  <h3 className="font-medium text-foreground mb-2">
+                    Selecione um elemento
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Clique em um elemento no canvas para editar suas
+                    propriedades
+                  </p>
+                </div>
               </div>
             )}
           </div>

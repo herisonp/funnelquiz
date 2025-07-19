@@ -90,7 +90,7 @@ export const useEditorStore = create<EditorState>()(
       quiz: null,
       currentStepId: null,
       selectedElementId: null,
-      isPropertiesPanelOpen: false,
+      isPropertiesPanelOpen: true,
       hasUnsavedChanges: false,
       isLoading: false,
       isValidating: false,
@@ -111,7 +111,6 @@ export const useEditorStore = create<EditorState>()(
       selectElement: (elementId) =>
         set({
           selectedElementId: elementId,
-          isPropertiesPanelOpen: elementId !== null,
         }),
 
       createNewQuiz: () => {
