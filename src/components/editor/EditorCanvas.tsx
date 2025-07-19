@@ -9,9 +9,9 @@ import {
 import DropZone from "./DropZone";
 import SortableElement from "./SortableElement";
 import QuizPreview from "./QuizPreview";
+import EmptyCanvasState from "./EmptyCanvasState";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { HelpText } from "@/components/ui/tooltip-help";
 import { cn } from "@/lib/utils";
 
 export default function EditorCanvas() {
@@ -59,7 +59,7 @@ export default function EditorCanvas() {
   return (
     <div className="flex-1 flex flex-col bg-muted/30">
       {/* Canvas header */}
-      <div className="p-4 border-b bg-background">
+      <div className="p-4 border-b bg-background shadow-sm">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold">{currentStep.title}</h2>
@@ -78,51 +78,64 @@ export default function EditorCanvas() {
         </div>
       </div>
 
-      {/* Canvas content */}
+      {/* Canvas content area with improved visual container */}
       <ScrollArea className="flex-1">
-        <div
-          className={cn(
-            "p-6 canvas-deselect-area min-h-full transition-colors duration-200",
-            selectedElementId && "cursor-pointer hover:bg-muted/20"
-          )}
-          onClick={handleCanvasClick}
-        >
-          {elements.length === 0 ? (
-            <div className="space-y-4">
-              <DropZone />
-              <HelpText className="text-center">
-                Arraste elementos da sidebar para começar ou use os atalhos:{" "}
-                <kbd className="px-1 py-0.5 text-xs bg-muted rounded border">
-                  Delete
-                </kbd>{" "}
-                para remover,{" "}
-                <kbd className="px-1 py-0.5 text-xs bg-muted rounded border">
-                  Esc
-                </kbd>{" "}
-                para deselecionar ou clique em área vazia
-              </HelpText>
+        <div className="p-6 min-h-full">
+          {/* Canvas container with visual improvements */}
+          <div
+            className={cn(
+              // Base canvas styling
+              "mx-auto max-w-4xl min-h-[calc(100vh-12rem)] bg-background",
+              "rounded-lg border shadow-sm canvas-container animate-canvas-enter",
+              // Interactive states
+              "canvas-deselect-area",
+              selectedElementId && "cursor-pointer has-selection",
+              // Hover and focus states
+              "hover:shadow-md focus-within:ring-2 focus-within:ring-primary/20",
+              // Better visual hierarchy
+              "relative overflow-hidden transition-all duration-200"
+            )}
+            onClick={handleCanvasClick}
+          >
+            {/* Canvas content */}
+            <div className="p-8">
+              {elements.length === 0 ? (
+                <EmptyCanvasState />
+              ) : (
+                <SortableContext
+                  items={elements.map((el) => el.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="space-y-6 pb-20">
+                    {/* Drop zone principal */}
+                    <DropZone
+                      id="canvas-dropzone"
+                      className="h-20 transform-gpu"
+                    />
+
+                    {elements.map((element) => (
+                      <SortableElement key={element.id} element={element} />
+                    ))}
+
+                    {/* Drop zone no final */}
+                    <DropZone
+                      id="canvas-dropzone-end"
+                      className="h-16 border-muted-foreground/15 transform-gpu"
+                    />
+                  </div>
+                </SortableContext>
+              )}
             </div>
-          ) : (
-            <SortableContext
-              items={elements.map((el) => el.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              <div className="space-y-4 max-w-2xl mx-auto pb-20">
-                {/* Drop zone principal para teste simples */}
-                <DropZone id="canvas-dropzone" className="h-20 p-6" />
 
-                {elements.map((element) => (
-                  <SortableElement key={element.id} element={element} />
-                ))}
-
-                {/* Drop zone no final */}
-                <DropZone
-                  id="canvas-dropzone-end"
-                  className="h-16 p-4 border-muted-foreground/15"
-                />
-              </div>
-            </SortableContext>
-          )}
+            {/* Subtle visual indicators */}
+            <div
+              className={cn(
+                "absolute inset-0 pointer-events-none transition-all duration-200",
+                "ring-0 ring-primary/20",
+                selectedElementId && "ring-2"
+              )}
+            />
+          </div>
         </div>
       </ScrollArea>
     </div>

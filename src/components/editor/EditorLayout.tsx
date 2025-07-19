@@ -76,7 +76,7 @@ export default function EditorLayout() {
           {/* Main canvas area */}
           <div
             className={cn(
-              "flex-1 flex flex-col transition-all duration-300",
+              "flex-1 flex flex-col transition-all duration-300 min-w-0",
               !isPreviewMode && !isSidebarCollapsed ? "ml-80" : "ml-0",
               !isPreviewMode && isPropertiesPanelOpen ? "mr-80" : "mr-0"
             )}

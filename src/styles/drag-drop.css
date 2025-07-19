@@ -1,5 +1,26 @@
 /* Drag and Drop animations and styles */
 
+/* Canvas and visual enhancements */
+.canvas-deselect-area {
+  /* Optimizations for better performance during interactions */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.canvas-container {
+  /* Smooth transitions for canvas states */
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.canvas-container:hover {
+  transform: translateY(-1px);
+}
+
+.canvas-container.has-selection {
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
+}
+
 /* Drag overlay animation */
 .drag-overlay {
   transform-origin: 0 0;
@@ -33,6 +54,26 @@
   }
 }
 
+/* Drop zone enhanced animations */
+.dropzone-active {
+  animation: dropZoneActive 0.3s ease-out;
+}
+
+@keyframes dropZoneActive {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 8px hsl(var(--primary) / 0.1);
+  }
+  100% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0);
+  }
+}
+
 /* Sortable element transition */
 .sortable-element {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -45,6 +86,22 @@
 
 .sortable-element.over {
   transform: scale(1.02);
+}
+
+/* Smooth entry animations */
+.animate-canvas-enter {
+  animation: canvasEnter 0.4s ease-out;
+}
+
+@keyframes canvasEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Draggable element from sidebar */
@@ -62,6 +119,12 @@
   opacity: 0.7;
 }
 
+/* Performance optimizations */
+.transform-gpu {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
 /* Mobile touch improvements */
 @media (hover: none) and (pointer: coarse) {
   .draggable-element:hover {
@@ -71,6 +134,18 @@
 
   .sortable-element {
     touch-action: manipulation;
+  }
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .canvas-container {
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+  }
+
+  .dropzone-active {
+    transform: scale(1.01) !important;
   }
 }
 

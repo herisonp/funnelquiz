@@ -21,34 +21,58 @@ export default function DropZone({
     <div
       ref={setNodeRef}
       className={cn(
-        "border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 transition-all duration-200",
-        isOver && "border-primary bg-primary/5 dropzone-active scale-105",
-        "hover:border-muted-foreground/40",
+        // Base styling with improved visual hierarchy
+        "border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 transition-all duration-300",
+        "bg-gradient-to-br from-muted/20 to-muted/10",
+        // Hover states
+        "hover:border-muted-foreground/40 hover:bg-muted/20",
+        // Active drop state with enhanced feedback
+        isOver && [
+          "border-primary bg-primary/10 shadow-lg",
+          "scale-[1.02] transform-gpu",
+          "ring-2 ring-primary/20",
+          "dropzone-active",
+        ],
+        // Performance optimizations
+        "will-change-transform",
         className
       )}
     >
       <div className="flex flex-col items-center justify-center text-center">
         <div
           className={cn(
-            "rounded-full p-3 mb-3 transition-all duration-200",
+            "rounded-full p-3 mb-3 transition-all duration-300 transform-gpu",
+            "will-change-transform",
             isOver
-              ? "bg-primary text-primary-foreground scale-110"
-              : "bg-muted text-muted-foreground"
+              ? "bg-primary text-primary-foreground scale-110 shadow-md"
+              : "bg-muted text-muted-foreground hover:bg-muted-foreground/10"
           )}
         >
-          <Plus className="h-6 w-6" />
+          <Plus
+            className={cn(
+              "h-6 w-6 transition-transform duration-300",
+              isOver && "rotate-90"
+            )}
+          />
         </div>
+
         <p
           className={cn(
-            "text-sm font-medium transition-colors duration-200",
-            isOver ? "text-primary" : "text-muted-foreground"
+            "text-sm font-medium transition-all duration-300",
+            isOver ? "text-primary scale-105" : "text-muted-foreground"
           )}
         >
           {isOver
             ? "Solte o elemento aqui"
             : "Arraste elementos da barra lateral"}
         </p>
-        <p className="text-xs text-muted-foreground mt-1">
+
+        <p
+          className={cn(
+            "text-xs text-muted-foreground/70 mt-1 transition-opacity duration-300",
+            isOver && "opacity-0"
+          )}
+        >
           Ou clique em um elemento para adicioná-lo
         </p>
       </div>
