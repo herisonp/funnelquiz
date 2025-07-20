@@ -29,7 +29,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import StepTemplateSelector from "./StepTemplateSelector";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { StepWithElements } from "@/types/composed";
 import {
@@ -199,11 +198,16 @@ function SortableStepItem({
 }
 
 export default function StepsVerticalNavigation() {
-  const { quiz, currentStepId, setCurrentStep, removeStep, reorderSteps } =
-    useEditorStore();
+  const {
+    quiz,
+    currentStepId,
+    setCurrentStep,
+    removeStep,
+    reorderSteps,
+    addStep,
+  } = useEditorStore();
   const [stepToDelete, setStepToDelete] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -220,7 +224,7 @@ export default function StepsVerticalNavigation() {
 
   const handleAddStep = () => {
     if (quiz.steps.length < 5) {
-      setIsTemplateDialogOpen(true);
+      addStep();
     }
   };
 
@@ -442,13 +446,6 @@ export default function StepsVerticalNavigation() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Template Selection Dialog */}
-      <StepTemplateSelector
-        isOpen={isTemplateDialogOpen}
-        onClose={() => setIsTemplateDialogOpen(false)}
-        onSelectTemplate={() => {}} // Template selection is handled in StepTemplateSelector
-      />
     </TooltipProvider>
   );
 }
