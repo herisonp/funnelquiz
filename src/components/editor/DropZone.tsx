@@ -38,7 +38,7 @@ export default function DropZone({
       ref={setNodeRef}
       className={cn(
         // Base styling with improved visual hierarchy
-        "border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 transition-all duration-300",
+        "border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 transition-all duration-300 h-fit",
         "bg-gradient-to-br from-muted/20 to-muted/10",
         // Hover states
         "hover:border-muted-foreground/40 hover:bg-muted/20",

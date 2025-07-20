@@ -61,14 +61,17 @@ export default function EditorCanvas() {
           )}
           onClick={handleCanvasClick}
         >
-          <div className="w-full p-8 relative">
+          <div
+            className={cn(
+              "w-full p-8 relative",
+              elements.length === 0 &&
+                "flex items-center justify-center min-h-[calc(100vh-20rem)]"
+            )}
+          >
             {/* Drop zone principal que cobre todo o canvas */}
             <DropZone
               id="main-canvas-dropzone"
-              className={cn(
-                "w-full absolute inset-0 z-0",
-                elements.length === 0 && "flex items-center justify-center"
-              )}
+              className="w-[90%] absolute inset-0 z-0 left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2"
               showVisual={elements.length === 0}
             />
 
