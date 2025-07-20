@@ -64,12 +64,7 @@ function ElementRenderer({ element }: ElementRendererProps) {
       >
         <CardContent className="p-0 relative">
           <div className="p-4">
-            <UniversalElementRenderer
-              element={element}
-              mode="editor"
-              isSelected={isSelected}
-              isEditing={true}
-            />
+            <UniversalElementRenderer element={element} mode="editor" />
           </div>
           <div
             className={cn(

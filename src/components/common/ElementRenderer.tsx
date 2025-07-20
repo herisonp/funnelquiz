@@ -1,9 +1,9 @@
 "use client";
 
 import { Element } from "@prisma/client";
-import { TextElement as EditorTextElement } from "../editor/elements/TextElement";
-import { MultipleChoiceElement as EditorMultipleChoiceElement } from "../editor/elements/MultipleChoiceElement";
-import { NavigationButtonElement as EditorNavigationButtonElement } from "../editor/elements/NavigationButtonElement";
+import { PublicTextElement } from "../quiz/elements/PublicTextElement";
+import { PublicMultipleChoiceElement } from "../quiz/elements/PublicMultipleChoiceElement";
+import { PublicNavigationButtonElement } from "../quiz/elements/PublicNavigationButtonElement";
 import { TextElement as QuizTextElement } from "../quiz/elements/TextElement";
 import { MultipleChoiceElement as QuizMultipleChoiceElement } from "../quiz/elements/MultipleChoiceElement";
 import { NavigationButtonElement as QuizNavigationButtonElement } from "../quiz/elements/NavigationButtonElement";
@@ -12,10 +12,6 @@ import { cn } from "@/lib/utils";
 interface ElementRendererProps {
   element: Element;
   mode: "editor" | "quiz";
-
-  // Editor mode props
-  isSelected?: boolean;
-  isEditing?: boolean;
 
   // Quiz mode props
   value?: string | string[];
@@ -30,8 +26,6 @@ interface ElementRendererProps {
 export function ElementRenderer({
   element,
   mode,
-  isSelected,
-  isEditing,
   value,
   onAnswer,
   onNavigate,
@@ -53,33 +47,34 @@ export function ElementRenderer({
   }
 
   try {
+    // Parse content once
+    const content =
+      typeof element.content === "string"
+        ? JSON.parse(element.content)
+        : (element.content as Record<string, unknown>);
+
     if (mode === "editor") {
-      // Render editor components
+      // Use public components in editor mode for consistent appearance
       switch (element.type) {
         case "TEXT":
-          return (
-            <EditorTextElement
-              element={element}
-              isSelected={isSelected}
-              isEditing={isEditing}
-            />
-          );
+          return <PublicTextElement content={content} elementId={element.id} />;
 
         case "MULTIPLE_CHOICE":
           return (
-            <EditorMultipleChoiceElement
-              element={element}
-              isSelected={isSelected}
-              isEditing={isEditing}
+            <PublicMultipleChoiceElement
+              content={content}
+              elementId={element.id}
             />
           );
 
         case "NAVIGATION_BUTTON":
           return (
-            <EditorNavigationButtonElement
-              element={element}
-              isSelected={isSelected}
-              isEditing={isEditing}
+            <PublicNavigationButtonElement
+              content={content}
+              elementId={element.id}
+              onNavigate={() => {}} // No-op in editor mode
+              isLastStep={false}
+              canProceed={true}
             />
           );
 
