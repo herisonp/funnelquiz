@@ -172,7 +172,7 @@ export const useEditorStore = create<EditorState>()(
         const reorderedSteps = filteredSteps.map((step, index) => ({
           ...step,
           order: index,
-          title: `Etapa ${index + 1}`,
+          // Preserva o título original da etapa, não renomeia automaticamente
         }));
 
         const newCurrentStepId =
