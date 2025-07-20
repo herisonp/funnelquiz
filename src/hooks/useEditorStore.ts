@@ -41,6 +41,7 @@ interface EditorState {
   addStep: () => void;
   removeStep: (stepId: string) => void;
   updateStepTitle: (stepId: string, title: string) => void;
+  reorderSteps: (stepIds: string[]) => void;
 
   // Element management
   addElement: (type: ElementType, order?: number) => void;
@@ -204,6 +205,34 @@ export const useEditorStore = create<EditorState>()(
           },
           hasUnsavedChanges: true,
         });
+      },
+
+      reorderSteps: (stepIds) => {
+        const { quiz } = get();
+        if (!quiz) return;
+
+        // Create a map for quick lookup
+        const stepMap = new Map(quiz.steps.map((step) => [step.id, step]));
+
+        // Reorder steps based on the new order
+        const reorderedSteps = stepIds
+          .map((stepId) => stepMap.get(stepId))
+          .filter(Boolean)
+          .map((step, index) => ({
+            ...step!,
+            order: index,
+          }));
+
+        // Only update if all steps are accounted for
+        if (reorderedSteps.length === quiz.steps.length) {
+          set({
+            quiz: {
+              ...quiz,
+              steps: reorderedSteps,
+            },
+            hasUnsavedChanges: true,
+          });
+        }
       },
 
       addElement: (type, order) => {

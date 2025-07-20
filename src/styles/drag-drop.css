@@ -1,5 +1,30 @@
 /* Drag and Drop animations and styles */
 
+/* Steps drag and drop */
+.steps-sortable-item {
+  transition: transform 200ms ease;
+}
+
+.steps-sortable-item.is-dragging {
+  z-index: 999;
+  animation: dragOverlayEnter 0.2s ease-out;
+  transform: rotate(5deg) scale(1.05);
+}
+
+.steps-drag-handle {
+  cursor: grab;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+
+.steps-drag-handle:hover {
+  opacity: 0.7;
+}
+
+.steps-drag-handle:active {
+  cursor: grabbing;
+}
+
 /* Canvas and visual enhancements */
 .canvas-deselect-area {
   /* Optimizations for better performance during interactions */
