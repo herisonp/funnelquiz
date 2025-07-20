@@ -107,18 +107,6 @@ export default function PropertiesPanel() {
                     </div>
                   </div>
                 )}
-
-                {/* Help Text */}
-                <div className="text-center py-4">
-                  <Settings className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-                  <h3 className="font-medium text-foreground mb-2">
-                    Selecione um elemento
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Clique em um elemento no canvas para editar suas
-                    propriedades
-                  </p>
-                </div>
               </div>
             )}
           </div>
