@@ -1,21 +1,13 @@
 "use client";
 
 import { useEditorStore } from "@/hooks/useEditorStore";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Settings, X } from "lucide-react";
+import { Settings } from "lucide-react";
 import ElementProperties from "./ElementProperties";
 
 export default function PropertiesPanel() {
-  const {
-    quiz,
-    currentStepId,
-    selectedElementId,
-    isPropertiesPanelOpen,
-    togglePropertiesPanel,
-  } = useEditorStore();
+  const { quiz, currentStepId, selectedElementId } = useEditorStore();
 
   const currentStep = quiz?.steps.find((step) => step.id === currentStepId);
   const selectedElement = currentStep?.elements.find(
@@ -23,27 +15,14 @@ export default function PropertiesPanel() {
   );
 
   return (
-    <div
-      className={cn(
-        "fixed right-0 top-16 h-[calc(100vh-4rem)] w-80 bg-background border-l z-40 transition-transform duration-300",
-        isPropertiesPanelOpen ? "translate-x-0" : "translate-x-full"
-      )}
-    >
+    <div className="fixed right-0 top-16 h-[calc(100vh-4rem)] w-80 bg-background border-l z-40">
       <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="flex items-center justify-between p-4">
+        <div className="flex items-center p-4">
           <div className="flex items-center gap-2">
             <Settings className="h-5 w-5" />
             <h2 className="font-semibold">Propriedades</h2>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={togglePropertiesPanel}
-            className="h-8 w-8 p-0"
-          >
-            <X className="h-4 w-4" />
-          </Button>
         </div>
 
         <Separator />
