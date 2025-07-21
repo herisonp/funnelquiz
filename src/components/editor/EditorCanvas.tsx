@@ -9,6 +9,7 @@ import DropZone from "./DropZone";
 import SortableElement from "./SortableElement";
 import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 export default function EditorCanvas() {
   const { quiz, currentStepId, selectElement, selectedElementId } =
@@ -16,6 +17,17 @@ export default function EditorCanvas() {
 
   const currentStep = quiz?.steps.find((step) => step.id === currentStepId);
   const elements = currentStep?.elements || [];
+
+  // Apply quiz colors as CSS variables
+  useEffect(() => {
+    if (quiz?.colors) {
+      const root = document.documentElement;
+      root.style.setProperty("--quiz-primary", quiz.colors.primaryColor);
+      root.style.setProperty("--quiz-background", quiz.colors.backgroundColor);
+      root.style.setProperty("--quiz-text", quiz.colors.textColor);
+      root.style.setProperty("--quiz-title", quiz.colors.titleColor);
+    }
+  }, [quiz?.colors]);
 
   // Handle click on canvas to deselect elements
   const handleCanvasClick = (e: React.MouseEvent) => {
@@ -49,7 +61,7 @@ export default function EditorCanvas() {
         <div
           className={cn(
             // Base canvas styling - alterado para permitir scroll vertical
-            "mx-auto max-w-4xl min-h-[calc(100vh-12rem)] bg-background",
+            "mx-auto max-w-4xl min-h-[calc(100vh-12rem)]",
             "rounded-lg border shadow-sm canvas-container animate-canvas-enter",
             // Interactive states
             "canvas-deselect-area",
@@ -59,6 +71,9 @@ export default function EditorCanvas() {
             // Better visual hierarchy - removido overflow-hidden
             "relative transition-all duration-200"
           )}
+          style={{
+            backgroundColor: quiz?.colors?.backgroundColor || "#ffffff",
+          }}
           onClick={handleCanvasClick}
         >
           <div

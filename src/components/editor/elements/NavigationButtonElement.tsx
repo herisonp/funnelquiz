@@ -123,6 +123,16 @@ export function NavigationButtonElement({
           }
           disabled={isEditing}
           className="min-w-[120px]"
+          style={
+            content.variant === "primary"
+              ? {
+                  backgroundColor:
+                    quiz?.colors?.primaryColor || "var(--quiz-primary)",
+                  borderColor:
+                    quiz?.colors?.primaryColor || "var(--quiz-primary)",
+                }
+              : undefined
+          }
         >
           {content.targetStep === "previous" && getIcon(content.targetStep)}
           <span className="mx-2">{content.label}</span>

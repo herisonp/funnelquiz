@@ -17,7 +17,7 @@ export function TextElement({
   isSelected,
   isEditing,
 }: TextElementProps) {
-  const { updateElement } = useEditorStore();
+  const { updateElement, quiz } = useEditorStore();
   const [isEditingText, setIsEditingText] = useState(false);
   const [localText, setLocalText] = useState("");
   const textRef = useRef<HTMLDivElement>(null);
@@ -48,6 +48,17 @@ export function TextElement({
   useEffect(() => {
     setLocalText(content.text);
   }, [content.text]);
+
+  // Determina a cor a ser usada: específica do elemento > cor do quiz > padrão
+  const getTextColor = () => {
+    if (content.color) return content.color;
+
+    // Usa cor do texto para elementos normais, cor de título para títulos grandes
+    const isTitle = content.fontSize === "2xl" || content.fontSize === "xl";
+    return isTitle
+      ? quiz?.colors?.titleColor || "var(--quiz-title)"
+      : quiz?.colors?.textColor || "var(--quiz-text)";
+  };
 
   const handleClick = () => {
     if (isEditing) {
@@ -134,7 +145,7 @@ export function TextElement({
             getFontWeightClass(content.fontWeight)
           )}
           style={{
-            color: content.color || undefined,
+            color: getTextColor(),
           }}
           autoFocus
           placeholder="Digite seu texto..."
@@ -165,7 +176,7 @@ export function TextElement({
           "min-h-[1.5em] p-2"
         )}
         style={{
-          color: content.color || undefined,
+          color: getTextColor(),
         }}
       >
         {localText.trim() || (isEditing ? "Clique para editar..." : "")}

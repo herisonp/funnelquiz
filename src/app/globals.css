@@ -63,6 +63,20 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Quiz color variables with defaults
+   * Essas variáveis são atualizadas dinamicamente quando o usuário
+   * altera as configurações de cores no painel de propriedades
+   * 
+   * --quiz-primary: Cor primária do quiz (botões principais, destaques)
+   * --quiz-background: Cor de fundo do canvas do quiz
+   * --quiz-text: Cor padrão para textos normais
+   * --quiz-title: Cor padrão para títulos e cabeçalhos
+   */
+  --quiz-primary: #3b82f6;
+  --quiz-background: #ffffff;
+  --quiz-text: #374151;
+  --quiz-title: #111827;
 }
 
 @media (prefers-color-scheme: dark) {

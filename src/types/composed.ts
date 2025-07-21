@@ -7,9 +7,18 @@ import {
   ElementType,
 } from "@prisma/client";
 
+// Tipos para configuração de cores do quiz
+export interface QuizColors {
+  primaryColor: string;
+  backgroundColor: string;
+  textColor: string;
+  titleColor: string;
+}
+
 // Tipos para operações do editor
 export type QuizWithSteps = Quiz & {
   steps: (Step & { elements: Element[] })[];
+  colors?: QuizColors;
 };
 
 export type StepWithElements = Step & {

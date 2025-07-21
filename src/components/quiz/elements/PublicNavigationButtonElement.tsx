@@ -8,6 +8,12 @@ interface PublicNavigationButtonElementProps {
   onNavigate: (target: string) => void;
   isLastStep?: boolean;
   canProceed?: boolean;
+  quizColors?: {
+    primaryColor: string;
+    backgroundColor: string;
+    textColor: string;
+    titleColor: string;
+  };
 }
 
 export function PublicNavigationButtonElement({
@@ -15,6 +21,7 @@ export function PublicNavigationButtonElement({
   onNavigate,
   isLastStep = false,
   canProceed = true,
+  quizColors,
 }: PublicNavigationButtonElementProps) {
   const getVariantClass = () => {
     switch (content.variant) {
@@ -65,6 +72,15 @@ export function PublicNavigationButtonElement({
         disabled={!canProceed && content.targetStep !== "previous"}
         className="min-w-32 font-medium"
         aria-label={getLabel()}
+        style={
+          content.variant === "primary" || getVariantClass() === "default"
+            ? {
+                backgroundColor:
+                  quizColors?.primaryColor || "var(--quiz-primary)",
+                borderColor: quizColors?.primaryColor || "var(--quiz-primary)",
+              }
+            : undefined
+        }
       >
         {content.targetStep === "previous" && getIcon()}
         {getLabel()}

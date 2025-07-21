@@ -3,9 +3,18 @@ import { TextElementContent } from "@/types/composed";
 interface PublicTextElementProps {
   content: TextElementContent;
   elementId: string;
+  quizColors?: {
+    primaryColor: string;
+    backgroundColor: string;
+    textColor: string;
+    titleColor: string;
+  };
 }
 
-export function PublicTextElement({ content }: PublicTextElementProps) {
+export function PublicTextElement({
+  content,
+  quizColors,
+}: PublicTextElementProps) {
   const getFontSizeClass = (fontSize?: string) => {
     switch (fontSize) {
       case "sm":
@@ -45,6 +54,17 @@ export function PublicTextElement({ content }: PublicTextElementProps) {
     }
   };
 
+  // Determina a cor do texto baseada nas configurações
+  const getTextColor = () => {
+    if (content.color) return content.color;
+
+    // Usa cor do título para textos grandes, cor normal para os demais
+    const isTitle = content.fontSize === "2xl" || content.fontSize === "xl";
+    return isTitle
+      ? quizColors?.titleColor || "var(--quiz-title)"
+      : quizColors?.textColor || "var(--quiz-text)";
+  };
+
   return (
     <div
       className={`
@@ -54,7 +74,7 @@ export function PublicTextElement({ content }: PublicTextElementProps) {
         ${getTextAlignClass(content.textAlign)}
       `}
       style={{
-        color: content.color || undefined,
+        color: getTextColor(),
       }}
     >
       <p className="mb-0">{content.text || "Texto vazio"}</p>

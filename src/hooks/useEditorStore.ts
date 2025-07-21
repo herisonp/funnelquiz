@@ -4,6 +4,7 @@ import {
   QuizWithSteps,
   StepWithElements,
   CreateElementInput,
+  QuizColors,
 } from "@/types/composed";
 import { ElementType } from "@prisma/client";
 import { createDefaultElement } from "@/lib/element-definitions";
@@ -39,6 +40,8 @@ interface EditorState {
   clearQuiz: () => void;
   updateQuizTitle: (title: string) => void;
   updateQuizDescription: (description: string) => void;
+  updateQuizColors: (colors: QuizColors) => void;
+  updateQuizColor: (key: keyof QuizColors, color: string) => void;
 
   // Step management
   addStep: () => void;
@@ -77,6 +80,12 @@ const createEmptyQuiz = (): QuizWithSteps => ({
   isPublished: false,
   createdAt: new Date(),
   updatedAt: new Date(),
+  colors: {
+    primaryColor: "#3b82f6",
+    backgroundColor: "#ffffff",
+    textColor: "#374151",
+    titleColor: "#111827",
+  },
   steps: [
     {
       id: uuidv4(),
@@ -164,6 +173,33 @@ export const useEditorStore = create<EditorState>()(
 
         set({
           quiz: { ...quiz, description },
+          hasUnsavedChanges: true,
+        });
+      },
+
+      updateQuizColors: (colors) => {
+        const { quiz } = get();
+        if (!quiz) return;
+
+        set({
+          quiz: { ...quiz, colors },
+          hasUnsavedChanges: true,
+        });
+      },
+
+      updateQuizColor: (key, color) => {
+        const { quiz } = get();
+        if (!quiz) return;
+
+        const currentColors = quiz.colors || {
+          primaryColor: "#3b82f6",
+          backgroundColor: "#ffffff",
+          textColor: "#374151",
+          titleColor: "#111827",
+        };
+
+        set({
+          quiz: { ...quiz, colors: { ...currentColors, [key]: color } },
           hasUnsavedChanges: true,
         });
       },

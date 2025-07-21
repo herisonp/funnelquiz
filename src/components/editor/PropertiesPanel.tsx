@@ -5,6 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import ColorPicker from "@/components/ui/color-picker";
 import {
   Accordion,
   AccordionContent,
@@ -24,6 +25,7 @@ export default function PropertiesPanel() {
     updateStepTitle,
     updateQuizTitle,
     updateQuizDescription,
+    updateQuizColor,
     propertiesTab,
     setPropertiesTab,
     selectElement,
@@ -316,8 +318,38 @@ export default function PropertiesPanel() {
                           Cores
                         </AccordionTrigger>
                         <AccordionContent>
-                          <div className="text-sm text-muted-foreground">
-                            Propriedades de cores serão implementadas em breve.
+                          <div className="space-y-4">
+                            <ColorPicker
+                              label="Cor Primária"
+                              value={quiz?.colors?.primaryColor || "#3b82f6"}
+                              onChange={(color) =>
+                                updateQuizColor("primaryColor", color)
+                              }
+                            />
+
+                            <ColorPicker
+                              label="Cor de Fundo"
+                              value={quiz?.colors?.backgroundColor || "#ffffff"}
+                              onChange={(color) =>
+                                updateQuizColor("backgroundColor", color)
+                              }
+                            />
+
+                            <ColorPicker
+                              label="Cor dos Textos"
+                              value={quiz?.colors?.textColor || "#374151"}
+                              onChange={(color) =>
+                                updateQuizColor("textColor", color)
+                              }
+                            />
+
+                            <ColorPicker
+                              label="Cor dos Títulos"
+                              value={quiz?.colors?.titleColor || "#111827"}
+                              onChange={(color) =>
+                                updateQuizColor("titleColor", color)
+                              }
+                            />
                           </div>
                         </AccordionContent>
                       </AccordionItem>
