@@ -126,49 +126,48 @@ export default function PropertiesPanel() {
       <div className="flex flex-col h-full">
         {/* Header com Tabs */}
         <div className="p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <Settings className="h-5 w-5" />
-            <h2 className="font-semibold">Propriedades</h2>
-          </div>
-
-          {/* Navigation Tabs */}
-          <div className="flex bg-muted rounded-md p-1">
-            <Button
-              variant={
-                !selectedElementId && propertiesTab === "step"
-                  ? "default"
-                  : "ghost"
-              }
-              size="sm"
-              onClick={handleStepTabClick}
-              className={cn(
-                "flex-1 h-8 text-xs",
-                !selectedElementId && propertiesTab === "step"
-                  ? "bg-background shadow-sm"
-                  : "hover:bg-background/50"
-              )}
-            >
-              <Layers className="h-3 w-3 mr-1" />
-              Etapa
-            </Button>
-            <Button
-              variant={
-                !selectedElementId && propertiesTab === "quiz"
-                  ? "default"
-                  : "ghost"
-              }
-              size="sm"
-              onClick={handleQuizTabClick}
-              className={cn(
-                "flex-1 h-8 text-xs",
-                !selectedElementId && propertiesTab === "quiz"
-                  ? "bg-background shadow-sm"
-                  : "hover:bg-background/50"
-              )}
-            >
-              <FileText className="h-3 w-3 mr-1" />
-              Quiz
-            </Button>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1">
+              <Settings className="h-5 w-5 shrink-0" />
+              <h2 className="font-semibold">Propriedades</h2>
+            </div>
+            {/* Navigation Tabs */}
+            <div className="flex bg-muted rounded-md p-1">
+              <Button
+                variant={
+                  !selectedElementId && propertiesTab === "step"
+                    ? "default"
+                    : "ghost"
+                }
+                size="sm"
+                onClick={handleStepTabClick}
+                className={cn(
+                  "flex-1 h-8 text-xs flex items-center justify-center",
+                  !selectedElementId && propertiesTab === "step"
+                    ? "bg-black shadow-sm"
+                    : "hover:bg-background/50"
+                )}
+              >
+                <Layers className="h-3 w-3" />
+              </Button>
+              <Button
+                variant={
+                  !selectedElementId && propertiesTab === "quiz"
+                    ? "default"
+                    : "ghost"
+                }
+                size="sm"
+                onClick={handleQuizTabClick}
+                className={cn(
+                  "flex-1 h-8 text-xs flex items-center justify-center",
+                  !selectedElementId && propertiesTab === "quiz"
+                    ? "bg-black shadow-sm"
+                    : "hover:bg-background/50"
+                )}
+              >
+                <FileText className="h-3 w-3" />
+              </Button>
+            </div>
           </div>
         </div>
 
