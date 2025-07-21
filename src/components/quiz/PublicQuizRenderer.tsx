@@ -109,6 +109,7 @@ export function PublicQuizRenderer({
       onBack={onBack}
       onStepClick={allowStepNavigation ? goToStepByIndex : undefined}
       allowNavigation={allowStepNavigation}
+      colors={quiz.colors}
     >
       <div className="space-y-8">
         {/* Render step elements */}
