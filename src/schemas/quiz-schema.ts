@@ -29,6 +29,14 @@ const stepSchema = z.object({
   elements: z.array(elementSchema),
 });
 
+// Schema para cores do quiz
+const quizColorsSchema = z.object({
+  primaryColor: z.string(),
+  backgroundColor: z.string(),
+  textColor: z.string(),
+  titleColor: z.string(),
+});
+
 // Schema para Quiz
 const quizSchema = z.object({
   id: z.string(),
@@ -44,6 +52,7 @@ const quizSchema = z.object({
   updatedAt: z
     .union([z.date(), z.string()])
     .transform((val) => (typeof val === "string" ? new Date(val) : val)),
+  colors: quizColorsSchema.optional(),
   steps: z.array(stepSchema),
 });
 

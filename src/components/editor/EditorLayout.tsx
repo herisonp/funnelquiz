@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useEditorStore } from "@/hooks/useEditorStore";
-import { useEditorPersistence } from "@/hooks/useEditorPersistence";
+import { useAutoSave } from "@/hooks/useAutoSave";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useEditorDragDrop } from "@/hooks/useEditorDragDrop";
 import { DndContext, closestCenter } from "@dnd-kit/core";
@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 export default function EditorLayout() {
   const { isPropertiesPanelOpen, createNewQuiz, quiz } = useEditorStore();
-  const { saveNow } = useEditorPersistence();
+  const { saveManually } = useAutoSave();
 
   // Drag and drop hooks (only in editor mode)
   const {
@@ -40,12 +40,12 @@ export default function EditorLayout() {
   // Save before page unload
   useEffect(() => {
     const handleBeforeUnload = () => {
-      saveNow();
+      saveManually();
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [saveNow]);
+  }, [saveManually]);
 
   return (
     <div className="h-screen flex flex-col bg-background">
