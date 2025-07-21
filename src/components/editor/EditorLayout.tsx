@@ -81,7 +81,7 @@ export default function EditorLayout() {
           </div>
 
           {/* Right sidebar - Properties */}
-          <PropertiesPanel />
+          {isPropertiesPanelOpen && <PropertiesPanel />}
         </div>
 
         {/* Drag overlay */}

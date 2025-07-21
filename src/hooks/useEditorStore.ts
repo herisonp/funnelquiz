@@ -17,6 +17,7 @@ interface EditorState {
 
   // UI state
   isPropertiesPanelOpen: boolean;
+  propertiesTab: "step" | "quiz";
 
   // Persistence state
   hasUnsavedChanges: boolean;
@@ -36,6 +37,8 @@ interface EditorState {
   createNewQuiz: () => void;
   resetQuiz: () => void;
   clearQuiz: () => void;
+  updateQuizTitle: (title: string) => void;
+  updateQuizDescription: (description: string) => void;
 
   // Step management
   addStep: () => void;
@@ -54,6 +57,7 @@ interface EditorState {
 
   // UI actions
   togglePropertiesPanel: () => void;
+  setPropertiesTab: (tab: "step" | "quiz") => void;
 
   // Loading and validation actions
   setLoading: (isLoading: boolean) => void;
@@ -92,6 +96,7 @@ export const useEditorStore = create<EditorState>()(
       currentStepId: null,
       selectedElementId: null,
       isPropertiesPanelOpen: true,
+      propertiesTab: "step",
       hasUnsavedChanges: false,
       isLoading: false,
       isValidating: false,
@@ -140,6 +145,26 @@ export const useEditorStore = create<EditorState>()(
           currentStepId: null,
           selectedElementId: null,
           hasUnsavedChanges: false,
+        });
+      },
+
+      updateQuizTitle: (title) => {
+        const { quiz } = get();
+        if (!quiz) return;
+
+        set({
+          quiz: { ...quiz, title },
+          hasUnsavedChanges: true,
+        });
+      },
+
+      updateQuizDescription: (description) => {
+        const { quiz } = get();
+        if (!quiz) return;
+
+        set({
+          quiz: { ...quiz, description },
+          hasUnsavedChanges: true,
         });
       },
 
@@ -360,6 +385,8 @@ export const useEditorStore = create<EditorState>()(
         set((state) => ({
           isPropertiesPanelOpen: !state.isPropertiesPanelOpen,
         })),
+
+      setPropertiesTab: (tab) => set({ propertiesTab: tab }),
 
       // Loading and validation actions
       setLoading: (isLoading) => set({ isLoading }),
