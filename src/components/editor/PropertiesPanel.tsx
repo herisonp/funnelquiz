@@ -5,6 +5,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Settings, Layers, FileText } from "lucide-react";
 import { useState, useEffect } from "react";
 import ElementProperties from "./ElementProperties";
@@ -230,54 +236,105 @@ export default function PropertiesPanel() {
                     <h3 className="font-medium text-foreground mb-3">
                       Informações do Quiz
                     </h3>
-                    <div className="space-y-2">
-                      <div>
-                        <label className="text-sm text-muted-foreground">
-                          Título
-                        </label>
-                        <Input
-                          value={quizTitle}
-                          onChange={(e) =>
-                            handleQuizTitleChange(e.target.value)
-                          }
-                          onBlur={handleQuizTitleBlur}
-                          onKeyPress={handleQuizTitleKeyPress}
-                          placeholder="Digite o título do quiz"
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm text-muted-foreground">
-                          Descrição
-                        </label>
-                        <Input
-                          value={quizDescription}
-                          onChange={(e) =>
-                            handleQuizDescriptionChange(e.target.value)
-                          }
-                          onBlur={handleQuizDescriptionBlur}
-                          onKeyPress={handleQuizDescriptionKeyPress}
-                          placeholder="Digite a descrição do quiz"
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm text-muted-foreground">
-                          Total de Etapas
-                        </label>
-                        <p className="text-sm font-medium">
-                          {quiz.steps.length} etapa(s)
-                        </p>
-                      </div>
-                      <div>
-                        <label className="text-sm text-muted-foreground">
-                          Status
-                        </label>
-                        <p className="text-sm font-medium">
-                          {quiz.isPublished ? "Publicado" : "Rascunho"}
-                        </p>
-                      </div>
-                    </div>
+                    <Accordion
+                      type="multiple"
+                      defaultValue={["geral"]}
+                      className="w-full"
+                    >
+                      {/* Grupo Geral */}
+                      <AccordionItem value="geral">
+                        <AccordionTrigger className="text-sm font-medium">
+                          Geral
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="space-y-3">
+                            <div>
+                              <label className="text-sm text-muted-foreground">
+                                Título
+                              </label>
+                              <Input
+                                value={quizTitle}
+                                onChange={(e) =>
+                                  handleQuizTitleChange(e.target.value)
+                                }
+                                onBlur={handleQuizTitleBlur}
+                                onKeyPress={handleQuizTitleKeyPress}
+                                placeholder="Digite o título do quiz"
+                                className="mt-1"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-sm text-muted-foreground">
+                                Descrição
+                              </label>
+                              <Input
+                                value={quizDescription}
+                                onChange={(e) =>
+                                  handleQuizDescriptionChange(e.target.value)
+                                }
+                                onBlur={handleQuizDescriptionBlur}
+                                onKeyPress={handleQuizDescriptionKeyPress}
+                                placeholder="Digite a descrição do quiz"
+                                className="mt-1"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-sm text-muted-foreground">
+                                Total de Etapas
+                              </label>
+                              <p className="text-sm font-medium">
+                                {quiz.steps.length} etapa(s)
+                              </p>
+                            </div>
+                            <div>
+                              <label className="text-sm text-muted-foreground">
+                                Status
+                              </label>
+                              <p className="text-sm font-medium">
+                                {quiz.isPublished ? "Publicado" : "Rascunho"}
+                              </p>
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* Grupo Header */}
+                      <AccordionItem value="header">
+                        <AccordionTrigger className="text-sm font-medium">
+                          Header
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="text-sm text-muted-foreground">
+                            Propriedades do header serão implementadas em breve.
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* Grupo Cores */}
+                      <AccordionItem value="cores">
+                        <AccordionTrigger className="text-sm font-medium">
+                          Cores
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="text-sm text-muted-foreground">
+                            Propriedades de cores serão implementadas em breve.
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* Grupo Tipografia */}
+                      <AccordionItem value="tipografia">
+                        <AccordionTrigger className="text-sm font-medium">
+                          Tipografia
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="text-sm text-muted-foreground">
+                            Propriedades de tipografia serão implementadas em
+                            breve.
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   </div>
                 )}
               </div>
