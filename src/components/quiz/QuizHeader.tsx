@@ -13,14 +13,7 @@ interface QuizHeaderProps {
   colors?: QuizColors;
 }
 
-export function QuizHeader({
-  currentStep,
-  totalSteps,
-  progress,
-  onBack,
-  title,
-  colors,
-}: QuizHeaderProps) {
+export function QuizHeader({ progress, onBack, colors }: QuizHeaderProps) {
   return (
     <header className="sticky top-0 z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -34,11 +27,6 @@ export function QuizHeader({
 
         {/* Progress section */}
         <div className="flex-1 max-w-md mx-auto">
-          <div className="text-center mb-2">
-            <span className="text-sm text-muted-foreground">
-              {title ? title : `Etapa ${currentStep} de ${totalSteps}`}
-            </span>
-          </div>
           <Progress
             value={progress}
             className="h-2"
