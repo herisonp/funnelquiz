@@ -182,7 +182,7 @@ export default function PropertiesPanel() {
         <Separator />
 
         {/* Content */}
-        <ScrollArea className="flex-1">
+        <ScrollArea className="flex-1 h-96">
           <div className="p-4">
             {selectedElement ? (
               <ElementProperties element={selectedElement} />
