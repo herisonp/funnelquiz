@@ -8,6 +8,17 @@ interface QuizElementRendererProps {
   onNavigate: (target: string) => void;
   isLastStep?: boolean;
   canProceed?: boolean;
+  quizColors?: {
+    primaryColor: string;
+    backgroundColor: string;
+    textColor: string;
+    titleColor: string;
+  };
+  quizFonts?: {
+    primaryFont: string;
+    headingFont: string;
+    baseFontSize: string;
+  };
 }
 
 export function QuizElementRenderer({
@@ -15,6 +26,8 @@ export function QuizElementRenderer({
   onNavigate,
   isLastStep = false,
   canProceed = true,
+  quizColors,
+  quizFonts,
 }: QuizElementRendererProps) {
   try {
     const content =
@@ -24,7 +37,14 @@ export function QuizElementRenderer({
 
     switch (element.type) {
       case "TEXT":
-        return <PublicTextElement content={content} elementId={element.id} />;
+        return (
+          <PublicTextElement
+            content={content}
+            elementId={element.id}
+            quizColors={quizColors}
+            quizFonts={quizFonts}
+          />
+        );
 
       case "MULTIPLE_CHOICE":
         return (

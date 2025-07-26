@@ -122,6 +122,8 @@ export function PublicQuizRenderer({
               onNavigate={handleNavigation}
               isLastStep={isLastStep}
               canProceed={canProceed}
+              quizColors={quiz.colors}
+              quizFonts={quiz.fonts}
             />
           ))}
 

@@ -7,6 +7,7 @@ import { PublicNavigationButtonElement } from "../quiz/elements/PublicNavigation
 import { TextElement as QuizTextElement } from "../quiz/elements/TextElement";
 import { MultipleChoiceElement as QuizMultipleChoiceElement } from "../quiz/elements/MultipleChoiceElement";
 import { NavigationButtonElement as QuizNavigationButtonElement } from "../quiz/elements/NavigationButtonElement";
+import { useEditorStore } from "@/hooks/useEditorStore";
 import { cn } from "@/lib/utils";
 
 interface ElementRendererProps {
@@ -32,6 +33,9 @@ export function ElementRenderer({
   disabled,
   className,
 }: ElementRendererProps) {
+  // Get quiz fonts from store when in editor mode
+  const { quiz } = useEditorStore();
+
   // Error boundary for invalid elements
   if (!element || !element.type) {
     return (
@@ -57,7 +61,14 @@ export function ElementRenderer({
       // Use public components in editor mode for consistent appearance
       switch (element.type) {
         case "TEXT":
-          return <PublicTextElement content={content} elementId={element.id} />;
+          return (
+            <PublicTextElement
+              content={content}
+              elementId={element.id}
+              quizColors={quiz?.colors}
+              quizFonts={quiz?.fonts}
+            />
+          );
 
         case "MULTIPLE_CHOICE":
           return (

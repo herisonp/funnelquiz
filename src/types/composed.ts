@@ -15,10 +15,46 @@ export interface QuizColors {
   titleColor: string;
 }
 
+// Tipos para configuração de tipografia do quiz
+export interface QuizFonts {
+  primaryFont: string; // Fonte principal para todos os textos
+  headingFont: string; // Fonte para títulos (h1, h2, h3) e textos grandes (xl, 2xl)
+  baseFontSize: string; // Tamanho padrão da fonte
+}
+
+// Fontes disponíveis do Google Fonts
+export const GOOGLE_FONTS = {
+  SERIF: [
+    { name: "Playfair Display", value: "Playfair Display, serif" },
+    { name: "Merriweather", value: "Merriweather, serif" },
+    { name: "Lora", value: "Lora, serif" },
+    { name: "Crimson Text", value: "Crimson Text, serif" },
+    { name: "Source Serif Pro", value: "Source Serif Pro, serif" },
+  ],
+  SANS_SERIF: [
+    { name: "Inter", value: "Inter, sans-serif" },
+    { name: "Roboto", value: "Roboto, sans-serif" },
+    { name: "Open Sans", value: "Open Sans, sans-serif" },
+    { name: "Montserrat", value: "Montserrat, sans-serif" },
+    { name: "Poppins", value: "Poppins, sans-serif" },
+    { name: "Nunito", value: "Nunito, sans-serif" },
+    { name: "Source Sans Pro", value: "Source Sans Pro, sans-serif" },
+  ],
+} as const;
+
+// Tamanhos de fonte disponíveis
+export const FONT_SIZES = [
+  { name: "Pequeno", value: "14px" },
+  { name: "Médio", value: "16px" },
+  { name: "Grande", value: "18px" },
+  { name: "Extra Grande", value: "20px" },
+] as const;
+
 // Tipos para operações do editor
 export type QuizWithSteps = Quiz & {
   steps: (Step & { elements: Element[] })[];
   colors?: QuizColors;
+  fonts?: QuizFonts;
 };
 
 export type StepWithElements = Step & {

@@ -9,11 +9,17 @@ interface PublicTextElementProps {
     textColor: string;
     titleColor: string;
   };
+  quizFonts?: {
+    primaryFont: string;
+    headingFont: string;
+    baseFontSize: string;
+  };
 }
 
 export function PublicTextElement({
   content,
   quizColors,
+  quizFonts,
 }: PublicTextElementProps) {
   const getFontSizeClass = (fontSize?: string) => {
     switch (fontSize) {
@@ -65,6 +71,20 @@ export function PublicTextElement({
       : quizColors?.textColor || "var(--quiz-text)";
   };
 
+  // Determina se deve usar classe de título para aplicação da fonte
+  const isLargeText = content.fontSize === "2xl" || content.fontSize === "xl";
+
+  // Determina a fonte a ser usada
+  const getFontFamily = () => {
+    if (isLargeText && quizFonts?.headingFont) {
+      return quizFonts.headingFont;
+    }
+    if (quizFonts?.primaryFont) {
+      return quizFonts.primaryFont;
+    }
+    return undefined;
+  };
+
   return (
     <div
       className={`
@@ -72,12 +92,21 @@ export function PublicTextElement({
         ${getFontSizeClass(content.fontSize)}
         ${getFontWeightClass(content.fontWeight)}
         ${getTextAlignClass(content.textAlign)}
+        ${isLargeText ? "quiz-heading-text" : "quiz-body-text"}
       `}
       style={{
         color: getTextColor(),
+        fontFamily: getFontFamily(),
       }}
     >
-      <p className="mb-0">{content.text || "Texto vazio"}</p>
+      <p
+        className="mb-0"
+        style={{
+          fontFamily: getFontFamily(),
+        }}
+      >
+        {content.text || "Texto vazio"}
+      </p>
     </div>
   );
 }

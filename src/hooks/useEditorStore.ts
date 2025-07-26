@@ -5,6 +5,7 @@ import {
   StepWithElements,
   CreateElementInput,
   QuizColors,
+  QuizFonts,
 } from "@/types/composed";
 import { ElementType } from "@prisma/client";
 import { createDefaultElement } from "@/lib/element-definitions";
@@ -42,6 +43,8 @@ interface EditorState {
   updateQuizDescription: (description: string) => void;
   updateQuizColors: (colors: QuizColors) => void;
   updateQuizColor: (key: keyof QuizColors, color: string) => void;
+  updateQuizFonts: (fonts: QuizFonts) => void;
+  updateQuizFont: (key: keyof QuizFonts, font: string) => void;
 
   // Step management
   addStep: () => void;
@@ -85,6 +88,11 @@ const createEmptyQuiz = (): QuizWithSteps => ({
     backgroundColor: "#ffffff",
     textColor: "#374151",
     titleColor: "#111827",
+  },
+  fonts: {
+    primaryFont: "Inter, sans-serif",
+    headingFont: "Inter, sans-serif",
+    baseFontSize: "16px",
   },
   steps: [
     {
@@ -200,6 +208,32 @@ export const useEditorStore = create<EditorState>()(
 
         set({
           quiz: { ...quiz, colors: { ...currentColors, [key]: color } },
+          hasUnsavedChanges: true,
+        });
+      },
+
+      updateQuizFonts: (fonts) => {
+        const { quiz } = get();
+        if (!quiz) return;
+
+        set({
+          quiz: { ...quiz, fonts },
+          hasUnsavedChanges: true,
+        });
+      },
+
+      updateQuizFont: (key, font) => {
+        const { quiz } = get();
+        if (!quiz) return;
+
+        const currentFonts = quiz.fonts || {
+          primaryFont: "Inter, sans-serif",
+          headingFont: "Inter, sans-serif",
+          baseFontSize: "16px",
+        };
+
+        set({
+          quiz: { ...quiz, fonts: { ...currentFonts, [key]: font } },
           hasUnsavedChanges: true,
         });
       },

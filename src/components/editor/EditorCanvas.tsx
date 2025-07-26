@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditorStore } from "@/hooks/useEditorStore";
+import { useGoogleFonts, useQuizFontStyles } from "@/hooks/useGoogleFonts";
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -17,6 +18,10 @@ export default function EditorCanvas() {
 
   const currentStep = quiz?.steps.find((step) => step.id === currentStepId);
   const elements = currentStep?.elements || [];
+
+  // Load Google Fonts and apply font styles
+  useGoogleFonts(quiz);
+  useQuizFontStyles(quiz);
 
   // Apply quiz colors as CSS variables
   useEffect(() => {
@@ -62,7 +67,7 @@ export default function EditorCanvas() {
           className={cn(
             // Base canvas styling - alterado para permitir scroll vertical
             "mx-auto max-w-4xl min-h-[calc(100vh-12rem)]",
-            "rounded-lg border shadow-sm canvas-container animate-canvas-enter",
+            "rounded-lg border shadow-sm canvas-container animate-canvas-enter quiz-canvas",
             // Interactive states
             "canvas-deselect-area",
             selectedElementId && "cursor-pointer has-selection",

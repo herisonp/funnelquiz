@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ColorPicker from "@/components/ui/color-picker";
+import FontPicker from "@/components/ui/font-picker";
 import {
   Accordion,
   AccordionContent,
@@ -16,6 +17,7 @@ import { Settings, Layers, FileText } from "lucide-react";
 import { useState, useEffect } from "react";
 import ElementProperties from "./ElementProperties";
 import { cn } from "@/lib/utils";
+import { GOOGLE_FONTS } from "@/types/composed";
 
 export default function PropertiesPanel() {
   const {
@@ -26,6 +28,7 @@ export default function PropertiesPanel() {
     updateQuizTitle,
     updateQuizDescription,
     updateQuizColor,
+    updateQuizFont,
     propertiesTab,
     setPropertiesTab,
     selectElement,
@@ -240,7 +243,7 @@ export default function PropertiesPanel() {
                     </h3>
                     <Accordion
                       type="multiple"
-                      defaultValue={["geral"]}
+                      defaultValue={["geral", "tipografia"]}
                       className="w-full"
                     >
                       {/* Grupo Geral */}
@@ -360,9 +363,74 @@ export default function PropertiesPanel() {
                           Tipografia
                         </AccordionTrigger>
                         <AccordionContent>
-                          <div className="text-sm text-muted-foreground">
-                            Propriedades de tipografia serão implementadas em
-                            breve.
+                          <div className="space-y-4">
+                            <FontPicker
+                              label="Fonte Principal"
+                              value={
+                                quiz?.fonts?.primaryFont || "Inter, sans-serif"
+                              }
+                              onChange={(font) =>
+                                updateQuizFont("primaryFont", font)
+                              }
+                              options={[
+                                ...GOOGLE_FONTS.SANS_SERIF,
+                                ...GOOGLE_FONTS.SERIF,
+                              ]}
+                            />
+
+                            <FontPicker
+                              label="Fonte dos Títulos"
+                              value={
+                                quiz?.fonts?.headingFont || "Inter, sans-serif"
+                              }
+                              onChange={(font) =>
+                                updateQuizFont("headingFont", font)
+                              }
+                              options={[
+                                ...GOOGLE_FONTS.SANS_SERIF,
+                                ...GOOGLE_FONTS.SERIF,
+                              ]}
+                            />
+                            <p className="text-xs text-muted-foreground">
+                              Aplica-se a títulos e textos Extra Grande e Extra
+                              Extra Grande
+                            </p>
+
+                            <div>
+                              <label className="text-sm font-medium text-foreground">
+                                Tamanho Base da Fonte
+                              </label>
+                              <div className="flex items-center space-x-2 mt-2">
+                                <Input
+                                  type="number"
+                                  min="10"
+                                  max="30"
+                                  value={parseInt(
+                                    quiz?.fonts?.baseFontSize?.replace(
+                                      "px",
+                                      ""
+                                    ) || "16"
+                                  )}
+                                  onChange={(e) => {
+                                    const value = parseInt(e.target.value);
+                                    if (value >= 10 && value <= 30) {
+                                      updateQuizFont(
+                                        "baseFontSize",
+                                        `${value}px`
+                                      );
+                                    }
+                                  }}
+                                  className="w-20"
+                                />
+                                <span className="text-sm text-muted-foreground">
+                                  px
+                                </span>
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Define o tamanho padrão para textos normais
+                                (10-30px)
+                              </p>
+                            </div>
                           </div>
                         </AccordionContent>
                       </AccordionItem>

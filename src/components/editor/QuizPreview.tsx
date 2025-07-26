@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditorStore } from "@/hooks/useEditorStore";
+import { useGoogleFonts, useQuizFontStyles } from "@/hooks/useGoogleFonts";
 import ElementWrapper from "./ElementWrapper";
 import ElementRenderer from "./ElementRenderer";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -17,6 +18,10 @@ export default function QuizPreview() {
 
   const currentStep = quiz?.steps.find((step) => step.id === currentStepId);
   const elements = currentStep?.elements || [];
+
+  // Load Google Fonts and apply font styles
+  useGoogleFonts(quiz);
+  useQuizFontStyles(quiz);
 
   if (!quiz || !currentStep) {
     return (
@@ -44,7 +49,12 @@ export default function QuizPreview() {
     <div className="flex-1 flex flex-col bg-muted/30">
       {/* Content area */}
       <div className="flex-1 p-6">
-        <div className="max-w-2xl mx-auto space-y-6">
+        <div
+          className="max-w-2xl mx-auto space-y-6 quiz-canvas"
+          style={{
+            backgroundColor: quiz?.colors?.backgroundColor || "#ffffff",
+          }}
+        >
           <ScrollArea className="h-full">
             {elements.map((element) => (
               <ElementWrapper
