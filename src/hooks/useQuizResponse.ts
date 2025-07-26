@@ -8,6 +8,7 @@ export function useQuizResponse(quiz: QuizWithSteps | null) {
     startQuiz,
     setResponse,
     goToStep,
+    goToStepById,
     completeQuiz,
     resetQuiz,
     getResponse,
@@ -18,7 +19,8 @@ export function useQuizResponse(quiz: QuizWithSteps | null) {
   // Initialize quiz when component mounts
   useEffect(() => {
     if (quiz && !currentResponse) {
-      startQuiz(quiz.id);
+      const firstStepId = quiz.steps[0]?.id || "";
+      startQuiz(quiz.id, firstStepId);
     }
   }, [quiz, currentResponse, startQuiz]);
 
@@ -51,9 +53,21 @@ export function useQuizResponse(quiz: QuizWithSteps | null) {
     [quiz, goToStep]
   );
 
+  // Nova função para navegação por ID
+  const goToStepByIdCallback = useCallback(
+    (stepId: string) => {
+      if (!quiz) return;
+      goToStepById(stepId, quiz);
+    },
+    [quiz, goToStepById]
+  );
+
   // Navigation info
   const navigationInfo = {
     currentStepIndex: currentResponse?.currentStepIndex || 0,
+    currentStepId: currentResponse?.currentStepId || quiz?.steps[0]?.id || "",
+    lastStepId: currentResponse?.lastStepId || null,
+    navigationHistory: currentResponse?.navigationHistory || [],
     isFirstStep: (currentResponse?.currentStepIndex || 0) === 0,
     isLastStep: quiz
       ? (currentResponse?.currentStepIndex || 0) === quiz.steps.length - 1
@@ -86,6 +100,8 @@ export function useQuizResponse(quiz: QuizWithSteps | null) {
   // Handle navigation based on target
   const handleNavigation = useCallback(
     (target: string) => {
+      if (!quiz) return;
+
       switch (target) {
         case "next":
           goToNext();
@@ -93,12 +109,19 @@ export function useQuizResponse(quiz: QuizWithSteps | null) {
         case "previous":
           goToPrevious();
           break;
+        case "submit":
+          completeQuiz();
+          break;
         default:
-          // Handle specific step ID navigation in the future
+          // Handle specific step ID navigation
+          const targetStep = quiz.steps.find((step) => step.id === target);
+          if (targetStep) {
+            goToStepByIdCallback(target);
+          }
           break;
       }
     },
-    [goToNext, goToPrevious]
+    [quiz, goToNext, goToPrevious, completeQuiz, goToStepByIdCallback]
   );
 
   return {
@@ -112,6 +135,7 @@ export function useQuizResponse(quiz: QuizWithSteps | null) {
     goToNext,
     goToPrevious,
     goToStepByIndex,
+    goToStepById: goToStepByIdCallback,
     completeQuiz,
     resetQuiz,
 

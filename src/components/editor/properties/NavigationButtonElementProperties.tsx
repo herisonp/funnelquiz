@@ -63,7 +63,11 @@ export function NavigationButtonElementProperties({
     if (target === "submit") return "Finaliza o quiz e coleta as respostas";
 
     const step = quiz?.steps.find((s) => s.id === target);
-    return step ? `Vai direto para a etapa: ${step.title}` : "Etapa específica";
+    if (step) {
+      const stepIndex = quiz?.steps.findIndex((s) => s.id === target) || 0;
+      return `Vai direto para a Etapa ${stepIndex + 1}: ${step.title}`;
+    }
+    return "Etapa específica";
   };
 
   const getVariantPreview = (variant: string) => {
@@ -133,7 +137,14 @@ export function NavigationButtonElementProperties({
             </SelectItem>
             {quiz?.steps.map((step, index) => (
               <SelectItem key={step.id} value={step.id}>
-                Ir para Etapa {index + 1}: {step.title}
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-xs flex items-center justify-center font-medium">
+                    {index + 1}
+                  </div>
+                  <span>
+                    Etapa {index + 1}: {step.title}
+                  </span>
+                </div>
               </SelectItem>
             ))}
           </SelectContent>

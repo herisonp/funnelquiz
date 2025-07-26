@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { AnswerValue } from "@/types/composed";
+import { AnswerValue, QuizWithSteps } from "@/types/composed";
 import { ElementType } from "@prisma/client";
 import {
   QuizResponseValidator,
@@ -12,6 +12,9 @@ interface QuizResponse {
   sessionId: string;
   responses: Record<string, AnswerValue>;
   currentStepIndex: number;
+  currentStepId: string; // Novo: ID da etapa atual
+  lastStepId: string | null; // Novo: ID da última etapa acessada
+  navigationHistory: string[]; // Novo: histórico de navegação
   startedAt: Date;
   completedAt?: Date;
   isCompleted: boolean;
@@ -26,9 +29,10 @@ interface QuizResponseState {
   lastValidationResult: ResponseValidationResult | null;
 
   // Actions
-  startQuiz: (quizId: string) => void;
+  startQuiz: (quizId: string, firstStepId?: string) => void;
   setResponse: (elementId: string, value: AnswerValue) => void;
   goToStep: (stepIndex: number) => void;
+  goToStepById: (stepId: string, quiz: QuizWithSteps) => void; // Novo: navegação por ID
   completeQuiz: () => void;
   resetQuiz: () => void;
 
@@ -62,13 +66,16 @@ export const useQuizResponseStore = create<QuizResponseState>()(
         validationErrors: {},
         lastValidationResult: null,
 
-        startQuiz: (quizId: string) => {
+        startQuiz: (quizId: string, firstStepId?: string) => {
           const sessionId = generateSessionId();
           const newResponse: QuizResponse = {
             quizId,
             sessionId,
             responses: {},
             currentStepIndex: 0,
+            currentStepId: firstStepId || "",
+            lastStepId: null,
+            navigationHistory: [firstStepId || ""].filter(Boolean),
             startedAt: new Date(),
             isCompleted: false,
           };
@@ -106,6 +113,25 @@ export const useQuizResponseStore = create<QuizResponseState>()(
               currentStepIndex: stepIndex,
             },
           });
+        },
+
+        goToStepById: (stepId: string, quiz: QuizWithSteps) => {
+          const { currentResponse } = get();
+          if (!currentResponse) return;
+
+          // Encontrar o índice da etapa pelo ID
+          const stepIndex = quiz.steps.findIndex((step) => step.id === stepId);
+          if (stepIndex === -1) return;
+
+          const updatedResponse = {
+            ...currentResponse,
+            lastStepId: currentResponse.currentStepId,
+            currentStepId: stepId,
+            currentStepIndex: stepIndex,
+            navigationHistory: [...currentResponse.navigationHistory, stepId],
+          };
+
+          set({ currentResponse: updatedResponse });
         },
 
         completeQuiz: () => {
