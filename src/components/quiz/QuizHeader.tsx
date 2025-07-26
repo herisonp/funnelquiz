@@ -1,6 +1,8 @@
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { QuizColors } from "@/types";
+import React from "react";
 
 interface QuizHeaderProps {
   currentStep: number;
@@ -8,6 +10,7 @@ interface QuizHeaderProps {
   progress: number;
   onBack?: () => void;
   title?: string;
+  colors?: QuizColors;
 }
 
 export function QuizHeader({
@@ -16,9 +19,10 @@ export function QuizHeader({
   progress,
   onBack,
   title,
+  colors,
 }: QuizHeaderProps) {
   return (
-    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+    <header className="sticky top-0 z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Back button */}
         {onBack && (
@@ -35,7 +39,17 @@ export function QuizHeader({
               {title ? title : `Etapa ${currentStep} de ${totalSteps}`}
             </span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress
+            value={progress}
+            className="h-2"
+            style={
+              {
+                "--progress-background":
+                  colors?.primaryColor ||
+                  "var(--quiz-primary, hsl(var(--primary)))",
+              } as React.CSSProperties
+            }
+          />
         </div>
 
         {/* Spacer to balance the layout */}

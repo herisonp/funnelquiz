@@ -29,7 +29,12 @@ export function QuizContainer({
   colors,
 }: QuizContainerProps) {
   return (
-    <div className={`min-h-screen bg-background ${className}`}>
+    <div
+      className={`min-h-screen bg-background ${className}`}
+      style={{
+        backgroundColor: colors?.backgroundColor || "hsl(var(--card))",
+      }}
+    >
       {/* Header */}
       <QuizHeader
         currentStep={currentStep}
@@ -41,18 +46,13 @@ export function QuizContainer({
       {/* Main content */}
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
-          <div
-            className="border rounded-lg p-8 min-h-[500px] flex flex-col justify-center shadow-sm"
-            style={{
-              backgroundColor: colors?.backgroundColor || "hsl(var(--card))",
-            }}
-          >
+          <div className="p-8 min-h-[500px] flex flex-col justify-center">
             {children}
           </div>
         </div>
       </main>
       {/* Footer with step navigation */}
-      <footer className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky bottom-0">
+      <footer className="sticky bottom-0">
         <div className="container mx-auto px-4">
           <QuizProgress
             currentStep={currentStep}
