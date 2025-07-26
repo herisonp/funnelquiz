@@ -83,7 +83,7 @@ export default function EditorCanvas() {
         >
           <div
             className={cn(
-              "w-full p-8 relative",
+              "w-full max-w-md mx-auto p-8 relative",
               elements.length === 0 &&
                 "flex items-center justify-center min-h-[calc(100vh-20rem)]"
             )}
@@ -96,7 +96,7 @@ export default function EditorCanvas() {
             />
 
             {/* Conteúdo do canvas */}
-            <div className="w-full max-w-[450px] mx-auto relative z-10">
+            <div className="w-full relative z-10">
               <SortableContext
                 items={elements.map((el) => el.id)}
                 strategy={verticalListSortingStrategy}
