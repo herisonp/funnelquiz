@@ -324,7 +324,11 @@ export default function PropertiesPanel() {
                           <div className="space-y-4">
                             <ColorPicker
                               label="Cor Primária"
-                              value={quiz?.colors?.primaryColor || "#3b82f6"}
+                              value={
+                                quiz?.primaryColor ||
+                                quiz?.colors?.primaryColor ||
+                                "#3b82f6"
+                              }
                               onChange={(color) =>
                                 updateQuizColor("primaryColor", color)
                               }
@@ -332,7 +336,11 @@ export default function PropertiesPanel() {
 
                             <ColorPicker
                               label="Cor de Fundo"
-                              value={quiz?.colors?.backgroundColor || "#ffffff"}
+                              value={
+                                quiz?.backgroundColor ||
+                                quiz?.colors?.backgroundColor ||
+                                "#ffffff"
+                              }
                               onChange={(color) =>
                                 updateQuizColor("backgroundColor", color)
                               }
@@ -340,7 +348,11 @@ export default function PropertiesPanel() {
 
                             <ColorPicker
                               label="Cor dos Textos"
-                              value={quiz?.colors?.textColor || "#374151"}
+                              value={
+                                quiz?.textColor ||
+                                quiz?.colors?.textColor ||
+                                "#374151"
+                              }
                               onChange={(color) =>
                                 updateQuizColor("textColor", color)
                               }
@@ -348,7 +360,11 @@ export default function PropertiesPanel() {
 
                             <ColorPicker
                               label="Cor dos Títulos"
-                              value={quiz?.colors?.titleColor || "#111827"}
+                              value={
+                                quiz?.titleColor ||
+                                quiz?.colors?.titleColor ||
+                                "#111827"
+                              }
                               onChange={(color) =>
                                 updateQuizColor("titleColor", color)
                               }
@@ -367,7 +383,9 @@ export default function PropertiesPanel() {
                             <FontPicker
                               label="Fonte Principal"
                               value={
-                                quiz?.fonts?.primaryFont || "Inter, sans-serif"
+                                quiz?.primaryFont ||
+                                quiz?.fonts?.primaryFont ||
+                                "Inter, sans-serif"
                               }
                               onChange={(font) =>
                                 updateQuizFont("primaryFont", font)
@@ -381,7 +399,9 @@ export default function PropertiesPanel() {
                             <FontPicker
                               label="Fonte dos Títulos"
                               value={
-                                quiz?.fonts?.headingFont || "Inter, sans-serif"
+                                quiz?.headingFont ||
+                                quiz?.fonts?.headingFont ||
+                                "Inter, sans-serif"
                               }
                               onChange={(font) =>
                                 updateQuizFont("headingFont", font)
@@ -406,10 +426,11 @@ export default function PropertiesPanel() {
                                   min="10"
                                   max="30"
                                   value={parseInt(
-                                    quiz?.fonts?.baseFontSize?.replace(
-                                      "px",
-                                      ""
-                                    ) || "16"
+                                    (
+                                      quiz?.baseFontSize ||
+                                      quiz?.fonts?.baseFontSize ||
+                                      "16px"
+                                    ).replace("px", "")
                                   )}
                                   onChange={(e) => {
                                     const value = parseInt(e.target.value);

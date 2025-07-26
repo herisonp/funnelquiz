@@ -45,8 +45,55 @@ export function useQuizRecovery(): UseQuizRecoveryReturn {
 
         console.log("Dados salvos carregados:", savedData);
 
-        // Restaura o quiz
-        setQuiz(savedData.quiz);
+        // Restaura o quiz com valores padrão para novos campos
+        const savedQuiz = savedData.quiz as typeof savedData.quiz & {
+          primaryColor?: string;
+          backgroundColor?: string;
+          textColor?: string;
+          titleColor?: string;
+          primaryFont?: string;
+          headingFont?: string;
+          baseFontSize?: string;
+        };
+
+        const quizWithDefaults = {
+          ...savedData.quiz,
+          primaryColor:
+            savedQuiz.primaryColor ||
+            savedQuiz.colors?.primaryColor ||
+            "#3b82f6",
+          backgroundColor:
+            savedQuiz.backgroundColor ||
+            savedQuiz.colors?.backgroundColor ||
+            "#ffffff",
+          textColor:
+            savedQuiz.textColor || savedQuiz.colors?.textColor || "#374151",
+          titleColor:
+            savedQuiz.titleColor || savedQuiz.colors?.titleColor || "#111827",
+          primaryFont:
+            savedQuiz.primaryFont ||
+            savedQuiz.fonts?.primaryFont ||
+            "Inter, sans-serif",
+          headingFont:
+            savedQuiz.headingFont ||
+            savedQuiz.fonts?.headingFont ||
+            "Inter, sans-serif",
+          baseFontSize:
+            savedQuiz.baseFontSize || savedQuiz.fonts?.baseFontSize || "16px",
+          colors: savedQuiz.colors || {
+            primaryColor: savedQuiz.primaryColor || "#3b82f6",
+            backgroundColor: savedQuiz.backgroundColor || "#ffffff",
+            textColor: savedQuiz.textColor || "#374151",
+            titleColor: savedQuiz.titleColor || "#111827",
+          },
+          fonts: savedQuiz.fonts || {
+            primaryFont: savedQuiz.primaryFont || "Inter, sans-serif",
+            headingFont: savedQuiz.headingFont || "Inter, sans-serif",
+            baseFontSize: savedQuiz.baseFontSize || "16px",
+          },
+        };
+
+        setQuiz(quizWithDefaults);
         setHasRecoveredData(true);
 
         // Restaura estado do editor se disponível

@@ -27,6 +27,17 @@ model Quiz {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Configurações de cores do quiz
+  primaryColor    String @default("#3b82f6")
+  backgroundColor String @default("#ffffff")
+  textColor       String @default("#374151")
+  titleColor      String @default("#111827")
+
+  // Configurações de fontes do quiz
+  primaryFont  String @default("Inter, sans-serif")
+  headingFont  String @default("Inter, sans-serif")
+  baseFontSize String @default("16px")
+
   steps     Step[]
   responses Response[]
 

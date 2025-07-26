@@ -90,7 +90,62 @@ export class QuizImportService {
             );
           }
 
-          resolve(validatedData.quiz);
+          // Adiciona valores padrão para compatibilidade
+          const importedQuiz =
+            validatedData.quiz as typeof validatedData.quiz & {
+              primaryColor?: string;
+              backgroundColor?: string;
+              textColor?: string;
+              titleColor?: string;
+              primaryFont?: string;
+              headingFont?: string;
+              baseFontSize?: string;
+            };
+
+          const quizWithDefaults = {
+            ...importedQuiz,
+            primaryColor:
+              importedQuiz.primaryColor ||
+              importedQuiz.colors?.primaryColor ||
+              "#3b82f6",
+            backgroundColor:
+              importedQuiz.backgroundColor ||
+              importedQuiz.colors?.backgroundColor ||
+              "#ffffff",
+            textColor:
+              importedQuiz.textColor ||
+              importedQuiz.colors?.textColor ||
+              "#374151",
+            titleColor:
+              importedQuiz.titleColor ||
+              importedQuiz.colors?.titleColor ||
+              "#111827",
+            primaryFont:
+              importedQuiz.primaryFont ||
+              importedQuiz.fonts?.primaryFont ||
+              "Inter, sans-serif",
+            headingFont:
+              importedQuiz.headingFont ||
+              importedQuiz.fonts?.headingFont ||
+              "Inter, sans-serif",
+            baseFontSize:
+              importedQuiz.baseFontSize ||
+              importedQuiz.fonts?.baseFontSize ||
+              "16px",
+            colors: importedQuiz.colors || {
+              primaryColor: importedQuiz.primaryColor || "#3b82f6",
+              backgroundColor: importedQuiz.backgroundColor || "#ffffff",
+              textColor: importedQuiz.textColor || "#374151",
+              titleColor: importedQuiz.titleColor || "#111827",
+            },
+            fonts: importedQuiz.fonts || {
+              primaryFont: importedQuiz.primaryFont || "Inter, sans-serif",
+              headingFont: importedQuiz.headingFont || "Inter, sans-serif",
+              baseFontSize: importedQuiz.baseFontSize || "16px",
+            },
+          };
+
+          resolve(quizWithDefaults);
         } catch (error) {
           if (error instanceof SyntaxError) {
             reject(new Error("Arquivo JSON inválido"));
@@ -128,7 +183,57 @@ export class QuizImportService {
         );
       }
 
-      return validatedData.quiz;
+      // Adiciona valores padrão para compatibilidade
+      const importedQuiz = validatedData.quiz as typeof validatedData.quiz & {
+        primaryColor?: string;
+        backgroundColor?: string;
+        textColor?: string;
+        titleColor?: string;
+        primaryFont?: string;
+        headingFont?: string;
+        baseFontSize?: string;
+      };
+
+      return {
+        ...importedQuiz,
+        primaryColor:
+          importedQuiz.primaryColor ||
+          importedQuiz.colors?.primaryColor ||
+          "#3b82f6",
+        backgroundColor:
+          importedQuiz.backgroundColor ||
+          importedQuiz.colors?.backgroundColor ||
+          "#ffffff",
+        textColor:
+          importedQuiz.textColor || importedQuiz.colors?.textColor || "#374151",
+        titleColor:
+          importedQuiz.titleColor ||
+          importedQuiz.colors?.titleColor ||
+          "#111827",
+        primaryFont:
+          importedQuiz.primaryFont ||
+          importedQuiz.fonts?.primaryFont ||
+          "Inter, sans-serif",
+        headingFont:
+          importedQuiz.headingFont ||
+          importedQuiz.fonts?.headingFont ||
+          "Inter, sans-serif",
+        baseFontSize:
+          importedQuiz.baseFontSize ||
+          importedQuiz.fonts?.baseFontSize ||
+          "16px",
+        colors: importedQuiz.colors || {
+          primaryColor: importedQuiz.primaryColor || "#3b82f6",
+          backgroundColor: importedQuiz.backgroundColor || "#ffffff",
+          textColor: importedQuiz.textColor || "#374151",
+          titleColor: importedQuiz.titleColor || "#111827",
+        },
+        fonts: importedQuiz.fonts || {
+          primaryFont: importedQuiz.primaryFont || "Inter, sans-serif",
+          headingFont: importedQuiz.headingFont || "Inter, sans-serif",
+          baseFontSize: importedQuiz.baseFontSize || "16px",
+        },
+      };
     } catch (error) {
       if (error instanceof SyntaxError) {
         throw new Error("JSON inválido");

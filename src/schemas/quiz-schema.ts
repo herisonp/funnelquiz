@@ -37,6 +37,13 @@ const quizColorsSchema = z.object({
   titleColor: z.string(),
 });
 
+// Schema para fontes do quiz
+const quizFontsSchema = z.object({
+  primaryFont: z.string(),
+  headingFont: z.string(),
+  baseFontSize: z.string(),
+});
+
 // Schema para Quiz
 const quizSchema = z.object({
   id: z.string(),
@@ -53,6 +60,7 @@ const quizSchema = z.object({
     .union([z.date(), z.string()])
     .transform((val) => (typeof val === "string" ? new Date(val) : val)),
   colors: quizColorsSchema.optional(),
+  fonts: quizFontsSchema.optional(),
   steps: z.array(stepSchema),
 });
 

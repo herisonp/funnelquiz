@@ -20,110 +20,139 @@ Response -> Answers (user submissions)
 
 Element types: `TEXT`, `MULTIPLE_CHOICE`, `NAVIGATION_BUTTON` with JSON content field for type-specific properties.
 
-### State Management Pattern
+### State Management & Persistence Architecture
 
-- **Zustand store** (`useEditorStore`) for editor state management
-- **Client-side quiz creation** with mock data structure during MVP phase
-- Elements use polymorphic JSON content field - type-specific interfaces in `src/types/composed.ts`
+- **Primary Store**: `useEditorStore` (Zustand) for real-time editor state
+- **Client-side Persistence**: `StorageManager` with LZ-String compression for localStorage
+- **Auto-save System**: `useAutoSave` hook with debounced saves and backup creation
+- **Data Recovery**: `useQuizRecovery` for loading and validating saved data with fallback to backups
 
-## Key Development Patterns
+**Critical Pattern**: All editor operations mark state as changed (`hasUnsavedChanges: true`) and trigger auto-save. Recovery system handles corrupted data gracefully.
 
-### Development Approach
+## Essential Development Patterns
 
-- **Ask questions when in doubt**: If requirements are unclear, implementation details are ambiguous, or multiple approaches are possible, always ask clarifying questions before proceeding to ensure the best possible execution.
-- **Confirm before major changes**: When making significant architectural changes or modifications that could impact existing functionality, seek confirmation first.
+### Drag & Drop System (@dnd-kit)
 
-### Component Architecture
+- **Elements Sidebar**: `DraggableElement` components with both click-to-add and drag functionality
+- **Canvas**: `SortableElement` and `DropZone` for precise element placement
+- **Steps Reordering**: `StepsVerticalNavigation` with sortable step items
+- **Sensors**: Configured for mouse, touch, and keyboard accessibility
 
-- **Shadcn/ui base**: Always use Shadcn components as foundation
-- **Element system**: Dynamic rendering via `src/lib/element-definitions.ts` registry
-- **Editor components**: Drag-and-drop with `@dnd-kit` for element placement
+Key files: `useEditorDragDrop`, `EditorLayout`, custom CSS in `src/styles/drag-drop.css`
 
-### TypeScript Conventions
+### Element Architecture Pattern
 
-- Type definitions split by domain in `src/types/` (composed, api, components, etc.)
-- Prisma types extended with relations (e.g., `QuizWithSteps`, `StepWithElements`)
-- Element content uses discriminated unions for type safety
+Elements use **polymorphic JSON content** with type-safe handling:
 
-### Next.js App Router Usage
+```typescript
+// Registry pattern in src/lib/element-definitions.ts
+export const AVAILABLE_ELEMENTS: ElementDefinition[]
 
-- **Server Components by default**, Client Components only when needed ("use client")
-- Use Next.js native navigation: `useRouter`, `usePathname`, `Link` from `next/navigation`
-- **NEVER** use `react-router-dom` or external routing libraries
+// Type guards in src/types/composed.ts
+export function isTextElementContent(content: unknown): content is TextElementContent
 
-## Development Workflow
-
-### Database Setup
-
-```bash
-# Start PostgreSQL (Docker)
-docker-compose up -d
-
-# Database operations
-npm run db:push      # Push schema changes
-npm run db:migrate   # Create migration
-npm run db:studio    # Open Prisma Studio
-npm run db:reset     # Reset with seed data
+// Universal renderer with mode switching
+<ElementRenderer element={element} mode="editor" | "public" />
 ```
 
-### Development Commands
+### Storage & Data Management
 
-```bash
-npm run dev          # Start with Turbopack
-npm run build        # Production build
-npm run lint         # ESLint check
+- **Storage Manager**: Singleton with compression, quota monitoring, backup management
+- **Schema Validation**: Zod schemas in `src/schemas/quiz-schema.ts` for data integrity
+- **Export/Import**: `QuizExportService` and `QuizImportService` for JSON-based data portability
+- **Response Tracking**: `useQuizResponseStore` for quiz submissions with validation
+
+### Editor Store Operations
+
+```typescript
+// Element management with automatic reordering
+addElement(type, order?) // Inserts at specific position
+moveElement(elementId, newOrder) // Drag & drop reordering
+updateElement(elementId, updates) // Content changes
+
+// Step management (MVP limit: 5 steps, minimum: 1)
+addStep() // Creates new step, auto-switches to it
+reorderSteps(stepIds) // From drag & drop operations
 ```
-
-### Environment Variables
-
-Database URL follows Docker Compose setup:
-`DATABASE_URL="postgresql://funnelquiz:funnelquiz123@localhost:5432/funnelquiz"`
 
 ## Critical Implementation Details
 
-### Element Content Pattern
+### Color & Typography System
 
-Each `Element.content` is polymorphic JSON. Use type guards and interfaces from `src/types/composed.ts`:
+Quiz appearance uses **dual field system** for backward compatibility:
 
-```typescript
-interface TextElementContent {
-  text: string;
-  fontSize?: "sm" | "base" | "lg" | "xl" | "2xl";
-  // ...
-}
+- Direct fields: `primaryColor`, `backgroundColor`, `textColor`, `titleColor`, `primaryFont`, `headingFont`, `baseFontSize`
+- Object fields: `colors: QuizColors`, `fonts: QuizFonts`
+
+Both are updated simultaneously. Google Fonts integration via `useGoogleFonts` hook.
+
+### Validation Architecture
+
+- **Editor Validation**: `useQuizValidation` for real-time feedback
+- **Response Validation**: `QuizResponseValidator` for public quiz submissions
+- **Step Validation**: Individual step completeness checking for navigation control
+
+### Component Patterns
+
+- **Shadcn/ui Foundation**: All base components use Shadcn with consistent theming
+- **Universal Rendering**: Same components work in editor and public modes via `mode` prop
+- **Wrapper Pattern**: `ElementWrapper` provides selection, deletion, and drag handles in editor
+
+## Development Workflow
+
+### Essential Commands
+
+```bash
+# Development with hot reload
+npm run dev
+
+# Database management
+docker-compose up -d        # Start PostgreSQL
+npm run db:push            # Sync schema (development)
+npm run db:migrate         # Create migration (production-ready)
+npm run db:studio          # Visual database browser
+npm run db:reset           # Reset with seed data
+
+# Build pipeline
+npm run build              # Production build with type checking
+npm run lint              # ESLint validation
 ```
 
-### Editor Store Integration
+### Environment Setup
 
-Components should use `useEditorStore` for quiz state. Key methods:
+```env
+DATABASE_URL="postgresql://funnelquiz:funnelquiz123@localhost:5432/funnelquiz"
+```
 
-- `setQuiz()`, `setCurrentStep()`
-- `addElement()`, `updateElement()`, `removeElement()`
-- `selectElement()` for properties panel
-
-### UI Component Strategy
-
-- Use Tailwind CSS with Shadcn color system (background, foreground, primary, etc.)
-- Follow responsive-first design
-- Maintain accessibility through Shadcn base components
+Docker Compose handles PostgreSQL with persistent volumes. Database schema auto-applies via Prisma.
 
 ## Project-Specific Context
 
-### Business Logic
+### Business Domain
 
-This is a **marketing conversion tool**, not an educational quiz. Focus on user engagement, data collection, and funnel optimization rather than scoring or correctness.
+Marketing conversion funnel tool - focus on **user engagement and data collection**, not quiz scoring. Features prioritize form completion rates and response quality.
 
-### MVP Scope
+### MVP Constraints
 
-Currently implementing core editor functionality. API routes and persistence are planned but not yet implemented - editor uses mock data structures.
+- Client-side only (no API routes yet)
+- 5 steps maximum per quiz
+- 3 element types: TEXT, MULTIPLE_CHOICE, NAVIGATION_BUTTON
+- localStorage persistence with 5MB quota management
 
-### Reference Applications
+### File Organization
 
-- WordPress Plugin Elementor-style drag-and-drop interface
-- Similar to Inlead Digital and FunnelFox platforms
+```
+src/
+├── components/{editor,quiz,ui,common}/  # Domain-grouped components
+├── hooks/                              # Domain-specific hooks (useEditor*, useQuiz*)
+├── lib/                               # Business logic (element-definitions, storage-manager, validators)
+├── stores/                            # Zustand stores for global state
+├── types/                             # Domain-separated TypeScript definitions
+└── styles/                            # CSS modules for drag-drop, preview-mode
+```
 
-## File Organization Patterns
+## Next.js App Router Specifics
 
-- Components grouped by domain: `editor/`, `quiz/`, `ui/`, `common/`
-- Hooks follow domain naming: `useEditorStore`, `useQuizEditor`, `useQuizPersistence`
-- Types mirror component organization with clear separation of concerns
+- **Server Components by default** - only add `"use client"` when needed for interactivity
+- **Native Navigation**: Use `useRouter`, `usePathname`, `Link` from `next/navigation`
+- **Route Structure**: `/editor` for builder, `/quiz/[id]` for public forms, `/quiz/preview/*` for preview modes

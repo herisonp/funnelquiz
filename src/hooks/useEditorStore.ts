@@ -83,6 +83,13 @@ const createEmptyQuiz = (): QuizWithSteps => ({
   isPublished: false,
   createdAt: new Date(),
   updatedAt: new Date(),
+  primaryColor: "#3b82f6",
+  backgroundColor: "#ffffff",
+  textColor: "#374151",
+  titleColor: "#111827",
+  primaryFont: "Inter, sans-serif",
+  headingFont: "Inter, sans-serif",
+  baseFontSize: "16px",
   colors: {
     primaryColor: "#3b82f6",
     backgroundColor: "#ffffff",
@@ -206,8 +213,15 @@ export const useEditorStore = create<EditorState>()(
           titleColor: "#111827",
         };
 
+        // Atualiza tanto o campo direto quanto o objeto colors
+        const updatedQuiz = {
+          ...quiz,
+          [key]: color, // Campo direto do banco
+          colors: { ...currentColors, [key]: color }, // Objeto para compatibilidade
+        };
+
         set({
-          quiz: { ...quiz, colors: { ...currentColors, [key]: color } },
+          quiz: updatedQuiz,
           hasUnsavedChanges: true,
         });
       },
@@ -232,8 +246,15 @@ export const useEditorStore = create<EditorState>()(
           baseFontSize: "16px",
         };
 
+        // Atualiza tanto o campo direto quanto o objeto fonts
+        const updatedQuiz = {
+          ...quiz,
+          [key]: font, // Campo direto do banco
+          fonts: { ...currentFonts, [key]: font }, // Objeto para compatibilidade
+        };
+
         set({
-          quiz: { ...quiz, fonts: { ...currentFonts, [key]: font } },
+          quiz: updatedQuiz,
           hasUnsavedChanges: true,
         });
       },
