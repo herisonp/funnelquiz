@@ -42,6 +42,14 @@ export default function ColorPicker({
     }
   };
 
+  const handleColorPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newColor = e.target.value;
+    const normalizedColor = normalizeHexColor(newColor);
+    setInputValue(normalizedColor);
+    setIsValid(true);
+    onChange(normalizedColor);
+  };
+
   const handleInputBlur = () => {
     if (!isValid && inputValue) {
       // Restaurar valor válido anterior em caso de erro
@@ -60,12 +68,22 @@ export default function ColorPicker({
         </Label>
       )}
       <div className="flex items-center space-x-3">
-        {/* Preview da cor */}
-        <div
-          className="w-8 h-8 rounded border-2 border-gray-200 shadow-sm cursor-pointer flex-shrink-0"
-          style={{ backgroundColor: displayColor }}
-          title={`Cor atual: ${displayColor}`}
-        />
+        {/* Preview da cor com color picker nativo */}
+        <div className="relative">
+          <input
+            type="color"
+            value={displayColor}
+            onChange={handleColorPickerChange}
+            disabled={disabled}
+            className="w-8 h-8 rounded border-2 border-gray-200 shadow-sm cursor-pointer opacity-0 absolute inset-0"
+            title="Selecionar cor"
+          />
+          <div
+            className="w-8 h-8 rounded border-2 border-gray-200 shadow-sm cursor-pointer flex-shrink-0 pointer-events-none"
+            style={{ backgroundColor: displayColor }}
+            title={`Cor atual: ${displayColor}`}
+          />
+        </div>
 
         {/* Input para código hex */}
         <div className="flex-1">
