@@ -1,8 +1,11 @@
+import { QuizColors } from "@/types";
+
 interface QuizProgressProps {
   currentStep: number;
   totalSteps: number;
   onStepClick?: (stepIndex: number) => void;
   allowNavigation?: boolean;
+  colors?: QuizColors;
 }
 
 export function QuizProgress({
@@ -10,6 +13,7 @@ export function QuizProgress({
   totalSteps,
   onStepClick,
   allowNavigation = false,
+  colors,
 }: QuizProgressProps) {
   return (
     <div className="flex justify-center gap-2 py-4">
@@ -18,6 +22,9 @@ export function QuizProgress({
         const isActive = stepNumber === currentStep;
         const isCompleted = stepNumber < currentStep;
         const isClickable = allowNavigation && onStepClick;
+
+        // Use primary color from colors prop or fallback to default
+        const primaryColor = colors?.primaryColor || "hsl(var(--primary))";
 
         return (
           <button
@@ -28,9 +35,9 @@ export function QuizProgress({
               w-3 h-3 rounded-full transition-all duration-200
               ${
                 isActive
-                  ? "bg-primary scale-110 shadow-sm"
+                  ? "scale-110 shadow-sm"
                   : isCompleted
-                  ? "bg-primary/70 hover:bg-primary/80"
+                  ? "hover:opacity-80"
                   : "bg-muted hover:bg-muted/80"
               }
               ${
@@ -39,6 +46,11 @@ export function QuizProgress({
                   : "cursor-default"
               }
             `}
+            style={{
+              backgroundColor:
+                isActive || isCompleted ? primaryColor : undefined,
+              opacity: isCompleted && !isActive ? 0.7 : 1,
+            }}
             aria-label={`${
               isCompleted ? "Concluído" : isActive ? "Atual" : "Pendente"
             }: Etapa ${stepNumber}`}

@@ -59,6 +59,7 @@ export function QuizContainer({
             totalSteps={totalSteps}
             onStepClick={onStepClick}
             allowNavigation={allowNavigation}
+            colors={colors}
           />
         </div>
       </footer>
