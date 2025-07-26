@@ -96,7 +96,7 @@ export default function EditorCanvas() {
             />
 
             {/* Conteúdo do canvas */}
-            <div className="w-full relative z-10">
+            <div className="w-full max-w-[450px] mx-auto relative z-10">
               <SortableContext
                 items={elements.map((el) => el.id)}
                 strategy={verticalListSortingStrategy}
