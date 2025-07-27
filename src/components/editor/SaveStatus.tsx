@@ -77,8 +77,8 @@ export function SaveStatus({ className }: SaveStatusProps) {
         icon: Clock,
         color: "text-orange-600",
         bgColor: "bg-orange-50",
-        message: "Salvando no banco...",
-        tooltip: "Salvamento no banco de dados em andamento",
+        message: "Salvando...",
+        tooltip: "Salvamento em andamento",
       };
     }
 
@@ -87,8 +87,8 @@ export function SaveStatus({ className }: SaveStatusProps) {
         icon: CheckCircle,
         color: "text-green-600",
         bgColor: "bg-green-50",
-        message: "Salvo no banco",
-        tooltip: `Salvo no banco: ${formatLastSaved(lastSaved)}`,
+        message: "Salvo",
+        tooltip: `Salvo: ${formatLastSaved(lastSaved)}`,
       };
     }
 
@@ -97,7 +97,7 @@ export function SaveStatus({ className }: SaveStatusProps) {
       color: "text-blue-600",
       bgColor: "bg-blue-50",
       message: "Sincronizado",
-      tooltip: `Último salvamento no banco: ${formatLastSaved(lastSaved)}`,
+      tooltip: `Último salvamento: ${formatLastSaved(lastSaved)}`,
     };
   };
 
@@ -152,7 +152,7 @@ export function SaveStatus({ className }: SaveStatusProps) {
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Salvar agora no banco (Ctrl+S)</p>
+            <p>Salvar agora (Ctrl+S)</p>
           </TooltipContent>
         </Tooltip>
 
