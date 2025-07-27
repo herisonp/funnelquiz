@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
-import { Eye, FileText, AlertTriangle } from "lucide-react";
+import { Eye, FileText, AlertTriangle, ChevronLeft } from "lucide-react";
 import { SaveStatus } from "./SaveStatus";
 import { ExportImportDialog } from "./ExportImportDialog";
 import { QuickTooltip } from "@/components/ui/tooltip-help";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export default function EditorHeader() {
   const router = useRouter();
@@ -36,6 +37,13 @@ export default function EditorHeader() {
         <div className="h-full flex items-center justify-between px-4">
           {/* Left section */}
           <div className="flex items-center gap-4">
+            <div>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/dashboard" className="flex items-center gap-2">
+                  <ChevronLeft className="h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-semibold text-foreground">
                 Funnel Quiz Editor
