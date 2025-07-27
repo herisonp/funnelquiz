@@ -56,9 +56,7 @@ export function useQuizAutoSave(
 
       try {
         setSaving(true);
-        saveErrorRef.current = null;
-
-        // 1. Salva no banco de dados
+        saveErrorRef.current = null; // 1. Salva no banco de dados
         const result = await updateQuiz(quizId, quizData);
 
         if (!result.success) {
