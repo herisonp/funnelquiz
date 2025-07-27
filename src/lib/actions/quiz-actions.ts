@@ -113,7 +113,7 @@ export async function createQuizAndRedirect(formData: FormData) {
     revalidatePath("/dashboard");
 
     // Redirecionar para o editor do quiz criado
-    redirect(`/editor/${result.data.id}`);
+    redirect(`/dashboard/editor/${result.data.id}`);
   }
 
   // Se chegou aqui, houve um erro - retornar o resultado
