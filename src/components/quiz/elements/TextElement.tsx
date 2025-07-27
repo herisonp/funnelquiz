@@ -13,11 +13,10 @@ export function TextElement({ element, className }: TextElementProps) {
   // Parse content
   let content: TextElementContent;
   try {
-    const contentStr =
+    const parsed =
       typeof element.content === "string"
-        ? element.content
-        : JSON.stringify(element.content);
-    const parsed = JSON.parse(contentStr);
+        ? JSON.parse(element.content)
+        : element.content;
     content = isTextElementContent(parsed)
       ? parsed
       : {

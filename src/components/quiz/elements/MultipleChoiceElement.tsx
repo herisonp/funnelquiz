@@ -31,11 +31,10 @@ export function MultipleChoiceElement({
   // Parse content
   let content: MultipleChoiceElementContent;
   try {
-    const contentStr =
+    const parsed =
       typeof element.content === "string"
-        ? element.content
-        : JSON.stringify(element.content);
-    const parsed = JSON.parse(contentStr);
+        ? JSON.parse(element.content)
+        : element.content;
     content = isMultipleChoiceElementContent(parsed)
       ? parsed
       : {
