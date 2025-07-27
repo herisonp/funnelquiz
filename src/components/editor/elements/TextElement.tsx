@@ -25,11 +25,10 @@ export function TextElement({
   // Parse content
   let content: TextElementContent;
   try {
-    const contentStr =
+    const parsed =
       typeof element.content === "string"
-        ? element.content
-        : JSON.stringify(element.content);
-    const parsed = JSON.parse(contentStr);
+        ? JSON.parse(element.content)
+        : element.content;
     content = isTextElementContent(parsed)
       ? parsed
       : {
@@ -69,10 +68,10 @@ export function TextElement({
   const handleTextChange = (newText: string) => {
     setLocalText(newText);
     updateElement(element.id, {
-      content: JSON.stringify({
+      content: {
         ...content,
         text: newText,
-      }),
+      },
     });
   };
 

@@ -25,11 +25,10 @@ export function TextElementProperties({ element }: TextElementPropertiesProps) {
   // Parse content
   let content: TextElementContent;
   try {
-    const contentStr =
+    const parsed =
       typeof element.content === "string"
-        ? element.content
-        : JSON.stringify(element.content);
-    const parsed = JSON.parse(contentStr);
+        ? JSON.parse(element.content)
+        : element.content;
     content = isTextElementContent(parsed)
       ? parsed
       : {
@@ -48,7 +47,7 @@ export function TextElementProperties({ element }: TextElementPropertiesProps) {
   const updateContent = (updates: Partial<TextElementContent>) => {
     const newContent = { ...content, ...updates };
     updateElement(element.id, {
-      content: JSON.stringify(newContent),
+      content: newContent,
     });
   };
 

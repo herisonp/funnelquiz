@@ -36,11 +36,10 @@ export function NavigationButtonElement({
   // Parse content
   let content: NavigationButtonElementContent;
   try {
-    const contentStr =
+    const parsed =
       typeof element.content === "string"
-        ? element.content
-        : JSON.stringify(element.content);
-    const parsed = JSON.parse(contentStr);
+        ? JSON.parse(element.content)
+        : element.content;
     content = isNavigationButtonElementContent(parsed)
       ? parsed
       : {
@@ -59,7 +58,7 @@ export function NavigationButtonElement({
   const updateContent = (updates: Partial<NavigationButtonElementContent>) => {
     const newContent = { ...content, ...updates };
     updateElement(element.id, {
-      content: JSON.stringify(newContent),
+      content: newContent,
     });
   };
 
