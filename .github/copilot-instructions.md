@@ -8,7 +8,7 @@ Funnel Quiz is a Next.js application for creating interactive marketing survey f
 
 ### Two-Interface System
 
-- **Editor Interface** (`/editor`): Visual drag-and-drop builder for creating quizzes
+- **Editor Interface** (`/dashboard/editor/[id]`): Visual drag-and-drop builder for creating quizzes
 - **Public Interface** (`/quiz/[id]`): Published forms accessible via unique URLs
 
 ### Data Model (Prisma)
@@ -155,4 +155,4 @@ src/
 
 - **Server Components by default** - only add `"use client"` when needed for interactivity
 - **Native Navigation**: Use `useRouter`, `usePathname`, `Link` from `next/navigation`
-- **Route Structure**: `/editor` for builder, `/quiz/[id]` for public forms, `/quiz/preview/*` for preview modes
+- **Route Structure**: `/dashboard/editor/[id]` for builder, `/quiz/[id]` for public forms, `/quiz/preview/*` for preview modes
