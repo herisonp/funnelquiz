@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -35,53 +35,33 @@ import {
   FileText,
   Users,
   Search,
+  Copy,
 } from "lucide-react";
 import Link from "next/link";
 import { CreateQuizModal } from "@/components/dashboard/CreateQuizModal";
+import { getQuizzes, getQuizStats } from "@/lib/actions/quiz-queries";
+import { deleteQuiz, duplicateQuiz } from "@/lib/actions/quiz-actions";
+import { toast } from "sonner";
 
-// Dados mockados para os quizzes
-const mockQuizzes = [
-  {
-    id: "quiz_1",
-    title: "Quiz de Satisfação do Cliente",
-    description: "Avalie a experiência do cliente com nossos produtos",
-    isPublished: true,
-    createdAt: new Date("2024-01-15T10:30:00Z"),
-    updatedAt: new Date("2024-01-20T14:45:00Z"),
-  },
-  {
-    id: "quiz_2",
-    title: "Pesquisa de Interesse em Produtos",
-    description: "Descubra quais produtos interessam mais aos seus clientes",
-    isPublished: false,
-    createdAt: new Date("2024-01-10T09:15:00Z"),
-    updatedAt: new Date("2024-01-12T16:20:00Z"),
-  },
-  {
-    id: "quiz_3",
-    title: "Questionário de Feedback",
-    description: "Colete feedback sobre nossos serviços",
-    isPublished: true,
-    createdAt: new Date("2024-01-05T11:00:00Z"),
-    updatedAt: new Date("2024-01-18T13:30:00Z"),
-  },
-  {
-    id: "quiz_4",
-    title: "Quiz de Onboarding",
-    description: "Guie novos usuários através do processo de integração",
-    isPublished: false,
-    createdAt: new Date("2024-01-03T08:45:00Z"),
-    updatedAt: new Date("2024-01-08T10:15:00Z"),
-  },
-  {
-    id: "quiz_5",
-    title: "Avaliação de Necessidades",
-    description: "Identifique as necessidades específicas dos clientes",
-    isPublished: true,
-    createdAt: new Date("2023-12-28T14:20:00Z"),
-    updatedAt: new Date("2024-01-15T09:45:00Z"),
-  },
-];
+type Quiz = {
+  id: string;
+  title: string;
+  description: string | null;
+  isPublished: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  _count: {
+    responses: number;
+    steps: number;
+  };
+};
+
+type QuizStats = {
+  totalQuizzes: number;
+  publishedQuizzes: number;
+  draftQuizzes: number;
+  totalResponses: number;
+};
 
 function formatDate(date: Date): string {
   return new Intl.DateTimeFormat("pt-BR", {
@@ -99,8 +79,104 @@ export default function DashboardPage() {
     "all" | "published" | "draft"
   >("all");
   const [isCreateQuizModalOpen, setIsCreateQuizModalOpen] = useState(false);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [stats, setStats] = useState<QuizStats>({
+    totalQuizzes: 0,
+    publishedQuizzes: 0,
+    draftQuizzes: 0,
+    totalResponses: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredQuizzes = mockQuizzes.filter((quiz) => {
+  // Carregar dados do servidor
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const [quizzesData, statsData] = await Promise.all([
+          getQuizzes(),
+          getQuizStats(),
+        ]);
+
+        setQuizzes(quizzesData);
+        setStats(statsData);
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+        toast.error("Erro ao carregar dados do dashboard");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (isCreateQuizModalOpen) return; // Não carregar se o modal estiver aberto
+    loadData();
+  }, [isCreateQuizModalOpen]);
+
+  // Função para recarregar dados
+  const reloadData = async () => {
+    try {
+      const [quizzesData, statsData] = await Promise.all([
+        getQuizzes(),
+        getQuizStats(),
+      ]);
+
+      setQuizzes(quizzesData);
+      setStats(statsData);
+    } catch (error) {
+      console.error("Erro ao recarregar dados:", error);
+      toast.error("Erro ao recarregar dados");
+    }
+  };
+
+  const handleDeleteQuiz = async (quizId: string, quizTitle: string) => {
+    if (!confirm(`Tem certeza que deseja deletar o quiz "${quizTitle}"?`)) {
+      return;
+    }
+
+    try {
+      const result = await deleteQuiz(quizId);
+
+      if (result.success) {
+        // Remover da lista local
+        setQuizzes((prev) => prev.filter((quiz) => quiz.id !== quizId));
+        setStats((prev) => ({
+          ...prev,
+          totalQuizzes: prev.totalQuizzes - 1,
+          publishedQuizzes:
+            prev.publishedQuizzes -
+            (quizzes.find((q) => q.id === quizId)?.isPublished ? 1 : 0),
+          draftQuizzes:
+            prev.draftQuizzes -
+            (quizzes.find((q) => q.id === quizId)?.isPublished ? 0 : 1),
+        }));
+        toast.success("Quiz deletado com sucesso!");
+      } else {
+        toast.error(result.error || "Erro ao deletar quiz");
+      }
+    } catch (error) {
+      console.error("Erro ao deletar quiz:", error);
+      toast.error("Erro inesperado ao deletar quiz");
+    }
+  };
+
+  const handleDuplicateQuiz = async (quizId: string) => {
+    try {
+      const result = await duplicateQuiz(quizId);
+
+      if (result.success && result.data) {
+        toast.success("Quiz duplicado com sucesso!");
+        // Recarregar dados
+        await reloadData();
+      } else {
+        toast.error(result.error || "Erro ao duplicar quiz");
+      }
+    } catch (error) {
+      console.error("Erro ao duplicar quiz:", error);
+      toast.error("Erro inesperado ao duplicar quiz");
+    }
+  };
+
+  const filteredQuizzes = quizzes.filter((quiz) => {
     const matchesSearch =
       quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       quiz.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -114,11 +190,18 @@ export default function DashboardPage() {
     return matchesSearch && matchesStatus;
   });
 
-  const totalQuizzes = mockQuizzes.length;
-  const publishedQuizzes = mockQuizzes.filter(
-    (quiz) => quiz.isPublished
-  ).length;
-  const draftQuizzes = totalQuizzes - publishedQuizzes;
+  if (isLoading) {
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
+            <p className="text-gray-600">Carregando dashboard...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -143,7 +226,7 @@ export default function DashboardPage() {
               <p className="text-xs font-medium text-muted-foreground">
                 Total de Quizzes
               </p>
-              <p className="text-xl font-bold">{totalQuizzes}</p>
+              <p className="text-xl font-bold">{stats.totalQuizzes}</p>
             </div>
             <FileText className="h-5 w-5 text-muted-foreground" />
           </div>
@@ -154,7 +237,7 @@ export default function DashboardPage() {
               <p className="text-xs font-medium text-muted-foreground">
                 Publicados
               </p>
-              <p className="text-xl font-bold">{publishedQuizzes}</p>
+              <p className="text-xl font-bold">{stats.publishedQuizzes}</p>
             </div>
             <BarChart3 className="h-5 w-5 text-muted-foreground" />
           </div>
@@ -165,7 +248,7 @@ export default function DashboardPage() {
               <p className="text-xs font-medium text-muted-foreground">
                 Rascunhos
               </p>
-              <p className="text-xl font-bold">{draftQuizzes}</p>
+              <p className="text-xl font-bold">{stats.draftQuizzes}</p>
             </div>
             <Users className="h-5 w-5 text-muted-foreground" />
           </div>
@@ -211,7 +294,7 @@ export default function DashboardPage() {
           {/* Indicador de resultados */}
           {(searchTerm || statusFilter !== "all") && (
             <div className="mb-4 text-sm text-gray-600">
-              Mostrando {filteredQuizzes.length} de {totalQuizzes} quizzes
+              Mostrando {filteredQuizzes.length} de {stats.totalQuizzes} quizzes
               {searchTerm && <span> • Busca: &ldquo;{searchTerm}&rdquo;</span>}
               {statusFilter !== "all" && (
                 <span>
@@ -229,6 +312,7 @@ export default function DashboardPage() {
                 <TableRow>
                   <TableHead>Título</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Respostas</TableHead>
                   <TableHead>Data de Criação</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
@@ -266,6 +350,11 @@ export default function DashboardPage() {
                       </TableCell>
                       <TableCell>
                         <div className="text-sm">
+                          {quiz._count.responses} respostas
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
                           {formatDate(quiz.createdAt)}
                         </div>
                       </TableCell>
@@ -281,7 +370,7 @@ export default function DashboardPage() {
                           </Button>
                           <Button variant="outline" size="sm" asChild>
                             <Link
-                              href={`/dashboard/editar/${quiz.id}`}
+                              href={`/dashboard/editor/${quiz.id}`}
                               title="Editar quiz"
                             >
                               <Edit className="w-4 h-4" />
@@ -290,11 +379,18 @@ export default function DashboardPage() {
                           <Button
                             variant="outline"
                             size="sm"
+                            title="Duplicar quiz"
+                            onClick={() => handleDuplicateQuiz(quiz.id)}
+                          >
+                            <Copy className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
                             title="Deletar quiz"
-                            onClick={() => {
-                              // TODO: Implementar função de deletar
-                              console.log("Deletar quiz:", quiz.id);
-                            }}
+                            onClick={() =>
+                              handleDeleteQuiz(quiz.id, quiz.title)
+                            }
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
