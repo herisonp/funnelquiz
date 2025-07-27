@@ -5,6 +5,7 @@ import { useQuizResponseStore } from "@/stores/useQuizResponseStore";
 export function useQuizResponse(quiz: QuizWithSteps | null) {
   const {
     currentResponse,
+    _hasHydrated,
     startQuiz,
     setResponse,
     goToStep,
@@ -16,13 +17,13 @@ export function useQuizResponse(quiz: QuizWithSteps | null) {
     canProceed,
   } = useQuizResponseStore();
 
-  // Initialize quiz when component mounts
+  // Initialize quiz when component mounts and store has hydrated
   useEffect(() => {
-    if (quiz && !currentResponse) {
+    if (quiz && !currentResponse && _hasHydrated) {
       const firstStepId = quiz.steps[0]?.id || "";
       startQuiz(quiz.id, firstStepId);
     }
-  }, [quiz, currentResponse, startQuiz]);
+  }, [quiz, currentResponse, _hasHydrated, startQuiz]);
 
   // Navigation actions
   const goToNext = useCallback(() => {

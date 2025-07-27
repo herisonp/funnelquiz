@@ -3,9 +3,11 @@
 import { QuizWithSteps } from "@/types/composed";
 import { PublicQuizRenderer } from "./PublicQuizRenderer";
 import { QuizCompletion } from "./QuizCompletion";
+import { QuizLoading } from "./QuizLoading";
 import { useQuizResponse } from "@/hooks/useQuizResponse";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useHydration } from "@/hooks/useHydration";
 
 interface PublicQuizContainerProps {
   quiz: QuizWithSteps;
@@ -13,6 +15,7 @@ interface PublicQuizContainerProps {
 
 export function PublicQuizContainer({ quiz }: PublicQuizContainerProps) {
   const router = useRouter();
+  const isHydrated = useHydration();
   const { navigationInfo, resetQuiz } = useQuizResponse(quiz);
   const { isCompleted } = navigationInfo;
 
@@ -61,6 +64,11 @@ export function PublicQuizContainer({ quiz }: PublicQuizContainerProps) {
   const handleBackToHome = () => {
     router.push("/");
   };
+
+  // Mostrar loading enquanto não hidratou para evitar erros de hidratação
+  if (!isHydrated) {
+    return <QuizLoading quiz={quiz} />;
+  }
 
   // Se o quiz foi completado, mostrar tela de finalização
   if (isCompleted) {

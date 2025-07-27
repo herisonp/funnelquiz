@@ -24,6 +24,9 @@ interface QuizResponseState {
   // Current response data
   currentResponse: QuizResponse | null;
 
+  // Hydration state
+  _hasHydrated: boolean;
+
   // Validation state
   validationErrors: Record<string, string[]>;
   lastValidationResult: ResponseValidationResult | null;
@@ -35,6 +38,7 @@ interface QuizResponseState {
   goToStepById: (stepId: string, quiz: QuizWithSteps) => void; // Novo: navegação por ID
   completeQuiz: () => void;
   resetQuiz: () => void;
+  setHasHydrated: (hasHydrated: boolean) => void;
 
   // Validation actions
   validateStep: (
@@ -54,8 +58,19 @@ interface QuizResponseState {
   hasValidationErrors: (elementId?: string) => boolean;
 }
 
+// Generate session ID only on client side
 const generateSessionId = () => {
-  return `quiz_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  // Use crypto.randomUUID if available, otherwise fallback to timestamp
+  if (typeof window !== "undefined" && window.crypto?.randomUUID) {
+    return `quiz_${window.crypto.randomUUID()}`;
+  }
+  // Fallback for environments without crypto.randomUUID
+  const timestamp = typeof window !== "undefined" ? Date.now() : 0;
+  const random =
+    typeof window !== "undefined"
+      ? Math.random().toString(36).substr(2, 9)
+      : "server";
+  return `quiz_${timestamp}_${random}`;
 };
 
 export const useQuizResponseStore = create<QuizResponseState>()(
@@ -63,8 +78,13 @@ export const useQuizResponseStore = create<QuizResponseState>()(
     persist(
       (set, get) => ({
         currentResponse: null,
+        _hasHydrated: false,
         validationErrors: {},
         lastValidationResult: null,
+
+        setHasHydrated: (hasHydrated: boolean) => {
+          set({ _hasHydrated: hasHydrated });
+        },
 
         startQuiz: (quizId: string, firstStepId?: string) => {
           const sessionId = generateSessionId();
@@ -265,6 +285,9 @@ export const useQuizResponseStore = create<QuizResponseState>()(
       {
         name: "quiz-response-storage",
         partialize: (state) => ({ currentResponse: state.currentResponse }),
+        onRehydrateStorage: () => (state) => {
+          state?.setHasHydrated(true);
+        },
       }
     ),
     { name: "QuizResponseStore" }
