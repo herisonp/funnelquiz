@@ -1,70 +1,32 @@
-import { useRouter } from "next/navigation";
 import { QuizWithSteps } from "@/types/composed";
 import { useQuizResponse } from "@/hooks/useQuizResponse";
 import { QuizContainer } from "./QuizContainer";
 import { QuizElementRenderer } from "./QuizElementRenderer";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useEffect } from "react";
 
 interface PublicQuizRendererProps {
   quiz: QuizWithSteps;
-  onBack?: () => void;
-  allowStepNavigation?: boolean;
 }
 
-export function PublicQuizRenderer({
-  quiz,
-  onBack,
-  allowStepNavigation = false,
-}: PublicQuizRendererProps) {
-  const router = useRouter();
+export function PublicQuizRenderer({ quiz }: PublicQuizRendererProps) {
   const {
     navigationInfo,
     handleNavigation,
     goToPrevious,
     goToNext,
-    goToStepByIndex,
     canProceedFromCurrentStep,
   } = useQuizResponse(quiz);
 
-  const {
-    currentStepIndex,
-    isFirstStep,
-    isLastStep,
-    progress,
-    currentStep,
-    isCompleted,
-  } = navigationInfo;
+  const { currentStepIndex, isFirstStep, isLastStep, progress, currentStep } =
+    navigationInfo;
 
-  // Redirect to completion page when quiz is completed
-  useEffect(() => {
-    if (isCompleted) {
-      router.push("/quiz/preview/complete");
+  // Função para voltar no histórico do quiz (não do navegador)
+  const handleQuizBack = () => {
+    if (!isFirstStep) {
+      goToPrevious();
     }
-  }, [isCompleted, router]);
-
-  // Show loading or redirect if quiz is completed
-  if (isCompleted) {
-    return (
-      <QuizContainer
-        currentStep={quiz.steps.length}
-        totalSteps={quiz.steps.length}
-        progress={100}
-        onBack={onBack}
-        title="Redirecionando..."
-      >
-        <div className="text-center space-y-4">
-          <h2 className="text-xl font-semibold">
-            Quiz finalizado com sucesso!
-          </h2>
-          <p className="text-muted-foreground">
-            Redirecionando para a página de resultados...
-          </p>
-        </div>
-      </QuizContainer>
-    );
-  }
+  };
 
   // Show error if no current step
   if (!currentStep) {
@@ -73,8 +35,9 @@ export function PublicQuizRenderer({
         currentStep={1}
         totalSteps={quiz.steps.length}
         progress={0}
-        onBack={onBack}
+        onBack={handleQuizBack}
         title="Erro"
+        colors={quiz.colors}
       >
         <div className="text-center space-y-4">
           <h2 className="text-xl font-semibold text-destructive">
@@ -83,12 +46,6 @@ export function PublicQuizRenderer({
           <p className="text-muted-foreground">
             Ocorreu um erro ao carregar a etapa atual do quiz.
           </p>
-          {onBack && (
-            <Button onClick={onBack} variant="outline">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar ao Editor
-            </Button>
-          )}
         </div>
       </QuizContainer>
     );
@@ -106,9 +63,7 @@ export function PublicQuizRenderer({
       currentStep={currentStepIndex + 1}
       totalSteps={quiz.steps.length}
       progress={progress}
-      onBack={onBack}
-      onStepClick={allowStepNavigation ? goToStepByIndex : undefined}
-      allowNavigation={allowStepNavigation}
+      onBack={!isFirstStep ? handleQuizBack : undefined}
       colors={quiz.colors}
     >
       <div className="space-y-4">
