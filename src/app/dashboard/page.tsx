@@ -37,6 +37,7 @@ import {
   Search,
 } from "lucide-react";
 import Link from "next/link";
+import { CreateQuizModal } from "@/components/dashboard/CreateQuizModal";
 
 // Dados mockados para os quizzes
 const mockQuizzes = [
@@ -97,6 +98,7 @@ export default function DashboardPage() {
   const [statusFilter, setStatusFilter] = useState<
     "all" | "published" | "draft"
   >("all");
+  const [isCreateQuizModalOpen, setIsCreateQuizModalOpen] = useState(false);
 
   const filteredQuizzes = mockQuizzes.filter((quiz) => {
     const matchesSearch =
@@ -127,11 +129,9 @@ export default function DashboardPage() {
             Gerencie seus quizzes e acompanhe o desempenho
           </p>
         </div>
-        <Button asChild>
-          <Link href="/editor">
-            <Plus className="w-4 h-4 mr-2" />
-            Novo Quiz
-          </Link>
+        <Button onClick={() => setIsCreateQuizModalOpen(true)}>
+          <Plus className="w-4 h-4 mr-2" />
+          Novo Quiz
         </Button>
       </div>
 
@@ -301,6 +301,12 @@ export default function DashboardPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Modal de Criação de Quiz */}
+      <CreateQuizModal
+        open={isCreateQuizModalOpen}
+        onOpenChange={setIsCreateQuizModalOpen}
+      />
     </div>
   );
 }
