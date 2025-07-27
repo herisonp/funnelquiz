@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Save, CheckCircle, AlertCircle, Clock } from "lucide-react";
+import {
+  Save,
+  CheckCircle,
+  AlertCircle,
+  Clock,
+  Cloud,
+  HardDrive,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -10,7 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useAutoSave } from "@/hooks/useAutoSave";
+import { useQuizAutoSave } from "@/hooks/useQuizAutoSave";
 import { useStorageQuota } from "@/hooks/useStorageQuota";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +26,7 @@ interface SaveStatusProps {
 }
 
 export function SaveStatus({ className }: SaveStatusProps) {
-  const { isSaving, lastSaved, saveManually, saveError } = useAutoSave();
+  const { isSaving, lastSaved, forceSave, saveError } = useQuizAutoSave();
   const { isNearLimit, isAtLimit, percentUsed } = useStorageQuota();
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
 
@@ -61,7 +68,7 @@ export function SaveStatus({ className }: SaveStatusProps) {
         color: "text-destructive",
         bgColor: "bg-destructive/10",
         message: "Erro ao salvar",
-        tooltip: saveError,
+        tooltip: `Erro: ${saveError}`,
       };
     }
 
@@ -70,8 +77,8 @@ export function SaveStatus({ className }: SaveStatusProps) {
         icon: Clock,
         color: "text-orange-600",
         bgColor: "bg-orange-50",
-        message: "Salvando...",
-        tooltip: "Salvamento em andamento",
+        message: "Salvando no banco...",
+        tooltip: "Salvamento no banco de dados em andamento",
       };
     }
 
@@ -80,17 +87,17 @@ export function SaveStatus({ className }: SaveStatusProps) {
         icon: CheckCircle,
         color: "text-green-600",
         bgColor: "bg-green-50",
-        message: "Salvo",
-        tooltip: `Último salvamento: ${formatLastSaved(lastSaved)}`,
+        message: "Salvo no banco",
+        tooltip: `Salvo no banco: ${formatLastSaved(lastSaved)}`,
       };
     }
 
     return {
-      icon: Save,
-      color: "text-muted-foreground",
-      bgColor: "bg-muted/20",
-      message: "Auto-save ativo",
-      tooltip: `Último salvamento: ${formatLastSaved(lastSaved)}`,
+      icon: Cloud,
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
+      message: "Sincronizado",
+      tooltip: `Último salvamento no banco: ${formatLastSaved(lastSaved)}`,
     };
   };
 
@@ -100,7 +107,7 @@ export function SaveStatus({ className }: SaveStatusProps) {
   return (
     <TooltipProvider>
       <div className={cn("flex items-center gap-2", className)}>
-        {/* Indicador de status */}
+        {/* Indicador de status do banco */}
         <Tooltip>
           <TooltipTrigger asChild>
             <Badge
@@ -125,6 +132,9 @@ export function SaveStatus({ className }: SaveStatusProps) {
           </TooltipTrigger>
           <TooltipContent>
             <p>{statusProps.tooltip}</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Backup local ativo no localStorage
+            </p>
           </TooltipContent>
         </Tooltip>
 
@@ -134,7 +144,7 @@ export function SaveStatus({ className }: SaveStatusProps) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={saveManually}
+              onClick={() => forceSave()}
               disabled={isSaving}
               className="h-7 w-7 p-0"
             >
@@ -142,11 +152,11 @@ export function SaveStatus({ className }: SaveStatusProps) {
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Salvar agora (Ctrl+S)</p>
+            <p>Salvar agora no banco (Ctrl+S)</p>
           </TooltipContent>
         </Tooltip>
 
-        {/* Indicador de quota de storage */}
+        {/* Indicador de quota de storage local */}
         {(isNearLimit || isAtLimit) && (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -154,15 +164,15 @@ export function SaveStatus({ className }: SaveStatusProps) {
                 variant={isAtLimit ? "destructive" : "secondary"}
                 className="text-xs"
               >
-                <AlertCircle className="h-3 w-3 mr-1" />
+                <HardDrive className="h-3 w-3 mr-1" />
                 {Math.round(percentUsed)}%
               </Badge>
             </TooltipTrigger>
             <TooltipContent>
               <p>
                 {isAtLimit
-                  ? "Armazenamento quase cheio! Considere exportar dados."
-                  : "Armazenamento próximo do limite."}
+                  ? "Armazenamento local cheio! Backup pode falhar."
+                  : "Armazenamento local próximo do limite."}
               </p>
             </TooltipContent>
           </Tooltip>
