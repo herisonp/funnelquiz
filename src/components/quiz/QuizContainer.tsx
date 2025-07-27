@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { QuizHeader } from "./QuizHeader";
 import { QuizProgress } from "./QuizProgress";
+import { QuizFooter } from "./QuizFooter";
 import { QuizColors } from "@/types";
 
 interface QuizContainerProps {
@@ -62,6 +63,7 @@ export function QuizContainer({
             colors={colors}
           />
         </div>
+        <QuizFooter />
       </footer>
     </div>
   );
