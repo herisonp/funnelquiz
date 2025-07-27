@@ -380,6 +380,7 @@ export default function DashboardPage() {
                             variant="outline"
                             size="sm"
                             title="Duplicar quiz"
+                            className="cursor-pointer"
                             onClick={() => handleDuplicateQuiz(quiz.id)}
                           >
                             <Copy className="w-4 h-4" />
@@ -388,6 +389,7 @@ export default function DashboardPage() {
                             variant="outline"
                             size="sm"
                             title="Deletar quiz"
+                            className="cursor-pointer"
                             onClick={() =>
                               handleDeleteQuiz(quiz.id, quiz.title)
                             }
