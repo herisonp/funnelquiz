@@ -134,6 +134,8 @@ export async function deleteQuiz(quizId: string): Promise<{
 
     // Revalidar cache da página do dashboard
     revalidatePath("/dashboard");
+    revalidatePath(`/dashboard/editor/${quizId}`);
+    revalidatePath(`/${quizId}`);
 
     return { success: true };
   } catch (error) {
@@ -398,6 +400,7 @@ export async function updateQuiz(
     };
 
     revalidatePath(`/dashboard/editor/${quizId}`);
+    revalidatePath(`/${quizId}`);
     return { success: true, data: quizWithCompatibility };
   } catch (error) {
     console.error("Erro ao atualizar quiz:", error);
