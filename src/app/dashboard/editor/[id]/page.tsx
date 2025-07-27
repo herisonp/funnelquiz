@@ -5,12 +5,37 @@ import EditorLayout from "@/components/editor/EditorLayout";
 import { useQuizData } from "@/hooks/useQuizData";
 import { useQuizAutoSave } from "@/hooks/useQuizAutoSave";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
+import { toast } from "sonner";
 
 export default function EditarQuizPage() {
   const { isLoading, error, quiz } = useQuizData();
-  const { saveError, isSaving } = useQuizAutoSave();
+  const { saveError } = useQuizAutoSave();
+
+  // Exibe toast para erros de carregamento
+  useEffect(() => {
+    if (error) {
+      toast.error(
+        `Erro ao carregar dados salvos: ${error}. Um novo quiz foi criado.`,
+        {
+          position: "top-right",
+          duration: 5000,
+        }
+      );
+    }
+  }, [error]);
+
+  // Exibe toast para erros de salvamento
+  useEffect(() => {
+    if (saveError) {
+      toast.error(
+        `Erro ao salvar: ${saveError}. Suas alterações podem não estar sendo salvas automaticamente.`,
+        {
+          position: "top-right",
+          duration: 5000,
+        }
+      );
+    }
+  }, [saveError]);
 
   // Adiciona atalho de teclado Ctrl+S
   useEffect(() => {
@@ -43,33 +68,6 @@ export default function EditarQuizPage() {
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Alertas de erro */}
-      {error && (
-        <Alert variant="destructive" className="mx-4 mt-2 shrink-0">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            Erro ao carregar dados salvos: {error}. Um novo quiz foi criado.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      {saveError && (
-        <Alert variant="destructive" className="mx-4 mt-2 shrink-0">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            Erro ao salvar: {saveError}. Suas alterações podem não estar sendo
-            salvas automaticamente.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      {isSaving && (
-        <Alert className="mx-4 mt-2 shrink-0">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>Salvando alterações...</AlertDescription>
-        </Alert>
-      )}
-
       {/* Editor Layout */}
       <div className="flex-1 min-h-0">
         <EditorLayout />
