@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +25,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Loader2 } from "lucide-react";
+import { createQuiz } from "@/lib/actions/quiz-actions";
+import { toast } from "sonner";
 
 const createQuizSchema = z.object({
   title: z
@@ -46,7 +48,7 @@ interface CreateQuizModalProps {
 }
 
 export function CreateQuizModal({ open, onOpenChange }: CreateQuizModalProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const form = useForm<CreateQuizFormData>({
@@ -58,27 +60,51 @@ export function CreateQuizModal({ open, onOpenChange }: CreateQuizModalProps) {
   });
 
   const onSubmit = async (data: CreateQuizFormData) => {
-    try {
-      setIsLoading(true);
+    startTransition(async () => {
+      try {
+        // Criar FormData para enviar para a Server Action
+        const formData = new FormData();
+        formData.append("title", data.title);
+        if (data.description) {
+          formData.append("description", data.description);
+        }
 
-      // TODO: Implementar criação do quiz no banco de dados
-      console.log("Dados do novo quiz:", data);
+        // Executar Server Action
+        const result = await createQuiz(formData);
 
-      // Simular delay de criação
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+        if (!result.success) {
+          // Mostrar erros de validação
+          if (result.fieldErrors) {
+            if (result.fieldErrors.title) {
+              form.setError("title", {
+                message: result.fieldErrors.title[0],
+              });
+            }
+            if (result.fieldErrors.description) {
+              form.setError("description", {
+                message: result.fieldErrors.description[0],
+              });
+            }
+          } else {
+            toast.error(result.error || "Erro ao criar quiz");
+          }
+          return;
+        }
 
-      // Resetar formulário e fechar modal
-      form.reset();
-      onOpenChange(false);
+        // Sucesso - resetar formulário e fechar modal
+        form.reset();
+        onOpenChange(false);
+        toast.success("Quiz criado com sucesso!");
 
-      // Redirecionar para o editor
-      router.push("/editor");
-    } catch (error) {
-      console.error("Erro ao criar quiz:", error);
-      // TODO: Mostrar toast de erro
-    } finally {
-      setIsLoading(false);
-    }
+        // Redirecionar para o editor
+        if (result.data) {
+          router.push(`/dashboard/editor/${result.data.id}`);
+        }
+      } catch (error) {
+        console.error("Erro ao criar quiz:", error);
+        toast.error("Erro inesperado ao criar quiz");
+      }
+    });
   };
 
   return (
@@ -106,7 +132,7 @@ export function CreateQuizModal({ open, onOpenChange }: CreateQuizModalProps) {
                     <Input
                       placeholder="Ex: Quiz de Satisfação do Cliente"
                       {...field}
-                      disabled={isLoading}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -126,7 +152,7 @@ export function CreateQuizModal({ open, onOpenChange }: CreateQuizModalProps) {
                       className="resize-none"
                       rows={3}
                       {...field}
-                      disabled={isLoading}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -139,12 +165,12 @@ export function CreateQuizModal({ open, onOpenChange }: CreateQuizModalProps) {
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                disabled={isLoading}
+                disabled={isPending}
               >
                 Cancelar
               </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? (
+              <Button type="submit" disabled={isPending}>
+                {isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Criando...
