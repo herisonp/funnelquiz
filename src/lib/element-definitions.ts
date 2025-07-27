@@ -5,6 +5,7 @@ import {
   MultipleChoiceElementContent,
   NavigationButtonElementContent,
 } from "@/types/composed";
+import type { Prisma } from "@prisma/client";
 
 export interface ElementDefinition {
   type: ElementType;
@@ -78,7 +79,7 @@ export function createDefaultElement(
 
   return {
     type,
-    content: JSON.stringify(definition.defaultContent),
+    content: definition.defaultContent as unknown as Prisma.JsonValue,
   };
 }
 
