@@ -8,7 +8,7 @@ Sistema interativo de criação de formulários de pesquisa customizáveis volta
 
 - **Frontend**: Next.js 15, React, TypeScript, Tailwind CSS
 - **UI Components**: Shadcn/ui
-- **Backend**: Next.js API Routes
+- **Backend**: Next.js Server Actions e API Routes
 - **Database**: PostgreSQL com Prisma ORM
 - **Containerização**: Docker (desenvolvimento)
 
