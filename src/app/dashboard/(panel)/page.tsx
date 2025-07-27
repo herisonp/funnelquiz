@@ -272,18 +272,25 @@ export default function DashboardPage() {
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <Button variant="outline" size="sm" asChild>
-                            <Link href={`/quiz/preview/${quiz.id}`}>
+                            <Link
+                              href={`/quiz/preview/${quiz.id}`}
+                              title="Visualizar quiz"
+                            >
                               <Eye className="w-4 h-4" />
                             </Link>
                           </Button>
                           <Button variant="outline" size="sm" asChild>
-                            <Link href={`/editor/${quiz.id}`}>
+                            <Link
+                              href={`/dashboard/editar/${quiz.id}`}
+                              title="Editar quiz"
+                            >
                               <Edit className="w-4 h-4" />
                             </Link>
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
+                            title="Deletar quiz"
                             onClick={() => {
                               // TODO: Implementar função de deletar
                               console.log("Deletar quiz:", quiz.id);
