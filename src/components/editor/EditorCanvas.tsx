@@ -103,7 +103,7 @@ export default function EditorCanvas() {
               >
                 <div
                   className={cn(
-                    "w-full space-y-6",
+                    "w-full space-y-4",
                     elements.length === 0 &&
                       "min-h-[calc(100vh-20rem)] flex items-center justify-center"
                   )}

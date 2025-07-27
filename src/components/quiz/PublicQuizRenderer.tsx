@@ -111,7 +111,7 @@ export function PublicQuizRenderer({
       allowNavigation={allowStepNavigation}
       colors={quiz.colors}
     >
-      <div className="space-y-8">
+      <div className="space-y-4">
         {/* Render step elements */}
         {currentStep.elements
           .sort((a, b) => a.order - b.order)

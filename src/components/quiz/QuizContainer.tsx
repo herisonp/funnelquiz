@@ -44,9 +44,9 @@ export function QuizContainer({
         title={title}
       />
       {/* Main content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="w-full max-w-md mx-auto sm:px-4 py-8">
         <div className="max-w-2xl mx-auto">
-          <div className="p-8 min-h-[500px] flex flex-col justify-center">
+          <div className="min-h-[500px] flex flex-col justify-center">
             {children}
           </div>
         </div>
