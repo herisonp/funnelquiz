@@ -2,8 +2,6 @@ import { QuizWithSteps } from "@/types/composed";
 import { useQuizResponse } from "@/hooks/useQuizResponse";
 import { QuizContainer } from "./QuizContainer";
 import { QuizElementRenderer } from "./QuizElementRenderer";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface PublicQuizRendererProps {
   quiz: QuizWithSteps;
@@ -14,7 +12,6 @@ export function PublicQuizRenderer({ quiz }: PublicQuizRendererProps) {
     navigationInfo,
     handleNavigation,
     goToPrevious,
-    goToNext,
     canProceedFromCurrentStep,
   } = useQuizResponse(quiz);
 
@@ -51,11 +48,6 @@ export function PublicQuizRenderer({ quiz }: PublicQuizRendererProps) {
     );
   }
 
-  // Check if current step has navigation buttons
-  const hasNavigationButtons = currentStep.elements.some(
-    (element) => element.type === "NAVIGATION_BUTTON"
-  );
-
   const canProceed = canProceedFromCurrentStep();
 
   return (
@@ -81,30 +73,6 @@ export function PublicQuizRenderer({ quiz }: PublicQuizRendererProps) {
               quizFonts={quiz.fonts}
             />
           ))}
-
-        {/* Auto navigation if no navigation buttons present */}
-        {!hasNavigationButtons && (
-          <div className="flex justify-between pt-8 border-t">
-            <Button
-              variant="outline"
-              onClick={goToPrevious}
-              disabled={isFirstStep}
-              className="min-w-32"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Anterior
-            </Button>
-
-            <Button
-              onClick={goToNext}
-              disabled={!canProceed}
-              className="min-w-32"
-            >
-              {isLastStep ? "Finalizar" : "Próximo"}
-              {!isLastStep && <ArrowRight className="ml-2 h-4 w-4" />}
-            </Button>
-          </div>
-        )}
 
         {/* Validation message */}
         {!canProceed && !isFirstStep && (
