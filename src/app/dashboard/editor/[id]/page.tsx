@@ -1,20 +1,16 @@
 "use client";
 
 import { useEffect } from "react";
-import { useParams } from "next/navigation";
 import EditorLayout from "@/components/editor/EditorLayout";
-import { useQuizRecovery } from "@/hooks/useQuizRecovery";
-import { useAutoSave } from "@/hooks/useAutoSave";
+import { useQuizData } from "@/hooks/useQuizData";
+import { useQuizAutoSave } from "@/hooks/useQuizAutoSave";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 
 export default function EditarQuizPage() {
-  const params = useParams();
-  const quizId = params.id as string;
-
-  const { isLoading, error } = useQuizRecovery();
-  const { saveError } = useAutoSave();
+  const { isLoading, error, quiz } = useQuizData();
+  const { saveError, isSaving } = useQuizAutoSave();
 
   // Adiciona atalho de teclado Ctrl+S
   useEffect(() => {
@@ -37,7 +33,9 @@ export default function EditarQuizPage() {
         <div className="flex flex-col items-center gap-4">
           <LoadingSpinner size="large" />
           <p className="text-muted-foreground">Carregando editor...</p>
-          <p className="text-sm text-muted-foreground">Quiz ID: {quizId}</p>
+          {quiz && (
+            <p className="text-sm text-muted-foreground">Quiz: {quiz.title}</p>
+          )}
         </div>
       </div>
     );
@@ -60,8 +58,15 @@ export default function EditarQuizPage() {
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
             Erro ao salvar: {saveError}. Suas alterações podem não estar sendo
-            salvas.
+            salvas automaticamente.
           </AlertDescription>
+        </Alert>
+      )}
+
+      {isSaving && (
+        <Alert className="mx-4 mt-2 shrink-0">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>Salvando alterações...</AlertDescription>
         </Alert>
       )}
 
