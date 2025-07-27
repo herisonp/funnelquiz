@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { QuizHeader } from "./QuizHeader";
-import { QuizProgress } from "./QuizProgress";
 import { QuizFooter } from "./QuizFooter";
 import { QuizColors } from "@/types";
 
@@ -23,8 +22,6 @@ export function QuizContainer({
   totalSteps,
   progress,
   onBack,
-  onStepClick,
-  allowNavigation = false,
   title,
   className = "",
   colors,
@@ -45,24 +42,13 @@ export function QuizContainer({
         title={title}
       />
       {/* Main content */}
-      <main className="w-full max-w-md mx-auto sm:px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="min-h-[500px] flex flex-col justify-start">
-            {children}
-          </div>
+      <main className="w-full max-w-md mx-auto px-4 py-8">
+        <div className="min-h-[500px] flex flex-col justify-start">
+          {children}
         </div>
       </main>
       {/* Footer with step navigation */}
       <footer className="sticky bottom-0">
-        <div className="container mx-auto px-4">
-          <QuizProgress
-            currentStep={currentStep}
-            totalSteps={totalSteps}
-            onStepClick={onStepClick}
-            allowNavigation={allowNavigation}
-            colors={colors}
-          />
-        </div>
         <QuizFooter />
       </footer>
     </div>
