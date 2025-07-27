@@ -1,6 +1,6 @@
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { QuizColors } from "@/types";
 import React from "react";
 
@@ -20,13 +20,12 @@ export function QuizHeader({ progress, onBack, colors }: QuizHeaderProps) {
         {/* Back button */}
         {onBack && (
           <Button variant="ghost" size="sm" onClick={onBack}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar
+            <ChevronLeft className="h-4 w-4 mr-2" />
           </Button>
         )}
 
         {/* Progress section */}
-        <div className="flex-1 max-w-md mx-auto">
+        <div className="flex-1 max-w-3xs md:max-w-md mx-auto">
           <Progress
             value={progress}
             className="h-2"
@@ -41,7 +40,7 @@ export function QuizHeader({ progress, onBack, colors }: QuizHeaderProps) {
         </div>
 
         {/* Spacer to balance the layout */}
-        <div className="w-20" />
+        {onBack && <div className="w-11" />}
       </div>
     </header>
   );
