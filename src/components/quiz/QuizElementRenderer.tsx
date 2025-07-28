@@ -62,6 +62,7 @@ export function QuizElementRenderer({
             onNavigate={onNavigate}
             isLastStep={isLastStep}
             canProceed={canProceed}
+            quizColors={quizColors}
           />
         );
 

@@ -44,6 +44,7 @@ export function QuizContainer({
         progress={progress}
         onBack={onBack}
         title={title}
+        colors={colors}
       />
       {/* Main content */}
       <main className="w-full max-w-md mx-auto px-4 py-8">
