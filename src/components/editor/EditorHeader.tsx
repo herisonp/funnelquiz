@@ -6,30 +6,16 @@ import { useQuizValidation } from "@/hooks/useQuizValidation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useRouter } from "next/navigation";
-import { Eye, FileText, AlertTriangle, ChevronLeft } from "lucide-react";
+import { Eye, FileText, ChevronLeft } from "lucide-react";
 import { SaveStatus } from "./SaveStatus";
 import { ExportImportDialog } from "./ExportImportDialog";
 import { QuickTooltip } from "@/components/ui/tooltip-help";
-import { toast } from "sonner";
 import Link from "next/link";
 
 export default function EditorHeader() {
-  const router = useRouter();
   const [showExportImport, setShowExportImport] = useState(false);
   const { quiz, currentStepId } = useEditorStore();
-  const { canPreview, hasErrors, errorCount, quickValidationMessage } =
-    useQuizValidation();
-
-  const handlePreview = () => {
-    if (!canPreview) {
-      toast.error(
-        quickValidationMessage || "Corrija os erros antes de visualizar o quiz"
-      );
-      return;
-    }
-    router.push("/quiz/preview");
-  };
+  const { canPreview, quickValidationMessage } = useQuizValidation();
 
   return (
     <>
@@ -104,19 +90,15 @@ export default function EditorHeader() {
               shortcut="Ctrl+P"
             >
               <Button
-                onClick={handlePreview}
                 size="sm"
                 disabled={!canPreview}
-                variant={hasErrors ? "outline" : "default"}
+                variant="default"
+                asChild
               >
-                {hasErrors && <AlertTriangle className="h-4 w-4 mr-2" />}
-                <Eye className="h-4 w-4 mr-2" />
-                Preview
-                {errorCount > 0 && (
-                  <Badge variant="destructive" className="ml-2">
-                    {errorCount}
-                  </Badge>
-                )}
+                <Link href={`/${quiz?.id}`} target="_blank">
+                  <Eye className="h-4 w-4 mr-2" />
+                  Preview
+                </Link>
               </Button>
             </QuickTooltip>
           </div>
