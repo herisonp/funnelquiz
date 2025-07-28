@@ -15,11 +15,16 @@ interface QuizHeaderProps {
 
 export function QuizHeader({ progress, onBack, colors }: QuizHeaderProps) {
   return (
-    <header className="sticky top-0 z-50">
+    <header className="w-full">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Back button */}
         {onBack && (
-          <Button variant="ghost" size="sm" onClick={onBack}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onBack}
+            className="hover:bg-white/65 cursor-pointer"
+          >
             <ChevronLeft className="h-4 w-4 mr-2" />
           </Button>
         )}

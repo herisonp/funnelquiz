@@ -92,15 +92,5 @@ export function PublicQuizContainer({ quiz }: PublicQuizContainerProps) {
   }
 
   // Renderizar quiz normal
-  return (
-    <div
-      className="min-h-screen"
-      style={{
-        backgroundColor: quiz.backgroundColor || "hsl(var(--background))",
-        color: quiz.textColor || "hsl(var(--foreground))",
-      }}
-    >
-      <PublicQuizRenderer quiz={quiz} />
-    </div>
-  );
+  return <PublicQuizRenderer quiz={quiz} />;
 }

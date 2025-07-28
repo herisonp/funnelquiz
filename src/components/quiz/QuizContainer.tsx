@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { QuizHeader } from "./QuizHeader";
 import { QuizFooter } from "./QuizFooter";
 import { QuizColors } from "@/types";
+import { cn } from "@/lib/utils";
 
 interface QuizContainerProps {
   children: ReactNode;
@@ -28,7 +29,10 @@ export function QuizContainer({
 }: QuizContainerProps) {
   return (
     <div
-      className={`min-h-screen bg-background ${className}`}
+      className={cn(
+        `min-h-screen bg-background relative flex flex-col`,
+        className
+      )}
       style={{
         backgroundColor: colors?.backgroundColor || "hsl(var(--card))",
       }}
@@ -47,10 +51,8 @@ export function QuizContainer({
           {children}
         </div>
       </main>
-      {/* Footer with step navigation */}
-      <footer className="sticky bottom-0">
-        <QuizFooter />
-      </footer>
+
+      <QuizFooter className="mt-auto" />
     </div>
   );
 }
