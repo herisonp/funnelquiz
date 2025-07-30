@@ -6,7 +6,6 @@ import { useAutoSave } from "@/hooks/useAutoSave";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useEditorDragDrop } from "@/hooks/useEditorDragDrop";
 import { DndContext, closestCenter } from "@dnd-kit/core";
-import EditorHeader from "./EditorHeader";
 import ElementsSidebar from "./ElementsSidebar";
 import EditorCanvas from "./EditorCanvas";
 import PropertiesPanel from "./PropertiesPanel";
@@ -48,10 +47,7 @@ export default function EditorLayout() {
   }, [saveManually]);
 
   return (
-    <div className="h-screen flex flex-col bg-background">
-      {/* Header */}
-      <EditorHeader />
-
+    <div className="h-full flex flex-col bg-background">
       {/* Steps Vertical Navigation */}
       <StepsVerticalNavigation />
 
