@@ -367,7 +367,7 @@ export default function DashboardPage() {
                           </Button>
                           <Button variant="outline" size="sm" asChild>
                             <Link
-                              href={`/dashboard/editor/${quiz.id}`}
+                              href={`/dashboard/quiz/${quiz.id}`}
                               title="Editar quiz"
                             >
                               <Edit className="w-4 h-4" />

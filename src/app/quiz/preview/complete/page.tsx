@@ -16,7 +16,7 @@ export default function QuizCompletePage() {
   const { currentResponse, resetQuiz } = useQuizResponseStore();
 
   const handleBackToEditor = () => {
-    router.push(`/quiz/editor/${quiz?.id}`);
+    router.push(`/quiz/quiz/${quiz?.id}`);
   };
 
   const handleRestart = () => {

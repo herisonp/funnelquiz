@@ -113,7 +113,7 @@ export async function createQuizAndRedirect(formData: FormData) {
     revalidatePath("/dashboard");
 
     // Redirecionar para o editor do quiz criado
-    redirect(`/dashboard/editor/${result.data.id}`);
+    redirect(`/dashboard/quiz/${result.data.id}`);
   }
 
   // Se chegou aqui, houve um erro - retornar o resultado
@@ -134,7 +134,7 @@ export async function deleteQuiz(quizId: string): Promise<{
 
     // Revalidar cache da página do dashboard
     revalidatePath("/dashboard");
-    revalidatePath(`/dashboard/editor/${quizId}`);
+    revalidatePath(`/dashboard/quiz/${quizId}`);
     revalidatePath(`/${quizId}`);
 
     return { success: true };
@@ -399,7 +399,7 @@ export async function updateQuiz(
       },
     };
 
-    revalidatePath(`/dashboard/editor/${quizId}`);
+    revalidatePath(`/dashboard/quiz/${quizId}`);
     revalidatePath(`/${quizId}`);
     return { success: true, data: quizWithCompatibility };
   } catch (error) {

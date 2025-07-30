@@ -12,7 +12,7 @@ export default function QuizPreviewPage() {
   const { quiz } = useEditorStore();
 
   const handleBackToEditor = () => {
-    router.push(`/quiz/editor/${quiz?.id}`);
+    router.push(`/quiz/quiz/${quiz?.id}`);
   };
 
   if (!quiz) {

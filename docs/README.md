@@ -19,7 +19,9 @@ funnelquiz/
 ├── src/
 │   ├── app/                 # Next.js App Router
 │   │   ├── api/            # API Routes
-│   │   ├── editor/         # Editor interface
+│   │   ├── dashboard/
+│   │   │   ├── (panel)/ # Painel de controle
+│   │   │   ├── quiz/        # Dashboard de quizzes
 │   │   ├── quiz/           # Public quiz interface
 │   │   ├── globals.css     # Global styles
 │   │   ├── layout.tsx      # Root layout

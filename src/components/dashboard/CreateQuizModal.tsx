@@ -98,7 +98,7 @@ export function CreateQuizModal({ open, onOpenChange }: CreateQuizModalProps) {
 
         // Redirecionar para o editor
         if (result.data) {
-          router.push(`/dashboard/editor/${result.data.id}`);
+          router.push(`/dashboard/quiz/${result.data.id}`);
         }
       } catch (error) {
         console.error("Erro ao criar quiz:", error);
