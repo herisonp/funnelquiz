@@ -189,9 +189,8 @@ export default function DashboardPage() {
       }
     };
 
-    if (isCreateQuizModalOpen) return; // Não carregar se o modal estiver aberto
     loadData();
-  }, [isCreateQuizModalOpen]);
+  }, []);
 
   // Função para recarregar dados
   const reloadData = async () => {
