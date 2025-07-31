@@ -8,17 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-  User,
-  Mail,
-  Phone,
-  Calendar,
-  BarChart3,
-  CheckCircle2,
-} from "lucide-react";
+import { User, Mail, Phone, Calendar, CheckCircle2 } from "lucide-react";
 import { Lead } from "./LeadsTable";
 
 interface LeadDetailsModalProps {
@@ -34,31 +26,9 @@ export function LeadDetailsModal({
 }: LeadDetailsModalProps) {
   if (!lead) return null;
 
-  const getStatusBadge = (status: Lead["status"]) => {
-    const statusConfig = {
-      qualified: {
-        label: "Qualificado",
-        variant: "default" as const,
-        color: "text-green-600",
-      },
-      unqualified: {
-        label: "Não Qualificado",
-        variant: "secondary" as const,
-        color: "text-gray-600",
-      },
-      completed: {
-        label: "Completo",
-        variant: "secondary" as const,
-        color: "text-blue-600",
-      },
-    };
-    return statusConfig[status];
-  };
-
   const progressPercentage = Math.round(
     (lead.lastStepCompleted / lead.totalSteps) * 100
   );
-  const statusConfig = getStatusBadge(lead.status);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -119,50 +89,29 @@ export function LeadDetailsModal({
             </CardContent>
           </Card>
 
-          {/* Status e progresso */}
+          {/* Progresso */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Status e Progresso</CardTitle>
+              <CardTitle className="text-lg">Progresso do Quiz</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <span className="text-sm font-medium">Status</span>
-                  <div>
-                    <Badge variant={statusConfig.variant}>
-                      {statusConfig.label}
-                    </Badge>
-                  </div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">Progresso</span>
                 </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">Score</span>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-sm">
+                    <span>{progressPercentage}%</span>
+                    <span className="text-muted-foreground">
+                      {lead.lastStepCompleted}/{lead.totalSteps} etapas
+                    </span>
                   </div>
-                  <p className="text-2xl font-bold text-primary">
-                    {lead.score}
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">Progresso</span>
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>{progressPercentage}%</span>
-                      <span className="text-muted-foreground">
-                        {lead.lastStepCompleted}/{lead.totalSteps} etapas
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="h-2 rounded-full bg-primary transition-all duration-300"
-                        style={{ width: `${progressPercentage}%` }}
-                      />
-                    </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="h-2 rounded-full bg-primary transition-all duration-300"
+                      style={{ width: `${progressPercentage}%` }}
+                    />
                   </div>
                 </div>
               </div>
