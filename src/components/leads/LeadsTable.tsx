@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -20,8 +19,6 @@ export interface Lead {
   name: string;
   email: string;
   phone?: string;
-  score: number;
-  status: "qualified" | "unqualified" | "completed";
   createdAt: Date;
   lastStepCompleted: number;
   totalSteps: number;
@@ -34,23 +31,12 @@ interface LeadsTableProps {
 }
 
 export function LeadsTable({ leads, onViewDetails }: LeadsTableProps) {
-  const getStatusBadge = (status: Lead["status"]) => {
-    const statusConfig = {
-      qualified: { label: "Qualificado", variant: "default" as const },
-      unqualified: { label: "Não Qualificado", variant: "secondary" as const },
-      completed: { label: "Completo", variant: "secondary" as const },
-    };
-    return statusConfig[status];
-  };
-
   const getProgressPercentage = (completed: number, total: number) => {
     return Math.round((completed / total) * 100);
   };
 
-  const getProgressColor = (percentage: number) => {
-    if (percentage >= 100) return "bg-green-500";
-    if (percentage >= 50) return "bg-yellow-500";
-    return "bg-red-500";
+  const getProgressColor = () => {
+    return "bg-primary";
   };
 
   if (leads.length === 0) {
@@ -84,16 +70,13 @@ export function LeadsTable({ leads, onViewDetails }: LeadsTableProps) {
               <TableRow>
                 <TableHead>Lead</TableHead>
                 <TableHead>Contato</TableHead>
-                <TableHead>Status</TableHead>
                 <TableHead>Progresso</TableHead>
-                <TableHead>Score</TableHead>
                 <TableHead>Data</TableHead>
                 <TableHead>Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {leads.map((lead) => {
-                const statusConfig = getStatusBadge(lead.status);
                 const progressPercentage = getProgressPercentage(
                   lead.lastStepCompleted,
                   lead.totalSteps
@@ -121,11 +104,6 @@ export function LeadsTable({ leads, onViewDetails }: LeadsTableProps) {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={statusConfig.variant}>
-                        {statusConfig.label}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
                       <div className="space-y-1">
                         <div className="flex items-center justify-between text-sm">
                           <span>{progressPercentage}%</span>
@@ -135,16 +113,11 @@ export function LeadsTable({ leads, onViewDetails }: LeadsTableProps) {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
-                            className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(
-                              progressPercentage
-                            )}`}
+                            className={`h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
                             style={{ width: `${progressPercentage}%` }}
                           />
                         </div>
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="font-medium">{lead.score}</div>
                     </TableCell>
                     <TableCell>
                       <div className="text-sm text-muted-foreground">
