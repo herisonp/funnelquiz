@@ -39,40 +39,30 @@ export function LeadsMetricsCards({ metrics }: LeadsMetricsCardsProps) {
       value: metrics.visitors.toLocaleString("pt-BR"),
       growth: growthRates.visitors,
       description: "Acessaram o funil",
-      footerText: "Aumento consistente este mês",
-      footerSubtext: "Tráfego orgânico em alta",
     },
     {
       title: "Leads Adquiridos",
       value: metrics.totalLeads.toLocaleString("pt-BR"),
       growth: growthRates.totalLeads,
       description: "Iniciaram interação",
-      footerText: "Performance acima da meta",
-      footerSubtext: "Taxa de captura melhorou",
     },
     {
       title: "Taxa de Interação",
       value: formatPercentage(metrics.interactionRate),
       growth: growthRates.interactionRate,
       description: "Visitantes que interagiram",
-      footerText: "Leve queda neste período",
-      footerSubtext: "Necessita otimização",
     },
     {
       title: "Leads Qualificados",
       value: metrics.qualifiedLeads.toLocaleString("pt-BR"),
       growth: growthRates.qualifiedLeads,
       description: "Passaram de 50% do quiz",
-      footerText: "Forte crescimento de qualidade",
-      footerSubtext: "Segmentação mais eficaz",
     },
     {
       title: "Fluxos Completos",
       value: metrics.completedFlows.toLocaleString("pt-BR"),
       growth: growthRates.completedFlows,
       description: "Finalizaram o funil",
-      footerText: "Excelente taxa de conversão",
-      footerSubtext: "Supera projeções de crescimento",
     },
   ];
 
@@ -85,7 +75,7 @@ export function LeadsMetricsCards({ metrics }: LeadsMetricsCardsProps) {
         return (
           <Card key={metric.title} className="@container/card">
             <CardHeader>
-              <CardDescription>{metric.description}</CardDescription>
+              <CardDescription>{metric.title}</CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {metric.value}
               </CardTitle>
@@ -98,12 +88,7 @@ export function LeadsMetricsCards({ metrics }: LeadsMetricsCardsProps) {
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="line-clamp-1 flex gap-2 font-medium">
-                {metric.footerText} <TrendIcon className="size-4" />
-              </div>
-              <div className="text-muted-foreground">
-                {metric.footerSubtext}
-              </div>
+              <div className="text-muted-foreground">{metric.description}</div>
             </CardFooter>
           </Card>
         );
