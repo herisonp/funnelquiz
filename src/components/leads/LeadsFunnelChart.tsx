@@ -103,7 +103,7 @@ export function LeadsFunnelChart({ data }: LeadsFunnelChartProps) {
                     const item = props.payload;
                     if (name === "visitors") {
                       return [
-                        <>
+                        <React.Fragment key="metrics">
                           <div className="space-y-1">
                             <div>
                               Visitantes: {value.toLocaleString("pt-BR")}
@@ -114,7 +114,7 @@ export function LeadsFunnelChart({ data }: LeadsFunnelChartProps) {
                             </div>
                             <div>Taxa de Conversão: {item.conversionRate}%</div>
                           </div>
-                        </>,
+                        </React.Fragment>,
                         "Métricas",
                       ];
                     }
