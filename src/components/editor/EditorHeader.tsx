@@ -6,16 +6,18 @@ import { useQuizValidation } from "@/hooks/useQuizValidation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Eye, FileText, ChevronLeft } from "lucide-react";
+import { Eye, FileText, ChevronLeft, Edit3, Users } from "lucide-react";
 import { SaveStatus } from "./SaveStatus";
 import { ExportImportDialog } from "./ExportImportDialog";
 import { QuickTooltip } from "@/components/ui/tooltip-help";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function EditorHeader() {
   const [showExportImport, setShowExportImport] = useState(false);
   const { quiz, currentStepId } = useEditorStore();
   const { canPreview, quickValidationMessage } = useQuizValidation();
+  const pathname = usePathname();
 
   return (
     <>
@@ -58,7 +60,46 @@ export default function EditorHeader() {
 
           {/* Center section */}
           <div className="hidden md:flex items-center gap-4 flex-1 justify-center max-w-2xl">
-            {/* Center content can be added here if needed */}
+            {quiz && (
+              <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+                <Button
+                  variant={
+                    pathname === `/dashboard/quiz/${quiz.id}`
+                      ? "default"
+                      : "ghost"
+                  }
+                  size="sm"
+                  asChild
+                  className="px-3 py-2"
+                >
+                  <Link
+                    href={`/dashboard/quiz/${quiz.id}`}
+                    className="flex items-center gap-2"
+                  >
+                    <Edit3 className="h-4 w-4" />
+                    Editor
+                  </Link>
+                </Button>
+                <Button
+                  variant={
+                    pathname === `/dashboard/quiz/${quiz.id}/leads`
+                      ? "default"
+                      : "ghost"
+                  }
+                  size="sm"
+                  asChild
+                  className="px-3 py-2"
+                >
+                  <Link
+                    href={`/dashboard/quiz/${quiz.id}/leads`}
+                    className="flex items-center gap-2"
+                  >
+                    <Users className="h-4 w-4" />
+                    Leads
+                  </Link>
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Right section */}
