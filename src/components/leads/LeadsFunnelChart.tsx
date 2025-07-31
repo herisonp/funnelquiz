@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/chart";
 
 interface FunnelData {
+  id: string;
+  order: number;
   step: string;
   visitors: number;
   completed: number;
@@ -28,36 +30,39 @@ interface LeadsFunnelChartProps {
 }
 
 const chartConfig = {
-  visitors: {
-    label: "Visitantes",
-    color: "hsl(var(--primary))",
-  },
-  completed: {
-    label: "Convertidos",
+  interactionRate: {
+    label: "Taxa de Interação (%)",
     color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig;
 
 export function LeadsFunnelChart({ data }: LeadsFunnelChartProps) {
-  // Transformar dados para mostrar a conversão vs abandono
-  const chartData = data.map((item, index) => ({
-    step: `Etapa ${index + 1}`,
-    stepName: item.step.replace(/^Etapa \d+: /, ""),
-    visitors: item.visitors,
-    completed: item.completed,
-    abandoned: item.visitors - item.completed,
-    conversionRate: ((item.completed / item.visitors) * 100).toFixed(1),
-  }));
+  // Ordenar dados pela ordem das etapas e calcular taxa de interação
+  const chartData = data
+    .sort((a, b) => {
+      return a.order - b.order;
+    })
+    .map((item) => {
+      const interactionRate = (item.completed / item.visitors) * 100;
+      return {
+        id: item.id,
+        step: item.step,
+        stepName: item.step,
+        interactionRate: Number(interactionRate.toFixed(1)),
+        visitors: item.visitors,
+        completed: item.completed,
+      };
+    });
 
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>Análise do Funil de Conversão</CardTitle>
+        <CardTitle>Taxa de Interação por Etapa</CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
-            Visitantes vs convertidos em cada etapa do processo
+            Percentual de usuários que interagem com cada etapa do funil
           </span>
-          <span className="@[540px]/card:hidden">Funil de conversão</span>
+          <span className="@[540px]/card:hidden">Taxa de interação</span>
         </CardDescription>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
@@ -89,7 +94,8 @@ export function LeadsFunnelChart({ data }: LeadsFunnelChartProps) {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.toLocaleString("pt-BR")}
+              domain={[0, 100]}
+              tickFormatter={(value) => `${value}%`}
             />
             <ChartTooltip
               cursor={false}
@@ -101,21 +107,21 @@ export function LeadsFunnelChart({ data }: LeadsFunnelChartProps) {
                   }}
                   formatter={(value, name, props) => {
                     const item = props.payload;
-                    if (name === "visitors") {
+                    if (name === "interactionRate") {
                       return [
                         <React.Fragment key="metrics">
                           <div className="space-y-1">
+                            <div>Taxa de Interação: {value}%</div>
                             <div>
-                              Visitantes: {value.toLocaleString("pt-BR")}
+                              Visitantes:{" "}
+                              {item.visitors.toLocaleString("pt-BR")}
                             </div>
                             <div>
-                              Convertidos:{" "}
+                              Interações:{" "}
                               {item.completed.toLocaleString("pt-BR")}
                             </div>
-                            <div>Taxa de Conversão: {item.conversionRate}%</div>
                           </div>
                         </React.Fragment>,
-                        "Métricas",
                       ];
                     }
                     return null;
@@ -124,49 +130,12 @@ export function LeadsFunnelChart({ data }: LeadsFunnelChartProps) {
               }
             />
             <Bar
-              dataKey="visitors"
-              fill="var(--color-visitors)"
-              radius={[4, 4, 0, 0]}
-              fillOpacity={0.6}
-            />
-            <Bar
-              dataKey="completed"
-              fill="var(--color-completed)"
+              dataKey="interactionRate"
+              fill="var(--color-interactionRate)"
               radius={[4, 4, 0, 0]}
             />
           </BarChart>
         </ChartContainer>
-
-        {/* Resumo das métricas */}
-        <div className="mt-4 grid grid-cols-1 gap-4 text-sm md:grid-cols-3">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="h-3 w-3 rounded bg-primary/60"></div>
-              <span className="font-medium">Total de Visitantes</span>
-            </div>
-            <div className="text-muted-foreground">
-              Usuários que acessaram cada etapa
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="h-3 w-3 rounded bg-primary"></div>
-              <span className="font-medium">Conversões</span>
-            </div>
-            <div className="text-muted-foreground">
-              Usuários que completaram a etapa
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="h-3 w-3 rounded bg-muted"></div>
-              <span className="font-medium">Performance</span>
-            </div>
-            <div className="text-muted-foreground">
-              Taxa de conversão por etapa
-            </div>
-          </div>
-        </div>
       </CardContent>
     </Card>
   );
