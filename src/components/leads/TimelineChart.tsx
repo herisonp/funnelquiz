@@ -75,6 +75,12 @@ export function TimelineChart({ data }: TimelineChartProps) {
             <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
             <XAxis dataKey="date" tick={{ fontSize: 12 }} />
             <YAxis tick={{ fontSize: 12 }} />
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              tick={{ fontSize: 12 }}
+              domain={[0, 100]}
+            />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             <Line
