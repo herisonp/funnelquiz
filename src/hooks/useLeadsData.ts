@@ -11,8 +11,6 @@ const mockLeads: Lead[] = [
     name: "Maria Silva",
     email: "maria.silva@email.com",
     phone: "(11) 99999-9999",
-    score: 85,
-    status: "qualified",
     createdAt: new Date("2025-07-28T10:30:00"),
     lastStepCompleted: 4,
     totalSteps: 5,
@@ -27,8 +25,6 @@ const mockLeads: Lead[] = [
     name: "João Santos",
     email: "joao.santos@empresa.com",
     phone: "(11) 88888-8888",
-    score: 65,
-    status: "qualified",
     createdAt: new Date("2025-07-27T15:45:00"),
     lastStepCompleted: 3,
     totalSteps: 5,
@@ -41,8 +37,6 @@ const mockLeads: Lead[] = [
     id: "3",
     name: "Ana Costa",
     email: "ana.costa@email.com",
-    score: 95,
-    status: "completed",
     createdAt: new Date("2025-07-26T09:15:00"),
     lastStepCompleted: 5,
     totalSteps: 5,
@@ -58,8 +52,6 @@ const mockLeads: Lead[] = [
     id: "4",
     name: "Pedro Oliveira",
     email: "pedro@startup.com",
-    score: 35,
-    status: "unqualified",
     createdAt: new Date("2025-07-25T14:20:00"),
     lastStepCompleted: 2,
     totalSteps: 5,
@@ -73,8 +65,6 @@ const mockLeads: Lead[] = [
     name: "Carla Mendes",
     email: "carla.mendes@email.com",
     phone: "(11) 77777-7777",
-    score: 78,
-    status: "qualified",
     createdAt: new Date("2025-07-24T11:30:00"),
     lastStepCompleted: 4,
     totalSteps: 5,
@@ -147,10 +137,10 @@ export function useLeadsData(quizId?: string): UseLeadsDataReturn {
     const visitors = 1000; // Em produção, viria da API
     const totalLeads = filteredLeads.length;
     const qualifiedLeads = filteredLeads.filter(
-      (lead) => lead.status === "qualified" || lead.status === "completed"
+      (lead) => lead.lastStepCompleted >= 3 // Considera qualificado quem passou da etapa 3
     ).length;
     const completedFlows = filteredLeads.filter(
-      (lead) => lead.status === "completed"
+      (lead) => lead.lastStepCompleted === lead.totalSteps
     ).length;
     const interactionRate = visitors > 0 ? (totalLeads / visitors) * 100 : 0;
 
@@ -168,14 +158,10 @@ export function useLeadsData(quizId?: string): UseLeadsDataReturn {
       Nome: lead.name,
       Email: lead.email,
       Telefone: lead.phone || "",
-      Status:
-        lead.status === "qualified"
-          ? "Qualificado"
-          : lead.status === "completed"
-          ? "Completo"
-          : "Não Qualificado",
-      Score: lead.score,
       Progresso: `${lead.lastStepCompleted}/${lead.totalSteps}`,
+      "Progresso %": `${Math.round(
+        (lead.lastStepCompleted / lead.totalSteps) * 100
+      )}%`,
       "Data de Captura": lead.createdAt.toLocaleDateString("pt-BR"),
       Respostas: Object.entries(lead.answers)
         .map(([q, a]) => `${q}: ${Array.isArray(a) ? a.join(", ") : a}`)
