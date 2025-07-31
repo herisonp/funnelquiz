@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { LeadsMetrics } from "@/components/leads/LeadsMetrics";
-import { FunnelChart } from "@/components/leads/FunnelChart";
-import { TimelineChart } from "@/components/leads/TimelineChart";
+import { LeadsMetricsCards } from "@/components/leads/LeadsMetricsCards";
+import { LeadsFunnelChart } from "@/components/leads/LeadsFunnelChart";
+import { LeadsTimelineChart } from "@/components/leads/LeadsTimelineChart";
 import { LeadsFilters } from "@/components/leads/LeadsFilters";
 import { LeadsTable, Lead } from "@/components/leads/LeadsTable";
 import { LeadDetailsModal } from "@/components/leads/LeadDetailsModal";
@@ -134,50 +134,56 @@ export default function LeadsPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Cabeçalho */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold">Leads do Quiz</h1>
-          <p className="text-muted-foreground mt-2">
-            Acompanhe e analise os leads capturados pelo seu funil de conversão
-          </p>
-        </div>
+    <div className="flex flex-1 flex-col">
+      <div className="@container/main flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+          {/* Cabeçalho */}
+          <div className="px-4 lg:px-6">
+            <h1 className="text-3xl font-bold">Leads do Quiz</h1>
+            <p className="text-muted-foreground mt-2">
+              Acompanhe e analise os leads capturados pelo seu funil de
+              conversão
+            </p>
+          </div>
 
-        {/* Métricas principais */}
-        <LeadsMetrics metrics={metrics} />
+          {/* Métricas principais */}
+          <LeadsMetricsCards metrics={metrics} />
 
-        {/* Gráficos */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <FunnelChart data={mockFunnelData} />
-          <TimelineChart data={mockTimelineData} />
-        </div>
+          {/* Gráficos */}
+          <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 lg:grid-cols-2">
+            <LeadsFunnelChart data={mockFunnelData} />
+            <LeadsTimelineChart data={mockTimelineData} />
+          </div>
 
-        {/* Filtros e tabela de leads */}
-        <div className="space-y-4">
-          <LeadsFilters
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            onExportCSV={exportToCSV}
-            onResetData={resetData}
-            totalLeads={leads.length}
-            filteredLeads={filteredLeads.length}
+          {/* Filtros e tabela de leads */}
+          <div className="space-y-4 px-4 lg:px-6">
+            <LeadsFilters
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
+              onExportCSV={exportToCSV}
+              onResetData={resetData}
+              totalLeads={leads.length}
+              filteredLeads={filteredLeads.length}
+            />
+
+            <LeadsTable
+              leads={filteredLeads}
+              onViewDetails={handleViewDetails}
+            />
+          </div>
+
+          {/* Modal de detalhes */}
+          <LeadDetailsModal
+            lead={selectedLead}
+            isOpen={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+              setSelectedLead(null);
+            }}
           />
-
-          <LeadsTable leads={filteredLeads} onViewDetails={handleViewDetails} />
         </div>
-
-        {/* Modal de detalhes */}
-        <LeadDetailsModal
-          lead={selectedLead}
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedLead(null);
-          }}
-        />
       </div>
     </div>
   );
