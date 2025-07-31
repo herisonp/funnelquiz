@@ -37,7 +37,12 @@ const createQuizSchema = z.object({
   description: z
     .string()
     .max(500, "A descrição deve ter no máximo 500 caracteres")
-    .optional(),
+    .optional()
+    .nullable()
+    .transform((val) => {
+      if (!val || val.trim() === "") return null;
+      return val.trim();
+    }),
 });
 
 type CreateQuizFormData = z.infer<typeof createQuizSchema>;
@@ -65,8 +70,10 @@ export function CreateQuizModal({ open, onOpenChange }: CreateQuizModalProps) {
         // Criar FormData para enviar para a Server Action
         const formData = new FormData();
         formData.append("title", data.title);
-        if (data.description) {
+        if (data.description && data.description.trim() !== "") {
           formData.append("description", data.description);
+        } else {
+          formData.append("description", "");
         }
 
         // Executar Server Action
@@ -152,6 +159,7 @@ export function CreateQuizModal({ open, onOpenChange }: CreateQuizModalProps) {
                       className="resize-none"
                       rows={3}
                       {...field}
+                      value={field.value ?? ""}
                       disabled={isPending}
                     />
                   </FormControl>

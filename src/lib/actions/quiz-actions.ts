@@ -18,7 +18,11 @@ const createQuizSchema = z.object({
     .string()
     .max(500, "A descrição deve ter no máximo 500 caracteres")
     .optional()
-    .transform((val) => val || null),
+    .nullable()
+    .transform((val) => {
+      if (!val || val.trim() === "") return null;
+      return val.trim();
+    }),
 });
 
 // Tipo para o resultado da action
@@ -46,12 +50,12 @@ export async function createQuiz(
   try {
     // Extrair dados do FormData
     const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
+    const description = formData.get("description") as string | null;
 
     // Validar dados
     const validationResult = createQuizSchema.safeParse({
       title,
-      description,
+      description: description || "",
     });
 
     if (!validationResult.success) {
