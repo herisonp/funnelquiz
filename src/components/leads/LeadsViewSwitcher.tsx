@@ -97,13 +97,7 @@ export function LeadsViewSwitcher({
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-primary">
-                          {
-                            leads.filter(
-                              (l) =>
-                                l.status === "qualified" ||
-                                l.status === "completed"
-                            ).length
-                          }
+                          {leads.filter((l) => l.lastStepCompleted >= 3).length}
                         </div>
                         <p className="text-sm text-muted-foreground">
                           Leads Qualificados
@@ -111,7 +105,11 @@ export function LeadsViewSwitcher({
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-green-600">
-                          {leads.filter((l) => l.status === "completed").length}
+                          {
+                            leads.filter(
+                              (l) => l.lastStepCompleted === l.totalSteps
+                            ).length
+                          }
                         </div>
                         <p className="text-sm text-muted-foreground">
                           Conversões
@@ -147,7 +145,7 @@ export function LeadsViewSwitcher({
                 <h3 className="text-lg font-semibold mb-4">
                   Insights dos Dados
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
                   <div className="p-4 bg-blue-50 rounded-lg">
                     <div className="text-2xl font-bold text-blue-600">
                       {(
@@ -159,15 +157,6 @@ export function LeadsViewSwitcher({
                     <p className="text-sm text-blue-700">
                       Taxa de Qualificação
                     </p>
-                  </div>
-                  <div className="p-4 bg-green-50 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">
-                      {Math.round(
-                        leads.reduce((sum, lead) => sum + lead.score, 0) /
-                          leads.length
-                      )}
-                    </div>
-                    <p className="text-sm text-green-700">Score Médio</p>
                   </div>
                   <div className="p-4 bg-purple-50 rounded-lg">
                     <div className="text-2xl font-bold text-purple-600">
