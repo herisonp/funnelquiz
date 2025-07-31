@@ -13,8 +13,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -36,6 +38,7 @@ import {
   Users,
   Search,
   Copy,
+  TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
 import { CreateQuizModal } from "@/components/dashboard/CreateQuizModal";
@@ -62,6 +65,84 @@ type QuizStats = {
   draftQuizzes: number;
   totalResponses: number;
 };
+
+function StatisticsCards({ stats }: { stats: QuizStats }) {
+  return (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 mb-6">
+      <Card className="@container/card">
+        <CardHeader>
+          <CardDescription>Total de Quizzes</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            {stats.totalQuizzes}
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline">
+              <TrendingUp className="w-3 h-3 mr-1" />
+              Total
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="flex items-center gap-2 font-medium">
+            <FileText className="w-4 h-4" />
+            Todos os seus quizzes
+          </div>
+          <div className="text-muted-foreground">
+            Gerencie e visualize todos os quizzes criados
+          </div>
+        </CardFooter>
+      </Card>
+
+      <Card className="@container/card">
+        <CardHeader>
+          <CardDescription>Publicados</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            {stats.publishedQuizzes}
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline">
+              <TrendingUp className="w-3 h-3 mr-1" />
+              Ativos
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="flex items-center gap-2 font-medium">
+            <BarChart3 className="w-4 h-4" />
+            Quizzes disponíveis ao público
+          </div>
+          <div className="text-muted-foreground">
+            Coletando respostas e dados de conversão
+          </div>
+        </CardFooter>
+      </Card>
+
+      <Card className="@container/card">
+        <CardHeader>
+          <CardDescription>Rascunhos</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            {stats.draftQuizzes}
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline">
+              <Users className="w-3 h-3 mr-1" />
+              Em construção
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="flex items-center gap-2 font-medium">
+            <Users className="w-4 h-4" />
+            Quizzes em desenvolvimento
+          </div>
+          <div className="text-muted-foreground">
+            Finalize e publique para começar a capturar leads
+          </div>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+}
 
 function formatDate(date: Date): string {
   return new Intl.DateTimeFormat("pt-BR", {
@@ -219,41 +300,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Cards de Estatísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground">
-                Total de Quizzes
-              </p>
-              <p className="text-xl font-bold">{stats.totalQuizzes}</p>
-            </div>
-            <FileText className="h-5 w-5 text-muted-foreground" />
-          </div>
-        </Card>
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground">
-                Publicados
-              </p>
-              <p className="text-xl font-bold">{stats.publishedQuizzes}</p>
-            </div>
-            <BarChart3 className="h-5 w-5 text-muted-foreground" />
-          </div>
-        </Card>
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground">
-                Rascunhos
-              </p>
-              <p className="text-xl font-bold">{stats.draftQuizzes}</p>
-            </div>
-            <Users className="h-5 w-5 text-muted-foreground" />
-          </div>
-        </Card>
-      </div>
+      <StatisticsCards stats={stats} />
 
       <Card>
         <CardHeader>
@@ -293,7 +340,7 @@ export default function DashboardPage() {
         <CardContent>
           {/* Indicador de resultados */}
           {(searchTerm || statusFilter !== "all") && (
-            <div className="mb-4 text-sm text-gray-600">
+            <div className="mb-4 text-sm text-muted-foreground">
               Mostrando {filteredQuizzes.length} de {stats.totalQuizzes} quizzes
               {searchTerm && <span> • Busca: &ldquo;{searchTerm}&rdquo;</span>}
               {statusFilter !== "all" && (
@@ -306,9 +353,9 @@ export default function DashboardPage() {
             </div>
           )}
 
-          <div className="overflow-x-auto">
+          <div className="overflow-hidden rounded-lg border">
             <Table>
-              <TableHeader>
+              <TableHeader className="bg-muted">
                 <TableRow>
                   <TableHead>Título</TableHead>
                   <TableHead>Status</TableHead>
@@ -321,7 +368,7 @@ export default function DashboardPage() {
                 {filteredQuizzes.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-8">
-                      <div className="text-gray-500">
+                      <div className="text-muted-foreground">
                         {searchTerm || statusFilter !== "all"
                           ? "Nenhum quiz encontrado com os filtros aplicados."
                           : "Nenhum quiz criado ainda."}
@@ -335,7 +382,7 @@ export default function DashboardPage() {
                         <div>
                           <div className="font-medium">{quiz.title}</div>
                           {quiz.description && (
-                            <div className="text-sm text-gray-500 mt-1">
+                            <div className="text-sm text-muted-foreground mt-1">
                               {quiz.description}
                             </div>
                           )}
@@ -377,7 +424,6 @@ export default function DashboardPage() {
                             variant="outline"
                             size="sm"
                             title="Duplicar quiz"
-                            className="cursor-pointer"
                             onClick={() => handleDuplicateQuiz(quiz.id)}
                           >
                             <Copy className="w-4 h-4" />
@@ -386,7 +432,6 @@ export default function DashboardPage() {
                             variant="outline"
                             size="sm"
                             title="Deletar quiz"
-                            className="cursor-pointer"
                             onClick={() =>
                               handleDeleteQuiz(quiz.id, quiz.title)
                             }
