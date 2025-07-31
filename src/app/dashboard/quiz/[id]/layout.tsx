@@ -14,7 +14,7 @@ export default function EditarQuizLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="h-screen flex flex-col bg-background">
+    <div className="h-screen flex flex-col pt-16 bg-background">
       {/* Header compartilhado entre todas as sub-rotas */}
       <EditorHeader />
 

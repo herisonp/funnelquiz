@@ -19,7 +19,7 @@ export default function EditorHeader() {
 
   return (
     <>
-      <header className="h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="fixed inset-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="h-full flex items-center justify-between px-4">
           {/* Left section */}
           <div className="flex items-center gap-4">
