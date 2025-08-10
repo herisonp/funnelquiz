@@ -93,7 +93,7 @@ export interface MultipleChoiceElementContent {
 
 export interface NavigationButtonElementContent {
   label: string;
-  targetStep?: "next" | "previous" | string; // specific step ID
+  targetStep?: "next" | "previous" | "submit" | string; // specific step ID or submit action
   variant?: "primary" | "secondary" | "outline";
 }
 

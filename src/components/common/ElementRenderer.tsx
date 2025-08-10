@@ -20,6 +20,14 @@ interface ElementRendererProps {
   onNavigate?: (targetStep: string) => void;
   disabled?: boolean;
 
+  // Quiz styling
+  quizColors?: {
+    primaryColor: string;
+    backgroundColor: string;
+    textColor: string;
+    titleColor: string;
+  };
+
   // Common props
   className?: string;
 }
@@ -31,6 +39,7 @@ export function ElementRenderer({
   onAnswer,
   onNavigate,
   disabled,
+  quizColors,
   className,
 }: ElementRendererProps) {
   // Get quiz fonts from store when in editor mode
@@ -84,8 +93,8 @@ export function ElementRenderer({
               content={content}
               elementId={element.id}
               onNavigate={() => {}} // No-op in editor mode
-              isLastStep={false}
               canProceed={true}
+              quizColors={quiz?.colors}
             />
           );
 
@@ -126,6 +135,7 @@ export function ElementRenderer({
               onNavigate={onNavigate}
               disabled={disabled}
               className={className}
+              quizColors={quizColors}
             />
           );
 

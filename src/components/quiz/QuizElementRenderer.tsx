@@ -6,7 +6,6 @@ import { PublicNavigationButtonElement } from "./elements/PublicNavigationButton
 interface QuizElementRendererProps {
   element: Element;
   onNavigate: (target: string) => void;
-  isLastStep?: boolean;
   canProceed?: boolean;
   quizColors?: {
     primaryColor: string;
@@ -24,7 +23,6 @@ interface QuizElementRendererProps {
 export function QuizElementRenderer({
   element,
   onNavigate,
-  isLastStep = false,
   canProceed = true,
   quizColors,
   quizFonts,
@@ -60,7 +58,6 @@ export function QuizElementRenderer({
             content={content}
             elementId={element.id}
             onNavigate={onNavigate}
-            isLastStep={isLastStep}
             canProceed={canProceed}
             quizColors={quizColors}
           />

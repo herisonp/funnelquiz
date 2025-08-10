@@ -8,12 +8,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getContrastColor } from "@/lib/color-utils";
 
 interface NavigationButtonElementProps {
   element: Element;
   onNavigate?: (targetStep: string) => void;
   disabled?: boolean;
   className?: string;
+  quizColors?: {
+    primaryColor: string;
+    backgroundColor: string;
+    textColor: string;
+    titleColor: string;
+  };
 }
 
 export function NavigationButtonElement({
@@ -21,6 +28,7 @@ export function NavigationButtonElement({
   onNavigate,
   disabled = false,
   className,
+  quizColors,
 }: NavigationButtonElementProps) {
   // Parse content
   let content: NavigationButtonElementContent;
@@ -69,6 +77,22 @@ export function NavigationButtonElement({
     }
   };
 
+  // Calcular cores para o botão principal (primary/default)
+  const getPrimaryButtonStyles = () => {
+    const primaryColor = quizColors?.primaryColor;
+
+    if (primaryColor && (content.variant === "primary" || !content.variant)) {
+      const textColor = getContrastColor(primaryColor);
+      return {
+        backgroundColor: primaryColor,
+        borderColor: primaryColor,
+        color: textColor,
+      };
+    }
+
+    return undefined;
+  };
+
   return (
     <div className={cn("w-full flex justify-center", className)}>
       <Button
@@ -82,6 +106,7 @@ export function NavigationButtonElement({
         disabled={disabled}
         className="min-w-[120px]"
         size="lg"
+        style={getPrimaryButtonStyles()}
       >
         {content.targetStep === "previous" && getIcon(content.targetStep)}
         <span className="mx-2">{content.label}</span>

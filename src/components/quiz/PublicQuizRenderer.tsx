@@ -15,7 +15,7 @@ export function PublicQuizRenderer({ quiz }: PublicQuizRendererProps) {
     canProceedFromCurrentStep,
   } = useQuizResponse(quiz);
 
-  const { currentStepIndex, isFirstStep, isLastStep, progress, currentStep } =
+  const { currentStepIndex, isFirstStep, progress, currentStep } =
     navigationInfo;
 
   // Função para voltar no histórico do quiz (não do navegador)
@@ -67,7 +67,6 @@ export function PublicQuizRenderer({ quiz }: PublicQuizRendererProps) {
               key={element.id}
               element={element}
               onNavigate={handleNavigation}
-              isLastStep={isLastStep}
               canProceed={canProceed}
               quizColors={quiz.colors}
               quizFonts={quiz.fonts}

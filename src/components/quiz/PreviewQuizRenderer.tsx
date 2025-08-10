@@ -27,7 +27,7 @@ export function PreviewQuizRenderer({
     canProceedFromCurrentStep,
   } = useQuizResponse(quiz);
 
-  const { currentStepIndex, isFirstStep, isLastStep, progress, currentStep } =
+  const { currentStepIndex, isFirstStep, progress, currentStep } =
     navigationInfo;
 
   // Show error if no current step
@@ -85,7 +85,6 @@ export function PreviewQuizRenderer({
               key={element.id}
               element={element}
               onNavigate={handleNavigation}
-              isLastStep={isLastStep}
               canProceed={canProceed}
               quizColors={quiz.colors}
               quizFonts={quiz.fonts}
@@ -110,8 +109,8 @@ export function PreviewQuizRenderer({
               disabled={!canProceed}
               className="min-w-32"
             >
-              {isLastStep ? "Finalizar" : "Próximo"}
-              {!isLastStep && <ArrowRight className="ml-2 h-4 w-4" />}
+              Próximo
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
         )}

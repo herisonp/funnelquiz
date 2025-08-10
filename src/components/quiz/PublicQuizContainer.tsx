@@ -2,10 +2,7 @@
 
 import { QuizWithSteps } from "@/types/composed";
 import { PublicQuizRenderer } from "./PublicQuizRenderer";
-import { QuizCompletion } from "./QuizCompletion";
 import { QuizLoading } from "./QuizLoading";
-import { useQuizResponse } from "@/hooks/useQuizResponse";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useHydration } from "@/hooks/useHydration";
 
@@ -14,10 +11,7 @@ interface PublicQuizContainerProps {
 }
 
 export function PublicQuizContainer({ quiz }: PublicQuizContainerProps) {
-  const router = useRouter();
   const isHydrated = useHydration();
-  const { navigationInfo, resetQuiz } = useQuizResponse(quiz);
-  const { isCompleted } = navigationInfo;
 
   // Aplicar estilos dinâmicos do quiz no body
   useEffect(() => {
@@ -57,40 +51,11 @@ export function PublicQuizContainer({ quiz }: PublicQuizContainerProps) {
     quiz.baseFontSize,
   ]);
 
-  const handleRestart = () => {
-    resetQuiz();
-  };
-
-  const handleBackToHome = () => {
-    router.push("/");
-  };
-
   // Mostrar loading enquanto não hidratou para evitar erros de hidratação
   if (!isHydrated) {
     return <QuizLoading quiz={quiz} />;
   }
 
-  // Se o quiz foi completado, mostrar tela de finalização
-  if (isCompleted) {
-    return (
-      <div
-        className="min-h-screen flex items-center justify-center px-4"
-        style={{
-          backgroundColor: quiz.backgroundColor || "hsl(var(--background))",
-          color: quiz.textColor || "hsl(var(--foreground))",
-        }}
-      >
-        <div className="w-full max-w-2xl">
-          <QuizCompletion
-            quiz={quiz}
-            onRestart={handleRestart}
-            onBack={handleBackToHome}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  // Renderizar quiz normal
+  // Renderizar quiz normal - sem tela de finalização
   return <PublicQuizRenderer quiz={quiz} />;
 }

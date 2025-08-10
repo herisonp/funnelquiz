@@ -1,12 +1,12 @@
 import { NavigationButtonElementContent } from "@/types/composed";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft, Check } from "lucide-react";
+import { getContrastColor } from "@/lib/color-utils";
 
 interface PublicNavigationButtonElementProps {
   content: NavigationButtonElementContent;
   elementId: string;
   onNavigate: (target: string) => void;
-  isLastStep?: boolean;
   canProceed?: boolean;
   quizColors?: {
     primaryColor: string;
@@ -19,7 +19,6 @@ interface PublicNavigationButtonElementProps {
 export function PublicNavigationButtonElement({
   content,
   onNavigate,
-  isLastStep = false,
   canProceed = true,
   quizColors,
 }: PublicNavigationButtonElementProps) {
@@ -35,32 +34,56 @@ export function PublicNavigationButtonElement({
   };
 
   const getIcon = () => {
-    if (isLastStep) {
-      return <Check className="ml-2 h-4 w-4" />;
-    }
-
     switch (content.targetStep) {
       case "previous":
         return <ArrowLeft className="mr-2 h-4 w-4" />;
       case "next":
+        return <ArrowRight className="ml-2 h-4 w-4" />;
+      case "submit":
+        return <Check className="ml-2 h-4 w-4" />;
       default:
+        // Para navegação para etapas específicas, usar ícone de seta
         return <ArrowRight className="ml-2 h-4 w-4" />;
     }
   };
 
   const getLabel = () => {
-    if (isLastStep && content.targetStep !== "previous") {
-      return "Finalizar Quiz";
+    // Usar sempre o label definido no conteúdo ou um padrão baseado no targetStep
+    if (content.label) {
+      return content.label;
     }
-    return (
-      content.label ||
-      (content.targetStep === "previous" ? "Anterior" : "Próximo")
-    );
+
+    switch (content.targetStep) {
+      case "previous":
+        return "Anterior";
+      case "next":
+        return "Próximo";
+      case "submit":
+        return "Enviar";
+      default:
+        return "Continuar";
+    }
   };
 
   const handleClick = () => {
     const target = content.targetStep || "next";
     onNavigate(target);
+  };
+
+  // Calcular cores para o botão principal (primary/default)
+  const getPrimaryButtonStyles = () => {
+    const primaryColor = quizColors?.primaryColor || "var(--quiz-primary)";
+
+    if (content.variant === "primary" || getVariantClass() === "default") {
+      const textColor = getContrastColor(primaryColor);
+      return {
+        backgroundColor: primaryColor,
+        borderColor: primaryColor,
+        color: textColor,
+      };
+    }
+
+    return undefined;
   };
 
   return (
@@ -72,15 +95,7 @@ export function PublicNavigationButtonElement({
         disabled={!canProceed && content.targetStep !== "previous"}
         className="min-w-32 font-medium"
         aria-label={getLabel()}
-        style={
-          content.variant === "primary" || getVariantClass() === "default"
-            ? {
-                backgroundColor:
-                  quizColors?.primaryColor || "var(--quiz-primary)",
-                borderColor: quizColors?.primaryColor || "var(--quiz-primary)",
-              }
-            : undefined
-        }
+        style={getPrimaryButtonStyles()}
       >
         {content.targetStep === "previous" && getIcon()}
         {getLabel()}

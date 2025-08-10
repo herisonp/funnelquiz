@@ -32,10 +32,9 @@ export function useQuizResponse(quiz: QuizWithSteps | null) {
     const nextStepIndex = currentResponse.currentStepIndex + 1;
     if (nextStepIndex < quiz.steps.length) {
       goToStep(nextStepIndex);
-    } else {
-      completeQuiz();
     }
-  }, [quiz, currentResponse, goToStep, completeQuiz]);
+    // Removemos a auto-finalização - agora só acontece explicitamente
+  }, [quiz, currentResponse, goToStep]);
 
   const goToPrevious = useCallback(() => {
     if (!currentResponse) return;
@@ -70,9 +69,6 @@ export function useQuizResponse(quiz: QuizWithSteps | null) {
     lastStepId: currentResponse?.lastStepId || null,
     navigationHistory: currentResponse?.navigationHistory || [],
     isFirstStep: (currentResponse?.currentStepIndex || 0) === 0,
-    isLastStep: quiz
-      ? (currentResponse?.currentStepIndex || 0) === quiz.steps.length - 1
-      : true,
     progress: quiz ? getProgress(quiz.steps.length) : 0,
     currentStep: quiz?.steps[currentResponse?.currentStepIndex || 0] || null,
     isCompleted: currentResponse?.isCompleted || false,
