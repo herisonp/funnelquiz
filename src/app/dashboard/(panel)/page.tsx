@@ -407,7 +407,11 @@ export default function DashboardPage() {
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <Button variant="outline" size="sm" asChild>
-                            <Link href={`/${quiz.id}`} title="Visualizar quiz">
+                            <Link
+                              href={`/${quiz.id}`}
+                              target="_blank"
+                              title="Visualizar quiz"
+                            >
                               <Eye className="w-4 h-4" />
                             </Link>
                           </Button>
