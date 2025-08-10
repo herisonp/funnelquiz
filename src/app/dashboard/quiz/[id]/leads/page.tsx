@@ -5,10 +5,10 @@ import { useParams } from "next/navigation";
 import { LeadsMetricsCards } from "@/components/leads/LeadsMetricsCards";
 import { LeadsFunnelChart } from "@/components/leads/LeadsFunnelChart";
 import { LeadsTimelineChart } from "@/components/leads/LeadsTimelineChart";
-import { LeadsFilters } from "@/components/leads/LeadsFilters";
+import { AdvancedFilters } from "@/components/leads/AdvancedFilters";
 import { LeadsTable, Lead } from "@/components/leads/LeadsTable";
 import { LeadDetailsModal } from "@/components/leads/LeadDetailsModal";
-import { useLeadsData } from "@/hooks/useLeadsData";
+import { useAdvancedLeadsData } from "@/hooks/useAdvancedLeadsData";
 
 // Dados mockados para os gráficos
 const mockFunnelData = [
@@ -127,15 +127,13 @@ export default function LeadsPage() {
 
   const {
     filteredLeads,
-    searchTerm,
-    setSearchTerm,
-    dateRange,
-    setDateRange,
+    filters,
+    setFilters,
     metrics,
     exportToCSV,
     resetData,
     leads,
-  } = useLeadsData(quizId);
+  } = useAdvancedLeadsData(quizId);
 
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -158,6 +156,18 @@ export default function LeadsPage() {
             </p>
           </div>
 
+          {/* Filtros avançados */}
+          <div className="px-4 lg:px-6">
+            <AdvancedFilters
+              filters={filters}
+              onFiltersChange={setFilters}
+              onExportCSV={exportToCSV}
+              onResetData={resetData}
+              totalResults={leads.length}
+              filteredResults={filteredLeads.length}
+            />
+          </div>
+
           {/* Métricas principais */}
           <LeadsMetricsCards metrics={metrics} />
 
@@ -167,19 +177,8 @@ export default function LeadsPage() {
             <LeadsTimelineChart data={mockTimelineData} />
           </div>
 
-          {/* Filtros e tabela de leads */}
-          <div className="space-y-4 px-4 lg:px-6">
-            <LeadsFilters
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              dateRange={dateRange}
-              onDateRangeChange={setDateRange}
-              onExportCSV={exportToCSV}
-              onResetData={resetData}
-              totalLeads={leads.length}
-              filteredLeads={filteredLeads.length}
-            />
-
+          {/* Tabela de leads */}
+          <div className="px-4 lg:px-6">
             <LeadsTable
               leads={filteredLeads}
               onViewDetails={handleViewDetails}

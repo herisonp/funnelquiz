@@ -9,10 +9,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Eye, Mail, Phone, User } from "lucide-react";
+import {
+  Eye,
+  Mail,
+  Phone,
+  User,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
 export interface Lead {
   id: string;
@@ -31,6 +49,38 @@ interface LeadsTableProps {
 }
 
 export function LeadsTable({ leads, onViewDetails }: LeadsTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  // Calcular total de páginas
+  const totalPages = Math.max(1, Math.ceil(leads.length / pageSize));
+
+  // Calcular o índice inicial e final dos itens da página atual
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentLeads = leads.slice(startIndex, endIndex);
+
+  // Funções de navegação
+  const goToFirstPage = () => setCurrentPage(1);
+  const goToLastPage = () => setCurrentPage(totalPages);
+  const goToPreviousPage = () =>
+    setCurrentPage((prev) => Math.max(1, prev - 1));
+  const goToNextPage = () =>
+    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+
+  // Reset para primeira página quando pageSize muda
+  const handlePageSizeChange = (newPageSize: string) => {
+    setPageSize(Number(newPageSize));
+    setCurrentPage(1);
+  };
+
+  // Evitar página inválida quando a lista de leads muda
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
   const getProgressPercentage = (completed: number, total: number) => {
     return Math.round((completed / total) * 100);
   };
@@ -76,7 +126,7 @@ export function LeadsTable({ leads, onViewDetails }: LeadsTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {leads.map((lead) => {
+              {currentLeads.map((lead) => {
                 const progressPercentage = getProgressPercentage(
                   lead.lastStepCompleted,
                   lead.totalSteps
@@ -141,6 +191,83 @@ export function LeadsTable({ leads, onViewDetails }: LeadsTableProps) {
               })}
             </TableBody>
           </Table>
+        </div>
+
+        {/* Controles de Paginação */}
+        <div className="flex items-center justify-between px-4 py-4">
+          <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
+            Mostrando {startIndex + 1} até {Math.min(endIndex, leads.length)} de{" "}
+            {leads.length} lead(s).
+          </div>
+
+          <div className="flex w-full items-center gap-8 lg:w-fit">
+            <div className="hidden items-center gap-2 lg:flex">
+              <Label htmlFor="rows-per-page" className="text-sm font-medium">
+                Itens por página
+              </Label>
+              <Select
+                value={`${pageSize}`}
+                onValueChange={handlePageSizeChange}
+              >
+                <SelectTrigger size="sm" className="w-20" id="rows-per-page">
+                  <SelectValue placeholder={pageSize} />
+                </SelectTrigger>
+                <SelectContent side="top">
+                  {[5, 10, 20, 50].map((size) => (
+                    <SelectItem key={size} value={`${size}`}>
+                      {size}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex w-fit items-center justify-center text-sm font-medium">
+              Página {currentPage} de {totalPages}
+            </div>
+
+            <div className="ml-auto flex items-center gap-2 lg:ml-0">
+              <Button
+                variant="outline"
+                className="hidden h-8 w-8 p-0 lg:flex"
+                onClick={goToFirstPage}
+                disabled={currentPage === 1}
+              >
+                <span className="sr-only">Ir para primeira página</span>
+                <ChevronsLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                className="h-8 w-8"
+                size="icon"
+                onClick={goToPreviousPage}
+                disabled={currentPage === 1}
+              >
+                <span className="sr-only">Página anterior</span>
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                className="h-8 w-8"
+                size="icon"
+                onClick={goToNextPage}
+                disabled={currentPage === totalPages}
+              >
+                <span className="sr-only">Próxima página</span>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                className="hidden h-8 w-8 lg:flex"
+                size="icon"
+                onClick={goToLastPage}
+                disabled={currentPage === totalPages}
+              >
+                <span className="sr-only">Ir para última página</span>
+                <ChevronsRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
