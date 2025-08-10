@@ -9,6 +9,8 @@ import { AdvancedFilters } from "@/components/leads/AdvancedFilters";
 import { LeadsTable, Lead } from "@/components/leads/LeadsTable";
 import { LeadDetailsModal } from "@/components/leads/LeadDetailsModal";
 import { useAdvancedLeadsData } from "@/hooks/useAdvancedLeadsData";
+import { useQuizData } from "@/hooks/useQuizData";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 // Dados mockados para os gráficos
 const mockFunnelData = [
@@ -125,6 +127,9 @@ export default function LeadsPage() {
   const params = useParams();
   const quizId = params?.id as string;
 
+  // Carrega os dados do quiz no store (necessário para o EditorHeader)
+  const { isLoading: isQuizLoading } = useQuizData();
+
   const {
     filteredLeads,
     filters,
@@ -142,6 +147,18 @@ export default function LeadsPage() {
     setSelectedLead(lead);
     setIsModalOpen(true);
   };
+
+  // Mostra loading enquanto carrega os dados do quiz
+  if (isQuizLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <LoadingSpinner size="large" />
+          <p className="text-muted-foreground">Carregando dados do quiz...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-1 flex-col">
